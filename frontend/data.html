@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroHealth AI - Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/data.css">
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-2 md:p-6">
+
+    <div class="w-full max-w-6xl mb-2.5 bg-slate-900 border border-slate-800 text-slate-400 px-4 py-1.5 rounded-full text-center text-xs font-medium">
+        🛡️ <span class="text-slate-300 font-semibold">Prototipo educativo</span> (Datasets públicos OSDR & LSDA). No es un dispositivo médico.
+    </div>
+
+    <div class="tablet-frame w-full max-w-6xl h-[82vh] min-h-[600px] p-4 md:p-6 flex gap-4 md:gap-6 overflow-hidden">
+        
+        <!-- BARRA LATERAL -->
+        <aside class="w-28 md:w-36 flex flex-col justify-between gap-3 shrink-0">
+            <div class="ui-card h-20 flex items-center justify-center">
+                <img src="C:\Users\djimenee\Documents\GitHub\Nasa-Space-App-Challenge-Roboticados-EPM\Web\Logo_NASA.webp" alt="Logo" class="w-16 h-16" />
+            </div>
+
+            <nav class="flex-1 flex flex-col justify-between gap-3">
+                <a href="index.html" class="nav-btn flex-1 flex items-center justify-center text-sm md:text-base">HOME</a>
+                <a href="data.html" class="nav-btn active flex-1 flex items-center justify-center text-sm md:text-base">DATA</a>
+                <a href="ai.html" class="nav-btn flex-1 flex items-center justify-center text-sm md:text-base">IA</a>
+                <a href="profile.html" class="nav-btn flex-1 flex items-center justify-center text-sm md:text-base">PROFILE</a>
+            </nav>
+        </aside>
+
+        <!-- CONTENIDO DATA -->
+        <main class="flex-1 flex flex-col gap-3 overflow-hidden">
+            
+            <!-- BANNER SUPERIOR LITTLE AI ADVICE -->
+            <div class="ui-card py-2.5 px-6 flex items-center justify-between bg-slate-900/60 border-blue-500/30">
+                <div class="flex items-center gap-3">
+                    <span class="text-lg">🤖</span>
+                    <p class="text-xs md:text-sm font-medium text-slate-300" id="py-data-ai-advice">
+                        <strong class="text-blue-400">Little AI Advice:</strong> Haz clic en cualquier indicador para inspeccionar los datos base y gráficas comparativas.
+                    </p>
+                </div>
+                <button id="btn-back-data" onclick="closeRiskDetail()" class="hidden bg-slate-800 hover:bg-slate-700 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-600">
+                    ← Volver a Riesgos
+                </button>
+            </div>
+
+            <!-- VISTA GENERAL: 4 BARRAS DE RIESGO -->
+            <div id="data-overview" class="flex-1 flex flex-col justify-between gap-3">
+                <div onclick="openRiskDetail('radiation')" class="risk-card flex-1 border border-rose-500/50 hover:border-rose-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-lg md:text-xl text-rose-400 tracking-wider">RADIATION</h3>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-radiation">Risk: ALTO (Aberraciones cromosómicas - Dataset NASA LSDA)</p>
+                </div>
+
+                <div onclick="openRiskDetail('gravity')" class="risk-card flex-1 border border-amber-500/50 hover:border-amber-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-lg md:text-xl text-amber-400 tracking-wider">GRAVITY</h3>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-gravity">Risk: MODERADO (Densidad Mineral Ósea - Dataset NASA OSDR)</p>
+                </div>
+
+                <div onclick="openRiskDetail('psicology')" class="risk-card flex-1 border border-rose-500/50 hover:border-rose-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-lg md:text-xl text-rose-400 tracking-wider">PSICOLOGY</h3>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-psicology">Risk: ALTO (Vigilancia psicomotora y fatiga por sueño)</p>
+                </div>
+
+                <div onclick="openRiskDetail('environment')" class="risk-card flex-1 border border-emerald-500/50 hover:border-emerald-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-lg md:text-xl text-emerald-400 tracking-wider">ENVIRONMENT</h3>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-environment">Risk: BAJO (Condiciones de cabina y análogo terrestre)</p>
+                </div>
+            </div>
+
+            <!-- VISTA DETALLADA -->
+            <div id="data-detail-view" class="hidden flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 min-h-0">
+                <div class="md:col-span-4 ui-card p-5 flex flex-col justify-between overflow-y-auto">
+                    <div>
+                        <span id="detail-badge" class="text-[10px] font-bold uppercase px-2.5 py-1 rounded bg-slate-800 text-slate-300">Dataset Oficial</span>
+                        <h3 id="detail-title" class="font-extrabold text-lg uppercase mt-3 text-white">RADIATION</h3>
+                        <p class="text-xs font-bold text-slate-400 mt-1">Información base del dato específico:</p>
+                        <p id="detail-description" class="text-xs md:text-sm text-slate-300 mt-3 leading-relaxed">
+                            Descripción estadística de los datos obtenidos.
+                        </p>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs space-y-1 mt-4">
+                        <p><strong>Promedio Pre-Vuelo:</strong> <span id="stat-pre">-</span></p>
+                        <p><strong>Promedio En Vuelo:</strong> <span id="stat-in">-</span></p>
+                        <p><strong>Promedio Post-Vuelo:</strong> <span id="stat-post">-</span></p>
+                    </div>
+                </div>
+
+                <div id="detail-chart-container" class="md:col-span-8 rounded-2xl p-5 flex flex-col justify-between border border-slate-700 bg-slate-900/90">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-extrabold text-sm uppercase text-white">Comparativa por Etapa de Misión</h4>
+                        <span class="text-xs text-slate-400">Fuente: NASA OSDR / LSDA</span>
+                    </div>
+                    <div class="flex-1 relative min-h-0">
+                        <canvas id="riskDetailChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/data.js"></script>
+</body>
+</html>

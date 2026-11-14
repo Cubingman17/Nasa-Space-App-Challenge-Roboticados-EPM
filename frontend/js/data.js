@@ -1,0 +1,103 @@
+let detailChartInstance = null;
+
+const risksDatabase = {
+    radiation: {
+        title: "RADIATION & BIODOSIMETRY",
+        badge: "Dataset NASA LSDA",
+        description: "Evaluación de aberraciones cromosómicas inducidas por radiación ionizante espacial.",
+        pre: "2.4 c/cell",
+        inFlight: "8.9 c/cell",
+        post: "8.2 c/cell",
+        chartColor: "#f43f5e",
+        bgTint: "rgba(244, 63, 94, 0.12)",
+        borderTint: "rgba(244, 63, 94, 0.5)",
+        dataValues: [2.4, 8.9, 8.2]
+    },
+    gravity: {
+        title: "GRAVITY (Densidad Mineral Ósea)",
+        badge: "Dataset NASA OSDR",
+        description: "Pérdida de masa ósea en cadera y columna vertebral por exposición prolongada a microgravedad.",
+        pre: "1.18 g/cm²",
+        inFlight: "1.09 g/cm²",
+        post: "1.11 g/cm²",
+        chartColor: "#fbbf24",
+        bgTint: "rgba(251, 191, 36, 0.12)",
+        borderTint: "rgba(251, 191, 36, 0.5)",
+        dataValues: [1.18, 1.09, 1.11]
+    },
+    psicology: {
+        title: "PSICOLOGY & FATIGUE (PVT)",
+        badge: "Modelo Parte 1 (n=3)",
+        description: "Incremento en tiempos de reacción (>500 ms = lapso) asociado a privación o desajuste del ciclo de sueño.",
+        pre: "235 ms",
+        inFlight: "410 ms",
+        post: "260 ms",
+        chartColor: "#f43f5e",
+        bgTint: "rgba(244, 63, 94, 0.12)",
+        borderTint: "rgba(244, 63, 94, 0.5)",
+        dataValues: [235, 410, 260]
+    },
+    environment: {
+        title: "ENVIRONMENT (Cabina / Análogo)",
+        badge: "Control Ambiental",
+        description: "Estabilidad de niveles de oxígeno ambiental, presión y condiciones de prueba controlada en Tierra.",
+        pre: "99% Nominal",
+        inFlight: "98% Nominal",
+        post: "99% Nominal",
+        chartColor: "#10b981",
+        bgTint: "rgba(16, 185, 129, 0.12)",
+        borderTint: "rgba(16, 185, 129, 0.5)",
+        dataValues: [99, 98, 99]
+    }
+};
+
+function openRiskDetail(riskKey) {
+    const info = risksDatabase[riskKey];
+    if (!info) return;
+
+    document.getElementById("data-overview").classList.add("hidden");
+    document.getElementById("data-detail-view").classList.remove("hidden");
+    document.getElementById("btn-back-data").classList.remove("hidden");
+
+    document.getElementById("detail-badge").innerText = info.badge;
+    document.getElementById("detail-title").innerText = info.title;
+    document.getElementById("detail-description").innerText = info.description;
+    document.getElementById("stat-pre").innerText = info.pre;
+    document.getElementById("stat-in").innerText = info.inFlight;
+    document.getElementById("stat-post").innerText = info.post;
+
+    const chartContainer = document.getElementById("detail-chart-container");
+    chartContainer.style.backgroundColor = info.bgTint;
+    chartContainer.style.borderColor = info.borderTint;
+
+    const ctx = document.getElementById("riskDetailChart").getContext("2d");
+    if (detailChartInstance) detailChartInstance.destroy();
+
+    detailChartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: ["Pre-Vuelo", "En Vuelo", "Post-Vuelo"],
+            datasets: [{
+                label: info.title,
+                data: info.dataValues,
+                backgroundColor: [info.chartColor, "#3b82f6", "#8b5cf6"],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { grid: { color: "rgba(255,255,255,0.08)" }, ticks: { color: "#cbd5e1" } },
+                x: { grid: { display: false }, ticks: { color: "#cbd5e1", font: { weight: "bold" } } }
+            }
+        }
+    });
+}
+
+function closeRiskDetail() {
+    document.getElementById("data-detail-view").classList.add("hidden");
+    document.getElementById("btn-back-data").classList.add("hidden");
+    document.getElementById("data-overview").classList.remove("hidden");
+}

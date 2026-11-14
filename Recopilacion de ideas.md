@@ -1,0 +1,1 @@
+frontend bonito html con graficas, un leaderboard para que compitan los astronautas

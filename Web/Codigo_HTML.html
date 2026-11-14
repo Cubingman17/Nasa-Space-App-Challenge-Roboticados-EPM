@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroHealth AI - Interfaz Gamificada (NASA Space Apps 2026)</title>
+    <!-- Tailwind CSS para un diseño limpio, moderno y con paleta de colores suave (antifatiga) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0b0f19; }
+        
+        /* Contenedor principal estilo consola espacial / tablet gamificada */
+        .tablet-frame {
+            background-color: #21326b;
+            border: 10px solid #1e293b;
+            border-radius: 2.2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Tarjetas con estilo suave antifatiga (evita colores estridentes) */
+        .ui-card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 1.25rem;
+            color: #f8fafc;
+            transition: all 0.2s ease;
+        }
+
+        /* Botones de navegación lateral */
+        .nav-btn {
+            background-color: #1e293b;
+            color: #94a3b8;
+            font-weight: 700;
+            border-radius: 1rem;
+            border: 1px solid #334155;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover { background-color: #334155; color: #f8fafc; }
+        .nav-btn.active {
+            background-color: #3b82f6;
+            color: #ffffff;
+            border-color: #60a5fa;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Scrollbar personalizado sutil */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-2 md:p-6 text-slate-100">
+
+    <!-- AVISO LEGAL OBLIGATORIO (NASA Space Apps 2026) -->
+    <div class="w-full max-w-6xl mb-2.5 bg-slate-900 border border-slate-800 text-slate-400 px-4 py-1.5 rounded-full text-center text-xs font-medium tracking-wide">
+        🛡️ <span class="text-slate-300 font-semibold">Prototipo educativo</span> (Análogo terrestre, n=3). No es un dispositivo médico ni reemplaza a un profesional de salud.
+    </div>
+
+    <!-- CONTENEDOR TABLET / INTERFAZ -->
+    <div class="tablet-frame w-full max-w-6xl h-[82vh] min-h-[600px] p-4 md:p-6 flex gap-4 md:gap-6 overflow-hidden">
+        
+        <!-- BARRA LATERAL (IDÉNTICA EN LAS 4 VISTAS) -->
+        <aside class="w-28 md:w-36 flex flex-col justify-between gap-3 shrink-0">
+            <!-- LOGO -->
+            <div onclick="switchView('home')" class="ui-card h-20 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500">
+                <img src="C:\Users\djimenee\Documents\GitHub\Nasa-Space-App-Challenge-Roboticados-EPM\Web\Logo_NASA.webp" alt="Logo" class="w-16 h-16" />
+            </div>
+
+            <!-- NAVEGACIÓN -->
+            <nav class="flex-1 flex flex-col justify-between gap-3">
+                <button onclick="switchView('home')" id="btn-home" class="nav-btn active flex-1 flex items-center justify-center text-sm md:text-base">HOME</button>
+                <button onclick="switchView('data')" id="btn-data" class="nav-btn flex-1 flex items-center justify-center text-sm md:text-base">DATA</button>
+                <button onclick="switchView('ia')" id="btn-ia" class="nav-btn flex-1 flex items-center justify-center text-sm md:text-base">IA</button>
+                <button onclick="switchView('profile')" id="btn-profile" class="nav-btn flex-1 flex items-center justify-center text-sm md:text-base">PROFILE</button>
+            </nav>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="flex-1 h-full overflow-hidden">
+
+            <!-- ========================================================= -->
+            <!-- VISTA 1: HOME (INICIO - GAMIFICADA Y ANTIFATIGA)          -->
+            <!-- ========================================================= -->
+            <section id="view-home" class="h-full flex flex-col gap-3">
+                <!-- WELCOME BANNER -->
+                <div class="ui-card py-2.5 px-6 flex items-center justify-between">
+                    <span class="font-bold text-sm md:text-base tracking-wide">WELCOME, <span id="py-home-user" class="text-blue-400 font-extrabold">ASTRONAUTA A</span></span>
+                    <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30" id="py-home-status">ESTADO: ÓPTIMO (NIVEL 3)</span>
+                </div>
+
+                <!-- LITTLE AI ADVICE (SECCIÓN AISLADA PARA PYTHON / IA LOCAL) -->
+                <div class="ui-card py-2.5 px-6 flex items-center gap-3 bg-slate-900/60 border-blue-500/30">
+                    <span class="text-lg">🤖</span>
+                    <p class="text-xs md:text-sm font-medium text-slate-300" id="py-home-ai-advice">
+                        <!-- ESPACIO CONTROLADO POR PYTHON: Mensaje analítico de la IA -->
+                        <strong class="text-blue-400">Little AI Advice:</strong> Tus horas de sueño (7.5h) y estabilidad cardíaca aseguran un óptimo desempeño cognitivo hoy.
+                    </p>
+                </div>
+
+                <!-- BLOQUE CENTRAL: GRÁFICA + LEADERBOARD GAMIFICADO -->
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3 min-h-0">
+                    <!-- Gráfica de distribución sutil -->
+                    <div class="ui-card p-4 flex flex-col items-center justify-center relative">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Métricas de Rendimiento Diario</h3>
+                        <div class="w-full h-44 md:h-52 relative flex items-center justify-center">
+                            <canvas id="homeChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- LEADERBOARD (AISLADO PARA RECIBIR DATOS DE PYTHON) -->
+                    <div class="ui-card p-4 flex flex-col justify-between">
+                        <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                            <h3 class="font-extrabold text-xs md:text-sm uppercase tracking-wide text-blue-400">🏆 LEADERBOARD DE MISIÓN</h3>
+                            <span class="text-[10px] font-bold bg-slate-800 text-slate-400 px-2 py-0.5 rounded">n=3</span>
+                        </div>
+                        
+                        <!-- LISTA DINÁMICA DE RANKING (Modificable desde Python) -->
+                        <div class="space-y-2 my-auto py-1" id="py-leaderboard-container">
+                            <div class="flex items-center justify-between bg-slate-900/80 px-3 py-2 rounded-xl text-xs md:text-sm font-semibold border border-slate-800">
+                                <span>🥇 <strong class="text-white">Persona C</strong></span>
+                                <span class="text-blue-400 font-extrabold">125 XP (10 pts)</span>
+                            </div>
+                            <div class="flex items-center justify-between bg-slate-900/80 px-3 py-2 rounded-xl text-xs md:text-sm font-semibold border border-slate-800">
+                                <span>🥈 <strong class="text-white">Persona A</strong></span>
+                                <span class="text-blue-400 font-extrabold">110 XP (8 pts)</span>
+                            </div>
+                            <div class="flex items-center justify-between bg-slate-900/80 px-3 py-2 rounded-xl text-xs md:text-sm font-semibold border border-slate-800">
+                                <span>🥉 <strong class="text-white">Persona B</strong></span>
+                                <span class="text-blue-400 font-extrabold">95 XP (6 pts)</span>
+                            </div>
+                        </div>
+
+                        <p class="text-[11px] font-medium text-slate-400 text-center bg-slate-900/60 py-1.5 rounded-lg border border-slate-800">
+                            ⭐ <span id="py-home-bonus">Wednesday Bonus activo: +2 pts por registrar sueño a tiempo.</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- BANNER DE MISIONS -->
+                <div class="ui-card p-3 px-5 flex items-center justify-between bg-slate-900/40">
+                    <div>
+                        <h4 class="font-bold text-xs uppercase text-slate-400">🎯 MISIONS ACTIVAS</h4>
+                        <p class="text-xs md:text-sm font-semibold text-slate-200 mt-0.5" id="py-home-missions">
+                            • Test de reacción psicomotora (PVT) &nbsp;|&nbsp; • Registro matutino de SpO2 y pulso
+                        </p>
+                    </div>
+                    <button onclick="switchView('ia')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition">
+                        Registrar →
+                    </button>
+                </div>
+            </section>
+
+
+            <!-- ========================================================= -->
+            <!-- VISTA 2: DATA (RIESGOS DE LARGO PLAZO - DISEÑO SUAVE)     -->
+            <!-- ========================================================= -->
+            <section id="view-data" class="h-full hidden flex-col justify-between gap-3">
+                <!-- Tarjeta 1: RADIATION -->
+                <div onclick="showRiskDetail('radiation')" class="flex-1 rounded-2xl bg-slate-900 border border-rose-500/40 hover:border-rose-500 p-4 flex flex-col justify-center cursor-pointer transition shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-extrabold text-base md:text-lg text-rose-400 tracking-wider">RADIATION & BIODOSIMETRY</h3>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300">Riesgo Alto</span>
+                    </div>
+                    <p class="text-xs md:text-sm text-slate-300 mt-1" id="py-data-radiation">Monitoreo de aberraciones cromosómicas por radiación cósmica (Dataset NASA LSDA).</p>
+                </div>
+
+                <!-- Tarjeta 2: GRAVITY -->
+                <div onclick="showRiskDetail('gravity')" class="flex-1 rounded-2xl bg-slate-900 border border-amber-500/40 hover:border-amber-500 p-4 flex flex-col justify-center cursor-pointer transition shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-extrabold text-base md:text-lg text-amber-400 tracking-wider">GRAVITY (Densidad Ósea)</h3>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300">Riesgo Moderado</span>
+                    </div>
+                    <p class="text-xs md:text-sm text-slate-300 mt-1" id="py-data-gravity">Evaluación de pérdida mineral ósea en cadera y columna (Dataset NASA OSDR).</p>
+                </div>
+
+                <!-- Tarjeta 3: PSICOLOGY -->
+                <div onclick="showRiskDetail('psicology')" class="flex-1 rounded-2xl bg-slate-900 border border-rose-500/40 hover:border-rose-500 p-4 flex flex-col justify-center cursor-pointer transition shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-extrabold text-base md:text-lg text-rose-400 tracking-wider">PSICOLOGY & FATIGUE</h3>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300">Riesgo Controlado</span>
+                    </div>
+                    <p class="text-xs md:text-sm text-slate-300 mt-1" id="py-data-psicology">Seguimiento de tiempos de reacción y lapsos cognitivos por fatiga.</p>
+                </div>
+
+                <!-- Tarjeta 4: ENVIRONMENT -->
+                <div onclick="showRiskDetail('environment')" class="flex-1 rounded-2xl bg-slate-900 border border-emerald-500/40 hover:border-emerald-500 p-4 flex flex-col justify-center cursor-pointer transition shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-extrabold text-base md:text-lg text-emerald-400 tracking-wider">ENVIRONMENT (ISS Cabin)</h3>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300">Estado Óptimo</span>
+                    </div>
+                    <p class="text-xs md:text-sm text-slate-300 mt-1" id="py-data-environment">Presión, niveles de oxígeno y variables ambientales estables.</p>
+                </div>
+            </section>
+
+
+            <!-- ========================================================= -->
+            <!-- VISTA 3: IA (ENTRADA DE SENSORES Y MODELO LOCAL)          -->
+            <!-- ========================================================= -->
+            <section id="view-ia" class="h-full hidden grid-cols-1 md:grid-cols-12 gap-3">
+                <!-- Columna Izquierda: Inputs de Sensores (7 Cols) -->
+                <div class="md:col-span-7 flex flex-col gap-3 h-full">
+                    <div class="flex-1 grid grid-cols-2 gap-3">
+                        <!-- Input LPM -->
+                        <div class="ui-card p-3.5 flex flex-col items-center justify-center text-center">
+                            <label class="font-bold text-xs uppercase text-slate-300 mb-2">💓 Frecuencia Cardíaca (LPM)</label>
+                            <input type="number" id="py-input-lpm" placeholder="Ej: 68" class="w-full max-w-[140px] text-center font-bold text-base py-2 px-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
+                            <span class="text-[10px] text-slate-400 mt-1">Pulso en reposo</span>
+                        </div>
+
+                        <!-- Input SpO2 -->
+                        <div class="ui-card p-3.5 flex flex-col items-center justify-center text-center">
+                            <label class="font-bold text-xs uppercase text-slate-300 mb-2">🫁 Oxígeno (SpO2 %)</label>
+                            <input type="number" id="py-input-spo2" placeholder="Ej: 98" class="w-full max-w-[140px] text-center font-bold text-base py-2 px-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
+                            <span class="text-[10px] text-slate-400 mt-1">Pulsioxímetro</span>
+                        </div>
+
+                        <!-- Input Sueño -->
+                        <div class="ui-card p-3.5 flex flex-col items-center justify-center text-center">
+                            <label class="font-bold text-xs uppercase text-slate-300 mb-2">😴 Tiempo de Sueño</label>
+                            <input type="number" step="0.1" id="py-input-sleep" placeholder="Ej: 7.5" class="w-full max-w-[140px] text-center font-bold text-base py-2 px-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
+                            <span class="text-[10px] text-slate-400 mt-1">Horas nocturnas</span>
+                        </div>
+
+                        <!-- Input Tiempo de Reacción -->
+                        <div class="ui-card p-3.5 flex flex-col items-center justify-center text-center">
+                            <label class="font-bold text-xs uppercase text-slate-300 mb-2">⚡ Tiempo Reacción</label>
+                            <input type="number" id="py-input-rt" placeholder="Ej: 240" class="w-full max-w-[140px] text-center font-bold text-base py-2 px-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-blue-500">
+                            <span class="text-[10px] text-slate-400 mt-1">Milisegundos (ms)</span>
+                        </div>
+                    </div>
+
+                    <!-- Botón Enviar Datos -->
+                    <button onclick="sendSensorDataToPython()" class="h-13 rounded-2xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-extrabold text-xs md:text-sm uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg">
+                        <span>📤 ENVIAR DATOS A PYTHON / IA LOCAL</span>
+                    </button>
+                </div>
+
+                <!-- Columna Derecha: IA RESPONSES + CHAT (5 Cols) -->
+                <div class="md:col-span-5 flex flex-col gap-3 h-full">
+                    <!-- Caja IA Responses -->
+                    <div class="ui-card flex-1 p-4 flex flex-col overflow-hidden">
+                        <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
+                            <span class="font-bold text-xs uppercase text-blue-400">🧠 IA RESPONSES (Local Model)</span>
+                            <span class="text-[10px] font-bold bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">En entrenamiento</span>
+                        </div>
+                        
+                        <!-- Contenedor del historial de respuestas manejado por Python/JS -->
+                        <div id="py-ia-responses-box" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs md:text-sm">
+                            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                                <p class="font-bold text-blue-400 text-xs mb-1">AstroAI Predictor (Ridge / GB):</p>
+                                <p class="text-slate-300">Esperando registro de sensores para calcular línea base personal y predecir desempeño...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input para Astronauta Mensajes -->
+                    <div class="ui-card h-14 px-3 flex items-center gap-2">
+                        <input type="text" id="py-astronaut-msg-input" onkeypress="if(event.key === 'Enter') sendChatMessageToPython()" placeholder="Preguntar a la IA local..." class="flex-1 bg-transparent text-xs md:text-sm font-medium text-white placeholder-slate-500 focus:outline-none">
+                        <button onclick="sendChatMessageToPython()" class="bg-slate-800 hover:bg-slate-700 text-blue-400 p-2 rounded-xl text-xs font-bold transition">
+                            Enviar
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ========================================================= -->
+            <!-- VISTA 4: PROFILE (PERFIL Y GAMIFICACIÓN)                  -->
+            <!-- ========================================================= -->
+            <section id="view-profile" class="h-full hidden flex-col gap-3">
+                <!-- Fila Superior: FOTO + DATOS BÁSICOS -->
+                <div class="h-1/3 grid grid-cols-12 gap-3">
+                    <!-- FOTO -->
+                    <div class="col-span-4 md:col-span-3 ui-card p-4 flex flex-col items-center justify-center">
+                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-3xl shadow-inner">
+                            👨‍🚀
+                        </div>
+                        <span class="font-bold text-xs uppercase text-slate-400 mt-2">AVATAR</span>
+                    </div>
+
+                    <!-- DATOS BÁSICOS + SELECTOR DE SUJETO -->
+                    <div class="col-span-8 md:col-span-9 ui-card p-4 md:p-5 flex flex-col justify-between">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2">
+                            <h3 class="font-extrabold text-xs md:text-sm uppercase text-blue-400">DATOS BÁSICOS (Anonimizados)</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold text-slate-400">Sujeto:</span>
+                                <select id="py-subject-select" onchange="changeProfileSubject(this.value)" class="bg-slate-900 text-white font-bold text-xs py-1 px-2.5 rounded-lg border border-slate-700 focus:outline-none">
+                                    <option value="A">Persona A</option>
+                                    <option value="B">Persona B</option>
+                                    <option value="C">Persona C</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs md:text-sm my-auto pt-1">
+                            <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                <span class="text-[10px] font-bold text-slate-400 block">PESO</span>
+                                <span class="font-extrabold text-white" id="py-prof-weight">70 kg</span>
+                            </div>
+                            <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                <span class="text-[10px] font-bold text-slate-400 block">ALTURA</span>
+                                <span class="font-extrabold text-white" id="py-prof-height">175 cm</span>
+                            </div>
+                            <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                <span class="text-[10px] font-bold text-slate-400 block">EDAD</span>
+                                <span class="font-extrabold text-white" id="py-prof-age">20 años</span>
+                            </div>
+                            <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                <span class="text-[10px] font-bold text-slate-400 block">LÍNEA BASE LPM</span>
+                                <span class="font-extrabold text-white" id="py-prof-hr">68 bpm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fila Inferior: Gamificación y Ranking Detallado -->
+                <div class="flex-1 ui-card p-5 flex flex-col justify-between overflow-y-auto">
+                    <div>
+                        <h3 class="font-extrabold text-xs md:text-sm uppercase border-b border-slate-700 pb-2 mb-3 text-blue-400">
+                            🎮 Gamificación & Logros de Misión
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Tabla de Posiciones -->
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <h4 class="font-bold text-xs uppercase text-slate-400">Ranking del Equipo (n=3)</h4>
+                                <div class="flex justify-between items-center text-xs md:text-sm font-bold border-b border-slate-800 pb-1.5">
+                                    <span>1ST : Persona C</span>
+                                    <span class="text-blue-400 font-extrabold">125 XP (10 pts)</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs md:text-sm font-bold border-b border-slate-800 pb-1.5">
+                                    <span>2ND : Persona A</span>
+                                    <span class="text-blue-400 font-extrabold">110 XP (8 pts)</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs md:text-sm font-bold">
+                                    <span>3RD : Persona B</span>
+                                    <span class="text-blue-400 font-extrabold">95 XP (6 pts)</span>
+                                </div>
+                            </div>
+
+                            <!-- Reglas de Puntos -->
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-xs uppercase text-slate-400 mb-2">Sistema de Recompensas</h4>
+                                    <ul class="text-xs font-medium space-y-1.5 text-slate-300">
+                                        <li>✅ <strong>+3 pts:</strong> Registrar más de 7 horas de sueño.</li>
+                                        <li>✅ <strong>+3 pts:</strong> Mantener tiempo de reacción &lt; 300 ms.</li>
+                                        <li>⭐ <strong>Wednesday Bonus:</strong> +2 pts por puntualidad en datos.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-[11px] font-medium text-slate-400 text-right mt-2">
+                        Privacidad garantizada: Datos anonimizados (A, B, C) sin identificadores personales.
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- SCRIPT DE CONTROL Y CONEXIÓN CON PYTHON (AISLADO POR SECCIONES)       -->
+    <!-- ===================================================================== -->
+    <script>
+        // 1. CONTROL DE NAVEGACIÓN ENTRE VISTAS
+        function switchView(viewName) {
+            const views = ['home', 'data', 'ia', 'profile'];
+            views.forEach(v => {
+                const section = document.getElementById(`view-${v}`);
+                const btn = document.getElementById(`btn-${v}`);
+                
+                if (v === viewName) {
+                    section.classList.remove('hidden');
+                    section.classList.add(v === 'ia' ? 'grid' : 'flex');
+                    btn.classList.add('active');
+                } else {
+                    section.classList.add('hidden');
+                    section.classList.remove('grid', 'flex');
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // 2. BASE DE DATOS SIMULADA (LISTA PARA SER MODIFICADA POR PYTHON)
+        const profileDataDB = {
+            A: { weight: "70 kg", height: "175 cm", age: "20 años", hr: "68 bpm", userText: "ASTRONAUTA A", status: "ESTADO: ÓPTIMO (NIVEL 3)" },
+            B: { weight: "65 kg", height: "168 cm", age: "21 años", hr: "72 bpm", userText: "ASTRONAUTA B", status: "ESTADO: ALERTA MODERADA" },
+            C: { weight: "78 kg", height: "180 cm", age: "19 años", hr: "64 bpm", userText: "ASTRONAUTA C", status: "ESTADO: ÓPTIMO (NIVEL 3)" }
+        };
+
+        function changeProfileSubject(subjectId) {
+            const data = profileDataDB[subjectId];
+            document.getElementById('py-prof-weight').innerText = data.weight;
+            document.getElementById('py-prof-height').innerText = data.height;
+            document.getElementById('py-prof-age').innerText = data.age;
+            document.getElementById('py-prof-hr').innerText = data.hr;
+            document.getElementById('py-home-user').innerText = data.userText;
+            document.getElementById('py-home-status').innerText = data.status;
+        }
+
+        // 3. INICIALIZAR GRÁFICA SUTIL (ANTIFATIGA) EN HOME
+        window.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('homeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Sueño Óptimo', 'Cardio / Pulso', 'Tiempo Reacción', 'SpO2'],
+                    datasets: [{
+                        data: [55, 25, 15, 5],
+                        backgroundColor: ['#3b82f6', '#6366f1', '#0ea5e9', '#38bdf8'],
+                        borderWidth: 2,
+                        borderColor: '#1e293b'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { color: '#94a3b8', font: { size: 11, weight: '600' }, boxWidth: 12 }
+                        }
+                    }
+                }
+            });
+        });
+
+        // =====================================================================
+        // 4. FUNCIONES DE ENLACE CON PYTHON (ENDPOINTS DE IA Y DATOS)
+        // =====================================================================
+
+        // Función para enviar los datos de los sensores a Python
+        async function sendSensorDataToPython() {
+            const payload = {
+                subject_id: document.getElementById('py-subject-select').value,
+                hr_bpm: document.getElementById('py-input-lpm').value,
+                spo2_pct: document.getElementById('py-input-spo2').value,
+                sleep_hours: document.getElementById('py-input-sleep').value,
+                rt_ms: document.getElementById('py-input-rt').value
+            };
+
+            if (!payload.hr_bpm || !payload.sleep_hours || !payload.rt_ms) {
+                appendAIResponse("Sistema", "⚠️ Por favor ingresa al menos LPM, Sueño y Tiempo de Reacción.");
+                return;
+            }
+
+            appendAIResponse("Tú (Sensores)", `LPM: ${payload.hr_bpm} | SpO2: ${payload.spo2_pct || 'N/A'}% | Sueño: ${payload.sleep_hours}h | Reacción: ${payload.rt_ms}ms`);
+
+            /* -----------------------------------------------------------------
+               CONEXIÓN CON PYTHON (Flask / FastAPI / Streamlit):
+               Descomenta cuando tengas tu backend activo:
+               
+               try {
+                   const res = await fetch('http://localhost:5000/api/predict', {
+                       method: 'POST',
+                       headers: { 'Content-Type': 'application/json' },
+                       body: JSON.stringify(payload)
+                   });
+                   const data = await res.json();
+                   appendAIResponse("AstroAI (Python)", data.ai_response);
+               } catch (e) {
+                   appendAIResponse("Error", "No se pudo conectar con el servidor local de Python.");
+               }
+            ----------------------------------------------------------------- */
+
+            // Respuesta simulada de prueba:
+            setTimeout(() => {
+                appendAIResponse(
+                    "AstroAI Local", 
+                    `Datos procesados correctamente. Z-Score en parámetros estables. Predicción siguiente reacción: <strong>${Math.round(payload.rt_ms * 1.02)} ms</strong>.`
+                );
+            }, 600);
+        }
+
+        // Función para enviar mensajes de chat a la IA local en Python
+        async function sendChatMessageToPython() {
+            const input = document.getElementById('py-astronaut-msg-input');
+            const prompt = input.value.trim();
+            if (!prompt) return;
+
+            appendAIResponse("Astronauta", prompt);
+            input.value = "";
+
+            /* -----------------------------------------------------------------
+               CONEXIÓN CON TU IA LOCAL (Ej. Ollama / Llama 3 en Python):
+               
+               const res = await fetch('http://localhost:5000/api/chat', {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify({ prompt: prompt })
+               });
+               const data = await res.json();
+               appendAIResponse("AstroAI Local", data.reply);
+            ----------------------------------------------------------------- */
+
+            // Respuesta simulada de IA local:
+            setTimeout(() => {
+                appendAIResponse(
+                    "AstroAI Local", 
+                    "Apartado configurado para recibir respuestas de tu modelo local en Python. Conecta tu script de IA para habilitar el chat interactivo."
+                );
+            }, 500);
+        }
+
+        // Utilidad para inyectar mensajes en la caja "IA Responses"
+        function appendAIResponse(sender, text) {
+            const box = document.getElementById('py-ia-responses-box');
+            const div = document.createElement('div');
+            div.className = "bg-slate-900 p-3 rounded-xl border border-slate-800";
+            div.innerHTML = `
+                <p class="font-bold text-blue-400 text-[11px] uppercase mb-0.5">${sender}:</p>
+                <p class="text-slate-300 leading-snug">${text}</p>
+            `;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // Detalle de tarjetas en la sección Data
+        function showRiskDetail(type) {
+            const info = {
+                radiation: "Dataset NASA LSDA: Seguimiento acumulado de radiación y mitigación de daños celulares en misión.",
+                gravity: "Dataset NASA OSDR: Análisis comparativo de densidad mineral ósea pre y post vuelo espacial.",
+                psicology: "Evaluación psicomotora continua: Prevención de fatiga extrema y lapsos de atención.",
+                environment: "Control ambiental: Estabilidad de soporte vital en cabina de la ISS."
+            };
+            alert(info[type]);
+        }
+    </script>
+</body>
+</html>

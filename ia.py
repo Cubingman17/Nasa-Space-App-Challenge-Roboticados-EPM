@@ -46,5 +46,9 @@ def spO2_value():
 
 def sleep_value():
     sleep_status = ''
-    if
+    if sleep >= 8:
+        sleep_status = 'normal'
+        
+    elif sleep >= 7 and sleep < 8:
+        sleep_status = 'normal: a little deficient'
     return sleep_status

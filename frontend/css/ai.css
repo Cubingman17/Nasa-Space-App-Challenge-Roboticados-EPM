@@ -1,0 +1,10 @@
+.sensor-input {
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    color: #ffffff;
+    border-radius: 0.75rem;
+}
+.sensor-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}

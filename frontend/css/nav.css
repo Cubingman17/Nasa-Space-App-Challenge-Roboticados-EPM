@@ -1,0 +1,21 @@
+.nav-btn {
+    background-color: #1e293b;
+    color: #94a3b8;
+    font-weight: 700;
+    border-radius: 1rem;
+    border: 1px solid #334155;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.nav-btn:hover {
+    background-color: #334155;
+    color: #f8fafc;
+}
+
+.nav-btn.active {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border-color: #60a5fa;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}

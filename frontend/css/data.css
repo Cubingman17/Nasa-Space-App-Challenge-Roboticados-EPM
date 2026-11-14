@@ -6,3 +6,12 @@
 .risk-card:hover {
     transform: scale(1.005);
 }
+
+/* Botón flotante en la esquina para ingreso manual */
+.floating-data-btn {
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+    transition: all 0.2s ease;
+}
+.floating-data-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+}

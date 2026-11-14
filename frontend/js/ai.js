@@ -1,23 +1,3 @@
-async function handleSendSensors() {
-    const payload = {
-        subject_id: localStorage.getItem("selectedSubject") || "A",
-        hr_bpm: document.getElementById("py-input-lpm").value,
-        spo2_pct: document.getElementById("py-input-spo2").value,
-        sleep_hours: document.getElementById("py-input-sleep").value,
-        rt_ms: document.getElementById("py-input-rt").value
-    };
-
-    if (!payload.hr_bpm || !payload.sleep_hours || !payload.rt_ms) {
-        appendBoxMessage("Sistema", "⚠️ Por favor completa LPM, Sueño y Tiempo de Reacción.");
-        return;
-    }
-
-    appendBoxMessage("Sensores", `LPM: ${payload.hr_bpm} | SpO2: ${payload.spo2_pct || "N/A"}% | Sueño: ${payload.sleep_hours}h | RT: ${payload.rt_ms}ms`);
-    
-    const response = await PythonBridge.sendSensorData(payload);
-    appendBoxMessage("AstroAI (Python)", response.ai_response);
-}
-
 async function handleSendMessage() {
     const input = document.getElementById("py-astronaut-msg-input");
     const text = input.value.trim();
@@ -26,8 +6,41 @@ async function handleSendMessage() {
     appendBoxMessage("Astronauta", text);
     input.value = "";
 
+    // Activar estado "Pensando..." en la mascota IA
+    setMascotState("thinking", "Analizando datos...");
+
     const response = await PythonBridge.sendChatMessage(text);
+    
+    // Activar animación de "Hablando" cuando responde
+    setMascotState("speaking", "Respondiendo...");
     appendBoxMessage("AstroAI Local", response.reply);
+
+    // Volver a estado normal tras 2.5 segundos
+    setTimeout(() => {
+        setMascotState("idle", "Listo para analizar tus registros de salud.");
+    }, 2500);
+}
+
+function setMascotState(state, captionText) {
+    const face = document.getElementById("ai-mascot-face");
+    const badge = document.getElementById("ai-state-badge");
+    const caption = document.getElementById("ai-mascot-caption");
+
+    if (caption) caption.innerText = captionText;
+
+    if (state === "speaking") {
+        face.classList.add("speaking");
+        badge.innerText = "Hablando";
+        badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30";
+    } else if (state === "thinking") {
+        face.classList.remove("speaking");
+        badge.innerText = "Procesando...";
+        badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+    } else {
+        face.classList.remove("speaking");
+        badge.innerText = "En línea";
+        badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+    }
 }
 
 function appendBoxMessage(sender, text) {

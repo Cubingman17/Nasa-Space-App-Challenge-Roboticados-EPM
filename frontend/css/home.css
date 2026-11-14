@@ -3,3 +3,16 @@
     border: 1px solid #1e293b;
     border-radius: 0.75rem;
 }
+
+/* Cursor parpadeante para la animación de escritura del Welcome */
+.typing-cursor::after {
+    content: '|';
+    animation: blink 0.8s infinite;
+    color: #60a5fa;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}

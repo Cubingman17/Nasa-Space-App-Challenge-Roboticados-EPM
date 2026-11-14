@@ -101,3 +101,41 @@ function closeRiskDetail() {
     document.getElementById("btn-back-data").classList.add("hidden");
     document.getElementById("data-overview").classList.remove("hidden");
 }
+
+// Funciones del Modal Flotante de Ingreso Manual
+function toggleManualModal(show) {
+    const modal = document.getElementById("manual-data-modal");
+    const feedback = document.getElementById("modal-feedback");
+    if (show) {
+        modal.classList.remove("hidden");
+        feedback.classList.add("hidden");
+    } else {
+        modal.classList.add("hidden");
+    }
+}
+
+async function submitManualSensors() {
+    const payload = {
+        subject_id: localStorage.getItem("selectedSubject") || "A",
+        hr_bpm: document.getElementById("py-input-lpm").value,
+        spo2_pct: document.getElementById("py-input-spo2").value,
+        sleep_hours: document.getElementById("py-input-sleep").value,
+        rt_ms: document.getElementById("py-input-rt").value,
+        fatigue_level: document.getElementById("py-input-fatigue").value,
+        env_temp: document.getElementById("py-input-temp").value,
+        notes: document.getElementById("py-input-notes").value
+    };
+
+    const feedback = document.getElementById("modal-feedback");
+    feedback.classList.remove("hidden");
+
+    if (!payload.hr_bpm || !payload.sleep_hours || !payload.rt_ms) {
+        feedback.className = "text-xs font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl text-center";
+        feedback.innerText = "⚠️ Completa al menos LPM, Sueño y Tiempo de Reacción.";
+        return;
+    }
+
+    const response = await PythonBridge.sendSensorData(payload);
+    feedback.className = "text-xs font-semibold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-xl text-center";
+    feedback.innerText = `✅ ${response.ai_response}`;
+}

@@ -1,4 +1,20 @@
 document.addEventListener("DOMContentLoaded", async () => {
+    // 1. Animación de escritura (Typewriter) para el texto WELCOME
+    const subject = localStorage.getItem("selectedSubject") || "A";
+    const welcomeText = `WELCOME, ASTRONAUTA ${subject}`;
+    const welcomeElement = document.getElementById("welcome-typewriter");
+    
+    let index = 0;
+    function typeWriterEffect() {
+        if (index < welcomeText.length) {
+            welcomeElement.textContent += welcomeText.charAt(index);
+            index++;
+            setTimeout(typeWriterEffect, 65);
+        }
+    }
+    typeWriterEffect();
+
+    // 2. Gráfica Circular
     const ctx = document.getElementById("homePieChart").getContext("2d");
     new Chart(ctx, {
         type: "doughnut",
@@ -23,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    const subject = localStorage.getItem("selectedSubject") || "A";
+    // 3. Conectar con datos reales desde Python si está activo
     const pythonData = await PythonBridge.fetchHomeData(subject);
     if (pythonData) {
         if (pythonData.ai_advice) {

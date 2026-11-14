@@ -1,0 +1,2 @@
+# CARPETA PARA EL EQUIPO BACHILLERATO DEL NASA SPACE APPS CHALLENGE
+Dante Segura, Lorenzo Montoya, Nicolas Cifuentes

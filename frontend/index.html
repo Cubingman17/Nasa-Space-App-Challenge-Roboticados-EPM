@@ -16,7 +16,7 @@
         🛡️ <span class="text-slate-300 font-semibold">Prototipo educativo</span> (Análogo terrestre, n=3). No es un dispositivo médico ni reemplaza a un profesional de salud.
     </div>
 
-    <div class="tablet-frame w-full max-w-6xl h-[82vh] min-h-[600px] p-4 md:p-6 flex gap-4 md:gap-6 overflow-hidden">
+    <div class="tablet-frame state-green w-full max-w-6xl h-[82vh] min-h-[600px] p-4 md:p-6 flex gap-4 md:gap-6 overflow-hidden">
         
         <!-- BARRA LATERAL -->
         <aside class="w-28 md:w-36 flex flex-col justify-between gap-3 shrink-0">
@@ -34,10 +34,19 @@
 
         <!-- CONTENIDO HOME -->
         <main class="flex-1 flex flex-col gap-3 overflow-hidden">
-            <!-- WELCOME CON ANIMACIÓN DE ESCRITURA -->
-            <div class="ui-card py-2.5 px-6 flex items-center justify-between">
+            <!-- WELCOME + NIVEL XP GAMIFICADO + ESTADO CROMÁTICO -->
+            <div class="ui-card py-2.5 px-6 flex flex-wrap items-center justify-between gap-3">
                 <span id="welcome-typewriter" class="font-extrabold text-sm md:text-base tracking-wide text-blue-400 typing-cursor"></span>
-                <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30" id="py-home-status">ESTADO: ÓPTIMO</span>
+                
+                <!-- Barra de progreso XP -->
+                <div class="flex items-center gap-2.5 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">
+                    <span id="py-home-level" class="text-[11px] font-extrabold text-sky-400">LVL 4</span>
+                    <div class="w-24 h-2 bg-slate-800 rounded-full overflow-hidden">
+                        <div id="py-home-xp-bar" class="xp-bar-fill h-full" style="width: 78%;"></div>
+                    </div>
+                </div>
+
+                <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40" id="py-home-status">ESTADO: ÓPTIMO</span>
             </div>
 
             <!-- LITTLE AI ADVICE -->
@@ -57,25 +66,25 @@
                     </div>
                 </div>
 
-                <!-- LEADERBOARD -->
+                <!-- LEADERBOARD GAMIFICADO -->
                 <div class="ui-card p-4 flex flex-col justify-between overflow-y-auto">
                     <div class="flex items-center justify-between border-b border-slate-700 pb-2">
-                        <h3 class="font-extrabold text-xs md:text-sm uppercase tracking-wide text-blue-400">🏆 LEADERBOARD</h3>
+                        <h3 class="font-extrabold text-xs md:text-sm uppercase tracking-wide text-blue-400">🏆 LEADERBOARD DE TRIPULACIÓN</h3>
                         <span class="text-[10px] font-bold bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Muestra n=3</span>
                     </div>
                     
                     <div class="space-y-2 my-auto py-1" id="py-leaderboard-list">
                         <div class="leaderboard-item flex items-center justify-between px-3 py-2 text-xs md:text-sm font-semibold">
                             <span>🥇 <strong class="text-white">Persona C</strong></span>
-                            <span class="text-blue-400 font-extrabold">10 pts</span>
+                            <span class="text-emerald-400 font-extrabold">125 XP • 10 pts</span>
                         </div>
                         <div class="leaderboard-item flex items-center justify-between px-3 py-2 text-xs md:text-sm font-semibold">
                             <span>🥈 <strong class="text-white">Persona A</strong></span>
-                            <span class="text-blue-400 font-extrabold">8 pts</span>
+                            <span class="text-blue-400 font-extrabold">110 XP • 8 pts</span>
                         </div>
                         <div class="leaderboard-item flex items-center justify-between px-3 py-2 text-xs md:text-sm font-semibold">
                             <span>🥉 <strong class="text-white">Persona B</strong></span>
-                            <span class="text-blue-400 font-extrabold">6 pts</span>
+                            <span class="text-amber-400 font-extrabold">95 XP • 6 pts</span>
                         </div>
                     </div>
 
@@ -88,20 +97,19 @@
             <!-- MISIONS -->
             <div class="ui-card p-3 px-5 flex items-center justify-between bg-slate-900/40">
                 <div>
-                    <h4 class="font-bold text-xs uppercase text-slate-400">🎯 MISIONS</h4>
+                    <h4 class="font-bold text-xs uppercase text-slate-400">🎯 MISIONS ACTIVAS (+XP)</h4>
                     <p class="text-xs md:text-sm font-semibold text-slate-200 mt-0.5" id="py-home-missions">
-                        • Test de reacción psicomotora (3 min) &nbsp;|&nbsp; • Registro de sueño y SpO2
+                        • Test de reacción psicomotora (+30 XP) &nbsp;|&nbsp; • Registro de sueño y SpO2 (+20 XP)
                     </p>
                 </div>
-                <a href="data.html" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition">
-                    Ingresar Datos →
+                <a href="data.html" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow-md">
+                    Insert Data →
                 </a>
             </div>
         </main>
     </div>
 
     <script src="js/api.js"></script>
-    <script src="js/nav.js"></script>
     <script src="js/home.js"></script>
 </body>
 </html>

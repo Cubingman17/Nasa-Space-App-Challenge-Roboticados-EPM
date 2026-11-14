@@ -6,11 +6,27 @@ body {
     color: #f8fafc;
 }
 
+/* Consola principal con borde dinámico según estado de salud */
 .tablet-frame {
     background-color: #131b2e;
     border: 10px solid #1e293b;
     border-radius: 2.2rem;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Estados globales del Astronauta controlados por Python */
+.tablet-frame.state-green {
+    border-color: #059669;
+    box-shadow: 0 0 35px rgba(16, 185, 129, 0.25);
+}
+.tablet-frame.state-yellow {
+    border-color: #d97706;
+    box-shadow: 0 0 35px rgba(245, 158, 11, 0.25);
+}
+.tablet-frame.state-red {
+    border-color: #e11d48;
+    box-shadow: 0 0 40px rgba(244, 63, 94, 0.35);
 }
 
 .ui-card {
@@ -18,11 +34,23 @@ body {
     border: 1px solid #334155;
     border-radius: 1.25rem;
     color: #f8fafc;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
+}
+
+.tablet-frame aside,
+.tablet-frame main {
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+/* Barra de experiencia (XP) gamificada */
+.xp-bar-fill {
+    background: linear-gradient(90deg, #3b82f6, #38bdf8);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 ::-webkit-scrollbar {
-    width: 5px;
+    width: 6px;
 }
 ::-webkit-scrollbar-track {
     background: transparent;

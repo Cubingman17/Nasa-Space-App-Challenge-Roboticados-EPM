@@ -28,7 +28,8 @@ AstroHealth AI is a tablet-style mission console with four screens:
 ## Architecture
 
 ```
-frontend/            Static HTML + JS (Tailwind, Chart.js)
+frontend/app.py      Native Streamlit interface (Home, Data, AstroAI, Profile)
+frontend/            Existing HTML/JS client assets
 backend/             FastAPI (port 5000)
 ├── routers/         /api/predict, /api/chat, data, profile, home
 ├── ai/
@@ -43,7 +44,7 @@ backend/             FastAPI (port 5000)
 
 - **Backend:** Python, FastAPI, Pydantic
 - **AI:** Ollama with a custom `astroai` model (llama3.2:3b base, health + emotional-support system prompt), 100% local
-- **Frontend:** HTML, JavaScript, Tailwind CSS, Chart.js
+- **Frontend:** Streamlit (Python), with the FastAPI backend for persistent data and analysis
 - **Data:** NASA LSDA / OSDR public datasets for hazard context
 
 ## How to Run
@@ -55,7 +56,7 @@ pip install -r requirements.txt
 streamlit run frontend/app.py
 ```
 
-This starts the FastAPI backend (port 5000) inside the Streamlit process and mounts the full console at `http://localhost:8501`.
+This opens the native Streamlit application at `http://localhost:8501`. It starts the FastAPI backend on port 5000 when one is not already running. The Data screen reads the 32 CSV-backed metric datasets from the API; AstroAI and Profile use the same persistent backend.
 
 **Option B — backend + static frontend separately:**
 
@@ -83,7 +84,7 @@ development: see [SI_DISCLOSURE.md](SI_DISCLOSURE.md).
 
 ```bash
 cd backend
-python -m ai.test_ai   # 62 tests: metric thresholds, API endpoints, local LLM
+python -m ai.test_ai   # 65 checks: metric thresholds, API endpoints, local LLM
 ```
 
 ## Team

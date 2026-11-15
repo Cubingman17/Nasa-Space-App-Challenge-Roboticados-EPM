@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,circadian_phase_shift_h,alertness_score_0_100,melatonin_onset_hour,rest_activity_amplitude,risk_level
+23-001,2026-09-01 08:00,AST-001,psychology,chronobiological_rest_alert,0.39,75,22.09,0.842,low
+23-002,2026-09-02 08:00,AST-001,psychology,chronobiological_rest_alert,-0.54,80,21.5,0.811,low
+23-003,2026-09-03 08:00,AST-001,psychology,chronobiological_rest_alert,0.38,75,21.97,0.838,low
+23-004,2026-09-04 08:00,AST-001,psychology,chronobiological_rest_alert,0.38,80,21.79,0.796,low
+23-005,2026-09-05 08:00,AST-001,psychology,chronobiological_rest_alert,0.48,77,22.43,0.852,low
+23-006,2026-09-06 08:00,AST-001,psychology,chronobiological_rest_alert,0.48,73,21.5,0.833,low
+23-007,2026-09-07 08:00,AST-001,psychology,chronobiological_rest_alert,-0.05,70,21.66,0.822,low
+23-008,2026-09-08 08:00,AST-001,psychology,chronobiological_rest_alert,0.41,81,21.57,0.848,low
+23-009,2026-09-09 08:00,AST-001,psychology,chronobiological_rest_alert,0.36,74,21.87,0.734,low
+23-010,2026-09-10 08:00,AST-001,psychology,chronobiological_rest_alert,0.47,72,21.43,0.737,low
+23-011,2026-09-11 08:00,AST-001,psychology,chronobiological_rest_alert,0.37,65,22.18,0.799,low
+23-012,2026-09-12 08:00,AST-001,psychology,chronobiological_rest_alert,0.05,71,22.17,0.78,low
+23-013,2026-09-13 08:00,AST-001,psychology,chronobiological_rest_alert,0.52,72,21.85,0.732,low
+23-014,2026-09-14 08:00,AST-001,psychology,chronobiological_rest_alert,0.64,71,23.11,0.787,low
+23-015,2026-09-15 08:00,AST-001,psychology,chronobiological_rest_alert,0.56,78,21.9,0.802,low
+23-016,2026-09-16 08:00,AST-001,psychology,chronobiological_rest_alert,0.49,81,21.75,0.803,low
+23-017,2026-09-17 08:00,AST-001,psychology,chronobiological_rest_alert,1.14,71,22.03,0.807,low
+23-018,2026-09-18 08:00,AST-001,psychology,chronobiological_rest_alert,1.05,67,22.14,0.741,low
+23-019,2026-09-19 08:00,AST-001,psychology,chronobiological_rest_alert,0.68,69,22.59,0.839,low
+23-020,2026-09-20 08:00,AST-001,psychology,chronobiological_rest_alert,1.73,71,21.8,0.732,low
+23-021,2026-09-21 08:00,AST-001,psychology,chronobiological_rest_alert,1.48,64,22.04,0.744,medium
+23-022,2026-09-22 08:00,AST-001,psychology,chronobiological_rest_alert,1.57,66,22.64,0.815,low
+23-023,2026-09-23 08:00,AST-001,psychology,chronobiological_rest_alert,1.05,73,21.62,0.755,low
+23-024,2026-09-24 08:00,AST-001,psychology,chronobiological_rest_alert,1.09,57,22.43,0.768,medium
+23-025,2026-09-25 08:00,AST-001,psychology,chronobiological_rest_alert,0.69,63,22.0,0.729,medium

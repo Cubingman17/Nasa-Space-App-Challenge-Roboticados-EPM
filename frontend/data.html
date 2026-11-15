@@ -49,74 +49,42 @@
                 <div class="flex items-center gap-3">
                     <span class="text-lg">🤖</span>
                     <p class="text-xs md:text-sm font-medium text-slate-300" id="py-data-ai-advice">
-                        <strong class="text-blue-400">Little AI Advice:</strong> Inspect the five NASA spaceflight hazards or use the corner button to log your measurements.
+                        <strong class="text-blue-400">Data Explorer:</strong> Select one of the four health categories to view its CSV datasets and charts.
                     </p>
                 </div>
                 <button id="btn-back-data" onclick="closeRiskDetail()" class="hidden bg-slate-800 hover:bg-slate-700 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-600">
-                    ← Back to Hazards
+                    ← Back to Categories
                 </button>
             </div>
 
-            <!-- OVERVIEW: THE 5 NASA SPACEFLIGHT HAZARDS -->
-            <div id="data-overview" class="flex-1 flex flex-col justify-between gap-2 min-h-0">
-                <div onclick="openRiskDetail('radiation')" class="risk-card flex-1 border border-rose-500/50 hover:border-rose-400 p-2 md:p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-sm md:text-lg text-rose-400 tracking-wider">☢️ RADIATION</h3>
-                    <span id="py-dot-radiation" class="inline-block w-2.5 h-2.5 rounded-full align-middle ml-2" style="background:#f43f5e" title="Status of this hazard"></span>
-                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-0.5 text-center" id="py-risk-radiation">Risk: HIGH (Chromosomal aberrations - NASA LSDA Dataset)</p>
-                </div>
-
-                <div onclick="openRiskDetail('isolation')" class="risk-card flex-1 border border-violet-500/50 hover:border-violet-400 p-2 md:p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-sm md:text-lg text-violet-400 tracking-wider">🚪 ISOLATION</h3>
-                    <span id="py-dot-isolation" class="inline-block w-2.5 h-2.5 rounded-full align-middle ml-2" style="background:#f59e0b" title="Status of this hazard"></span>
-                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-0.5 text-center" id="py-risk-isolation">Risk: MODERATE (Mood and fatigue decline in confinement)</p>
-                </div>
-
-                <div onclick="openRiskDetail('gravity')" class="risk-card flex-1 border border-amber-500/50 hover:border-amber-400 p-2 md:p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-sm md:text-lg text-amber-400 tracking-wider">🦴 GRAVITY</h3>
-                    <span id="py-dot-gravity" class="inline-block w-2.5 h-2.5 rounded-full align-middle ml-2" style="background:#f59e0b" title="Status of this hazard"></span>
-                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-0.5 text-center" id="py-risk-gravity">Risk: MODERATE (Bone Mineral Density - NASA OSDR Dataset)</p>
-                </div>
-
-                <div onclick="openRiskDetail('environment')" class="risk-card flex-1 border border-emerald-500/50 hover:border-emerald-400 p-2 md:p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-sm md:text-lg text-emerald-400 tracking-wider">🏭 HOSTILE ENV.</h3>
-                    <span id="py-dot-environment" class="inline-block w-2.5 h-2.5 rounded-full align-middle ml-2" style="background:#10b981" title="Status of this hazard"></span>
-                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-0.5 text-center" id="py-risk-environment">Risk: LOW (Cabin CO2, pressure and temperature nominal)</p>
-                </div>
-
-                <div onclick="openRiskDetail('distance')" class="risk-card flex-1 border border-sky-500/50 hover:border-sky-400 p-2 md:p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-sm md:text-lg text-sky-400 tracking-wider">🛰️ DISTANCE</h3>
-                    <span id="py-dot-distance" class="inline-block w-2.5 h-2.5 rounded-full align-middle ml-2" style="background:#f43f5e" title="Status of this hazard"></span>
-                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-0.5 text-center" id="py-risk-distance">Risk: HIGH (Psychomotor vigilance and sleep-related fatigue)</p>
-                </div>
+            <!-- FOUR DATA CATEGORIES -->
+            <div id="data-overview" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-0">
+                <button type="button" onclick="openRiskDetail('radiation')" class="risk-card border border-rose-500/50 hover:border-rose-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-lg md:text-xl text-rose-400 tracking-wider">☢️ RADIATION</h3>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-2" id="category-count-radiation">Loading datasets…</p>
+                </button>
+                <button type="button" onclick="openRiskDetail('microgravity')" class="risk-card border border-amber-500/50 hover:border-amber-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-lg md:text-xl text-amber-400 tracking-wider">🦴 MICROGRAVITY</h3>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-2" id="category-count-microgravity">Loading datasets…</p>
+                </button>
+                <button type="button" onclick="openRiskDetail('psychology')" class="risk-card border border-violet-500/50 hover:border-violet-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-lg md:text-xl text-violet-400 tracking-wider">🧠 PSYCHOLOGY</h3>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-2" id="category-count-psychology">Loading datasets…</p>
+                </button>
+                <button type="button" onclick="openRiskDetail('environment')" class="risk-card border border-emerald-500/50 hover:border-emerald-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-lg md:text-xl text-emerald-400 tracking-wider">🌎 ENVIRONMENT</h3>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-2" id="category-count-environment">Loading datasets…</p>
+                </button>
             </div>
 
-            <!-- DETAIL VIEW -->
-            <div id="data-detail-view" class="hidden flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 min-h-0">
-                <div class="md:col-span-4 ui-card p-5 flex flex-col justify-between overflow-y-auto">
-                    <div>
-                        <span id="detail-badge" class="text-[10px] font-bold uppercase px-2.5 py-1 rounded bg-slate-800 text-slate-300">Official Dataset</span>
-                        <h3 id="detail-title" class="font-extrabold text-lg uppercase mt-3 text-white">RADIATION</h3>
-                        <p class="text-xs font-bold text-slate-400 mt-1">Base information for this data point:</p>
-                        <p id="detail-description" class="text-xs md:text-sm text-slate-300 mt-3 leading-relaxed">
-                            Statistical description of the collected data.
-                        </p>
-                    </div>
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs space-y-1 mt-4">
-                        <p><strong>Pre-Flight Average:</strong> <span id="stat-pre">-</span></p>
-                        <p><strong>In-Flight Average:</strong> <span id="stat-in">-</span></p>
-                        <p><strong>Post-Flight Average:</strong> <span id="stat-post">-</span></p>
-                    </div>
+            <!-- CATEGORY DATASETS AND GENERATED CHARTS -->
+            <div id="data-detail-view" class="hidden flex flex-1 flex-col min-h-0 overflow-hidden">
+                <div class="mb-3 shrink-0">
+                    <h3 id="detail-title" class="font-extrabold text-lg uppercase text-white"></h3>
+                    <p id="detail-description" class="text-xs md:text-sm text-slate-400 mt-1"></p>
+                    <p id="dataset-load-status" class="text-xs text-slate-400 mt-2"></p>
                 </div>
-
-                <div id="detail-chart-container" class="md:col-span-8 rounded-2xl p-5 flex flex-col justify-between border border-slate-700 bg-slate-900/90">
-                    <div class="flex items-center justify-between mb-2">
-                        <h4 class="font-extrabold text-sm uppercase text-white">Comparison by Mission Stage</h4>
-                        <span class="text-xs text-slate-400">Source: NASA OSDR / LSDA</span>
-                    </div>
-                    <div class="flex-1 relative min-h-0">
-                        <canvas id="riskDetailChart"></canvas>
-                    </div>
-                </div>
+                <div id="metric-datasets" class="flex-1 overflow-y-auto space-y-4 pr-1"></div>
             </div>
 
             <!-- FLOATING BUTTON, BOTTOM RIGHT CORNER -->

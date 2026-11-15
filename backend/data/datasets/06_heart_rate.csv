@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,heart_rate_bpm,resting_hr_bpm,risk_level
+06-001,2026-09-01 08:00,AST-001,microgravity,heart_rate,72,59,low
+06-002,2026-09-02 08:00,AST-001,microgravity,heart_rate,76,65,low
+06-003,2026-09-03 08:00,AST-001,microgravity,heart_rate,63,62,low
+06-004,2026-09-04 08:00,AST-001,microgravity,heart_rate,81,68,low
+06-005,2026-09-05 08:00,AST-001,microgravity,heart_rate,71,63,low
+06-006,2026-09-06 08:00,AST-001,microgravity,heart_rate,67,61,low
+06-007,2026-09-07 08:00,AST-001,microgravity,heart_rate,71,65,low
+06-008,2026-09-08 08:00,AST-001,microgravity,heart_rate,68,57,low
+06-009,2026-09-09 08:00,AST-001,microgravity,heart_rate,72,61,low
+06-010,2026-09-10 08:00,AST-001,microgravity,heart_rate,68,69,low
+06-011,2026-09-11 08:00,AST-001,microgravity,heart_rate,66,63,low
+06-012,2026-09-12 08:00,AST-001,microgravity,heart_rate,71,59,low
+06-013,2026-09-13 08:00,AST-001,microgravity,heart_rate,75,62,low
+06-014,2026-09-14 08:00,AST-001,microgravity,heart_rate,70,57,low
+06-015,2026-09-15 08:00,AST-001,microgravity,heart_rate,80,64,low
+06-016,2026-09-16 08:00,AST-001,microgravity,heart_rate,70,59,low
+06-017,2026-09-17 08:00,AST-001,microgravity,heart_rate,77,61,low
+06-018,2026-09-18 08:00,AST-001,microgravity,heart_rate,65,56,low
+06-019,2026-09-19 08:00,AST-001,microgravity,heart_rate,66,70,low
+06-020,2026-09-20 08:00,AST-001,microgravity,heart_rate,69,66,low
+06-021,2026-09-21 08:00,AST-001,microgravity,heart_rate,69,67,low
+06-022,2026-09-22 08:00,AST-001,microgravity,heart_rate,80,66,low
+06-023,2026-09-23 08:00,AST-001,microgravity,heart_rate,76,68,low
+06-024,2026-09-24 08:00,AST-001,microgravity,heart_rate,83,65,low
+06-025,2026-09-25 08:00,AST-001,microgravity,heart_rate,65,61,low

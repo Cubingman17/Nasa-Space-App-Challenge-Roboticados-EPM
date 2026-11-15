@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,weight_kg,bmi,waist_cm,calf_circumference_cm,thigh_circumference_cm,risk_level
+30-001,2026-09-01 08:00,AST-001,microgravity,anthropometry_body_mass,74.9,23.64,82.1,37.3,56.3,low
+30-002,2026-09-08 08:00,AST-001,microgravity,anthropometry_body_mass,74.7,23.61,81.8,37.2,56.7,low
+30-003,2026-09-15 08:00,AST-001,microgravity,anthropometry_body_mass,75.3,23.79,81.1,36.7,55.8,low
+30-004,2026-09-22 08:00,AST-001,microgravity,anthropometry_body_mass,74.6,23.48,81.7,37.2,56.2,low
+30-005,2026-09-29 08:00,AST-001,microgravity,anthropometry_body_mass,74.8,23.25,82.1,37.0,55.9,low
+30-006,2026-10-06 08:00,AST-001,microgravity,anthropometry_body_mass,74.6,23.59,81.5,36.6,56.0,low
+30-007,2026-10-13 08:00,AST-001,microgravity,anthropometry_body_mass,74.7,23.48,81.6,36.3,55.1,low
+30-008,2026-10-20 08:00,AST-001,microgravity,anthropometry_body_mass,74.2,23.44,82.1,36.1,55.8,low
+30-009,2026-10-27 08:00,AST-001,microgravity,anthropometry_body_mass,74.3,23.14,82.8,36.7,55.8,low
+30-010,2026-11-03 08:00,AST-001,microgravity,anthropometry_body_mass,75.3,23.19,81.4,37.0,54.9,low
+30-011,2026-11-10 08:00,AST-001,microgravity,anthropometry_body_mass,74.2,23.26,82.1,36.6,55.0,low
+30-012,2026-11-17 08:00,AST-001,microgravity,anthropometry_body_mass,74.5,23.35,81.0,36.2,55.1,low
+30-013,2026-11-24 08:00,AST-001,microgravity,anthropometry_body_mass,73.5,23.36,81.3,36.3,54.8,low
+30-014,2026-12-01 08:00,AST-001,microgravity,anthropometry_body_mass,73.8,23.4,81.8,35.9,54.8,low
+30-015,2026-12-08 08:00,AST-001,microgravity,anthropometry_body_mass,74.1,23.08,81.1,36.0,54.6,low
+30-016,2026-12-15 08:00,AST-001,microgravity,anthropometry_body_mass,73.8,23.07,81.9,36.2,54.7,low
+30-017,2026-12-22 08:00,AST-001,microgravity,anthropometry_body_mass,73.9,23.3,81.0,35.7,54.8,low
+30-018,2026-12-29 08:00,AST-001,microgravity,anthropometry_body_mass,73.0,23.32,80.6,36.1,55.5,low
+30-019,2027-01-05 08:00,AST-001,microgravity,anthropometry_body_mass,73.8,22.97,80.9,36.0,54.8,low
+30-020,2027-01-12 08:00,AST-001,microgravity,anthropometry_body_mass,74.0,23.0,80.5,36.3,55.2,low
+30-021,2027-01-19 08:00,AST-001,microgravity,anthropometry_body_mass,73.2,23.12,81.2,35.6,54.7,low
+30-022,2027-01-26 08:00,AST-001,microgravity,anthropometry_body_mass,72.8,22.88,80.7,36.0,54.8,low
+30-023,2027-02-02 08:00,AST-001,microgravity,anthropometry_body_mass,72.6,22.81,81.1,36.0,54.7,low
+30-024,2027-02-09 08:00,AST-001,microgravity,anthropometry_body_mass,72.2,23.12,81.9,36.3,54.8,low
+30-025,2027-02-16 08:00,AST-001,microgravity,anthropometry_body_mass,73.3,22.8,81.1,35.5,54.5,low

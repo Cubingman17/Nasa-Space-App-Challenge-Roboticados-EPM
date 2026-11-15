@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,absorbed_dose_mGy,dose_equivalent_mSv,badge_id_position,risk_level
+02-001,2026-09-01 08:00,AST-001,radiation,passive_radiation_dosimetry,0.212,0.755,NODE-2,low
+02-002,2026-09-02 08:00,AST-001,radiation,passive_radiation_dosimetry,0.318,0.665,US-LAB,low
+02-003,2026-09-03 08:00,AST-001,radiation,passive_radiation_dosimetry,0.302,0.519,NODE-2,low
+02-004,2026-09-04 08:00,AST-001,radiation,passive_radiation_dosimetry,0.192,0.89,COLUMBUS,low
+02-005,2026-09-05 08:00,AST-001,radiation,passive_radiation_dosimetry,0.283,0.627,CREW-QTR,low
+02-006,2026-09-06 08:00,AST-001,radiation,passive_radiation_dosimetry,0.325,0.588,COLUMBUS,low
+02-007,2026-09-07 08:00,AST-001,radiation,passive_radiation_dosimetry,0.321,0.534,CREW-QTR,low
+02-008,2026-09-08 08:00,AST-001,radiation,passive_radiation_dosimetry,0.258,0.727,NODE-2,low
+02-009,2026-09-09 08:00,AST-001,radiation,passive_radiation_dosimetry,0.179,0.592,CREW-QTR,low
+02-010,2026-09-10 08:00,AST-001,radiation,passive_radiation_dosimetry,0.301,0.598,US-LAB,low
+02-011,2026-09-11 08:00,AST-001,radiation,passive_radiation_dosimetry,0.318,0.554,US-LAB,low
+02-012,2026-09-12 08:00,AST-001,radiation,passive_radiation_dosimetry,0.263,0.691,US-LAB,low
+02-013,2026-09-13 08:00,AST-001,radiation,passive_radiation_dosimetry,0.398,0.62,CREW-QTR,low
+02-014,2026-09-14 08:00,AST-001,radiation,passive_radiation_dosimetry,0.345,0.591,COLUMBUS,low
+02-015,2026-09-15 08:00,AST-001,radiation,passive_radiation_dosimetry,0.366,0.794,CREW-QTR,low
+02-016,2026-09-16 08:00,AST-001,radiation,passive_radiation_dosimetry,0.272,0.59,CREW-QTR,low
+02-017,2026-09-17 08:00,AST-001,radiation,passive_radiation_dosimetry,0.413,0.571,US-LAB,low
+02-018,2026-09-18 08:00,AST-001,radiation,passive_radiation_dosimetry,0.324,0.737,CREW-QTR,low
+02-019,2026-09-19 08:00,AST-001,radiation,passive_radiation_dosimetry,0.372,0.724,CREW-QTR,low
+02-020,2026-09-20 08:00,AST-001,radiation,passive_radiation_dosimetry,0.385,0.65,COLUMBUS,low
+02-021,2026-09-21 08:00,AST-001,radiation,passive_radiation_dosimetry,0.364,0.752,COLUMBUS,low
+02-022,2026-09-22 08:00,AST-001,radiation,passive_radiation_dosimetry,0.317,0.875,NODE-2,low
+02-023,2026-09-23 08:00,AST-001,radiation,passive_radiation_dosimetry,0.44,0.624,COLUMBUS,low
+02-024,2026-09-24 08:00,AST-001,radiation,passive_radiation_dosimetry,0.317,0.579,US-LAB,low
+02-025,2026-09-25 08:00,AST-001,radiation,passive_radiation_dosimetry,0.274,0.726,CREW-QTR,low

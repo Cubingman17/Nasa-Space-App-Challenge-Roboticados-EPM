@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,bacteria_cfu_per_100cm2,fungi_cfu_per_100cm2,sample_site_id,risk_level
+19-001,2026-09-01 08:00,AST-001,environment,station_surface_microbiology,13,4,SLEEP-QTR,low
+19-002,2026-09-04 08:00,AST-001,environment,station_surface_microbiology,27,5,US-LAB,low
+19-003,2026-09-07 08:00,AST-001,environment,station_surface_microbiology,32,8,US-LAB,low
+19-004,2026-09-10 08:00,AST-001,environment,station_surface_microbiology,14,3,EXERCISE,low
+19-005,2026-09-13 08:00,AST-001,environment,station_surface_microbiology,5,11,SLEEP-QTR,low
+19-006,2026-09-16 08:00,AST-001,environment,station_surface_microbiology,18,10,GALLEY,low
+19-007,2026-09-19 08:00,AST-001,environment,station_surface_microbiology,30,6,EXERCISE,low
+19-008,2026-09-22 08:00,AST-001,environment,station_surface_microbiology,29,9,US-LAB,low
+19-009,2026-09-25 08:00,AST-001,environment,station_surface_microbiology,11,11,US-LAB,low
+19-010,2026-09-28 08:00,AST-001,environment,station_surface_microbiology,29,6,WCS,low
+19-011,2026-10-01 08:00,AST-001,environment,station_surface_microbiology,29,10,SLEEP-QTR,low
+19-012,2026-10-04 08:00,AST-001,environment,station_surface_microbiology,21,13,WCS,low
+19-013,2026-10-07 08:00,AST-001,environment,station_surface_microbiology,59,13,GALLEY,medium
+19-014,2026-10-10 08:00,AST-001,environment,station_surface_microbiology,32,4,US-LAB,low
+19-015,2026-10-13 08:00,AST-001,environment,station_surface_microbiology,25,11,US-LAB,low
+19-016,2026-10-16 08:00,AST-001,environment,station_surface_microbiology,27,10,WCS,low
+19-017,2026-10-19 08:00,AST-001,environment,station_surface_microbiology,32,11,US-LAB,low
+19-018,2026-10-22 08:00,AST-001,environment,station_surface_microbiology,38,9,SLEEP-QTR,low
+19-019,2026-10-25 08:00,AST-001,environment,station_surface_microbiology,23,12,WCS,low
+19-020,2026-10-28 08:00,AST-001,environment,station_surface_microbiology,30,13,SLEEP-QTR,low
+19-021,2026-10-31 08:00,AST-001,environment,station_surface_microbiology,26,10,SLEEP-QTR,low
+19-022,2026-11-03 08:00,AST-001,environment,station_surface_microbiology,34,11,US-LAB,low
+19-023,2026-11-06 08:00,AST-001,environment,station_surface_microbiology,26,13,EXERCISE,low
+19-024,2026-11-09 08:00,AST-001,environment,station_surface_microbiology,29,10,SLEEP-QTR,low
+19-025,2026-11-12 08:00,AST-001,environment,station_surface_microbiology,21,15,US-LAB,low

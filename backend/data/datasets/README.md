@@ -1,65 +1,49 @@
-# Metric CSV datasets
+# Astronaut health CSV datasets
 
-Keep one UTF-8 CSV file per metric in this directory. Use the stable metric ID
-from `backend/data/metrics.py` in each filename: `metric_01.csv` through
-`metric_32.csv`.
+This directory contains one source CSV for each of the 32 metric IDs in
+`backend/data/metrics.py`. File prefixes map to IDs (`01_...csv` is metric 1,
+`32_...csv` is metric 32); the `metric` and `category` columns are validated
+against that catalog during import.
 
-## Required format
+## Source row format
 
-Each file must contain exactly one time series with these required columns:
-
-```csv
-timestamp,value
-2026-01-01T00:00:00Z,12.5
-2026-01-01T01:00:00Z,12.7
-```
-
-- `timestamp`: ISO 8601 date/time. Include `Z` or a UTC offset; date-only and
-  timezone-naive ISO dates are interpreted as UTC.
-- `value`: finite numeric value, expressed in the unit defined for that metric
-  in `backend/data/metrics.py`.
-- Timestamps must be unique within a file. Rows may be in any order; the
-  importer sorts them.
-- Keep the metric ID, unit, sampling interval, and value meaning consistent
-  throughout each file. Do not add calculated risk labels or fabricated
-  astronaut profile fields.
-
-The metric catalog is the source of truth for IDs, categories, names, and
-units. A CSV is associated with its metric by its stable ID, not by a guessed
-name in the CSV.
-
-| File | Metric |
-| --- | --- |
-| `metric_01.csv`–`metric_02.csv` | Active and passive radiation dosimetry |
-| `metric_03.csv`–`metric_15.csv` | Blood pressure, cardiac, ocular, bone, and biochemical metrics |
-| `metric_16.csv`–`metric_21.csv` | Cabin and microbiological environment metrics |
-| `metric_22.csv`–`metric_25.csv` | Sleep, chronobiology, reaction time, and well-being |
-| `metric_26.csv`–`metric_32.csv` | SpO2, HRV, temperature, body composition, and balance metrics |
-
-## Import and query
-
-Send each file's contents to:
+The supplied files are wide tables. Each row represents one recorded
+observation and contains these shared columns:
 
 ```text
-POST /api/data/metrics/{metric_id}/csv?astronaut_id=A
-Content-Type: text/csv
+measurement_id,date,astronaut_id,category,metric
 ```
 
-The importer validates the full file before saving. By default, importing the
-same astronaut/metric again replaces that time series, so re-imports do not
-duplicate points. To read the series:
+The remaining columns are measurements or source labels specific to that CSV.
+For example, active radiation includes dose rate, cumulative dose, particle
+flux, and risk level. All fields are retained in the database; finite numeric
+fields become graph series, while text labels remain available in the raw
+observation. Dates are stored as UTC; timezone-naive dates in the supplied
+files are interpreted as UTC.
 
-```text
-GET /api/data/metrics/{metric_id}/observations?astronaut_id=A
-```
+## Import all 32 files
 
-To load all 32 files from this directory into SQLite in one database
-transaction, run from the `backend` directory:
+Run from the `backend` directory:
 
 ```bash
-python -m services.import_datasets --astronaut-id A
+python -m services.import_datasets
 ```
 
-The database stores every point in the shared `measurements` table, keyed by
-astronaut, metric, and timestamp. It does not create a separate database table
-for each CSV.
+The importer requires exactly one numbered CSV for each ID, validates all
+files before changing measurement rows, and then replaces the matching metric
+records in one transaction. Imported observations keep their astronaut IDs and
+are marked with the source `synthetic_csv`.
+
+## API
+
+- `GET /api/data` lists the four categories and counts for their metrics.
+- `GET /api/data/{category}` lists the metrics in one category.
+- `GET /api/data/metrics/{id}/observations` returns raw rows and a numeric
+  time series for every measurement column. Add `?astronaut_id=AST-001` to
+  filter by astronaut.
+- `POST /api/data/metrics/{id}/csv` imports one wide CSV; send the CSV bytes as
+  the request body.
+
+SQLite uses one normalized `measurements` table keyed by astronaut, metric, and
+source record ID. The variable measurement columns are stored as JSON so the
+32 CSVs can keep their different schemas without losing fields.

@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,mean_hr_bpm,max_hr_bpm,min_hr_bpm,ectopic_beats_24h,risk_level
+08-001,2026-09-01 08:00,AST-001,microgravity,ecg_holter_ambulatory,64,129,49,15,low
+08-002,2026-09-02 08:00,AST-001,microgravity,ecg_holter_ambulatory,65,116,53,15,low
+08-003,2026-09-03 08:00,AST-001,microgravity,ecg_holter_ambulatory,71,136,55,5,low
+08-004,2026-09-04 08:00,AST-001,microgravity,ecg_holter_ambulatory,71,121,58,2,low
+08-005,2026-09-05 08:00,AST-001,microgravity,ecg_holter_ambulatory,76,137,49,18,low
+08-006,2026-09-06 08:00,AST-001,microgravity,ecg_holter_ambulatory,69,139,59,3,low
+08-007,2026-09-07 08:00,AST-001,microgravity,ecg_holter_ambulatory,75,133,49,14,low
+08-008,2026-09-08 08:00,AST-001,microgravity,ecg_holter_ambulatory,67,130,56,12,low
+08-009,2026-09-09 08:00,AST-001,microgravity,ecg_holter_ambulatory,69,118,59,16,low
+08-010,2026-09-10 08:00,AST-001,microgravity,ecg_holter_ambulatory,74,125,54,15,low
+08-011,2026-09-11 08:00,AST-001,microgravity,ecg_holter_ambulatory,78,124,56,24,low
+08-012,2026-09-12 08:00,AST-001,microgravity,ecg_holter_ambulatory,77,116,56,15,low
+08-013,2026-09-13 08:00,AST-001,microgravity,ecg_holter_ambulatory,73,139,48,0,low
+08-014,2026-09-14 08:00,AST-001,microgravity,ecg_holter_ambulatory,75,127,56,23,low
+08-015,2026-09-15 08:00,AST-001,microgravity,ecg_holter_ambulatory,67,114,50,18,low
+08-016,2026-09-16 08:00,AST-001,microgravity,ecg_holter_ambulatory,63,122,52,9,low
+08-017,2026-09-17 08:00,AST-001,microgravity,ecg_holter_ambulatory,74,121,46,13,low
+08-018,2026-09-18 08:00,AST-001,microgravity,ecg_holter_ambulatory,64,155,47,2,low
+08-019,2026-09-19 08:00,AST-001,microgravity,ecg_holter_ambulatory,71,118,49,20,low
+08-020,2026-09-20 08:00,AST-001,microgravity,ecg_holter_ambulatory,76,135,50,15,low
+08-021,2026-09-21 08:00,AST-001,microgravity,ecg_holter_ambulatory,78,122,53,19,low
+08-022,2026-09-22 08:00,AST-001,microgravity,ecg_holter_ambulatory,71,141,51,19,low
+08-023,2026-09-23 08:00,AST-001,microgravity,ecg_holter_ambulatory,69,131,51,20,low
+08-024,2026-09-24 08:00,AST-001,microgravity,ecg_holter_ambulatory,73,154,56,17,low
+08-025,2026-09-25 08:00,AST-001,microgravity,ecg_holter_ambulatory,74,131,60,13,low

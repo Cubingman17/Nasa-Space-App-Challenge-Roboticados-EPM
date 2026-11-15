@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,dose_rate_uSv_h,cumulative_dose_mSv,particle_flux_cm2_s,risk_level
+01-001,2026-09-01 08:00,AST-001,radiation,active_radiation_dosimetry,0.438,0.252,3.11,low
+01-002,2026-09-02 08:00,AST-001,radiation,active_radiation_dosimetry,0.474,0.525,4.01,low
+01-003,2026-09-03 08:00,AST-001,radiation,active_radiation_dosimetry,0.481,0.785,3.08,low
+01-004,2026-09-04 08:00,AST-001,radiation,active_radiation_dosimetry,0.511,1.05,3.29,low
+01-005,2026-09-05 08:00,AST-001,radiation,active_radiation_dosimetry,0.511,1.322,3.29,low
+01-006,2026-09-06 08:00,AST-001,radiation,active_radiation_dosimetry,0.406,1.59,3.14,low
+01-007,2026-09-07 08:00,AST-001,radiation,active_radiation_dosimetry,0.466,1.87,3.2,low
+01-008,2026-09-08 08:00,AST-001,radiation,active_radiation_dosimetry,0.441,2.116,2.83,low
+01-009,2026-09-09 08:00,AST-001,radiation,active_radiation_dosimetry,0.537,2.359,3.15,low
+01-010,2026-09-10 08:00,AST-001,radiation,active_radiation_dosimetry,0.596,2.628,3.83,low
+01-011,2026-09-11 08:00,AST-001,radiation,active_radiation_dosimetry,0.516,2.894,2.53,low
+01-012,2026-09-12 08:00,AST-001,radiation,active_radiation_dosimetry,0.55,3.161,3.21,low
+01-013,2026-09-13 08:00,AST-001,radiation,active_radiation_dosimetry,0.528,3.444,2.69,low
+01-014,2026-09-14 08:00,AST-001,radiation,active_radiation_dosimetry,0.367,3.684,2.94,low
+01-015,2026-09-15 08:00,AST-001,radiation,active_radiation_dosimetry,0.488,3.926,3.73,low
+01-016,2026-09-16 08:00,AST-001,radiation,active_radiation_dosimetry,0.485,4.178,3.55,low
+01-017,2026-09-17 08:00,AST-001,radiation,active_radiation_dosimetry,0.433,4.435,2.97,low
+01-018,2026-09-18 08:00,AST-001,radiation,active_radiation_dosimetry,0.501,4.722,3.72,low
+01-019,2026-09-19 08:00,AST-001,radiation,active_radiation_dosimetry,0.422,4.969,2.8,low
+01-020,2026-09-20 08:00,AST-001,radiation,active_radiation_dosimetry,0.483,5.227,3.06,low
+01-021,2026-09-21 08:00,AST-001,radiation,active_radiation_dosimetry,0.606,5.494,3.32,medium
+01-022,2026-09-22 08:00,AST-001,radiation,active_radiation_dosimetry,0.432,5.772,2.49,low
+01-023,2026-09-23 08:00,AST-001,radiation,active_radiation_dosimetry,0.499,6.026,3.51,low
+01-024,2026-09-24 08:00,AST-001,radiation,active_radiation_dosimetry,0.492,6.314,3.73,low
+01-025,2026-09-25 08:00,AST-001,radiation,active_radiation_dosimetry,0.55,6.586,3.1,low

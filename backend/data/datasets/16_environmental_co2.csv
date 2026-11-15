@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,co2_ppm,co2_mmHg,risk_level
+16-001,2026-09-01 08:00,AST-001,environment,environmental_co2,3236,2.44,low
+16-002,2026-09-02 08:00,AST-001,environment,environmental_co2,2659,2.34,low
+16-003,2026-09-03 08:00,AST-001,environment,environmental_co2,3369,2.62,low
+16-004,2026-09-04 08:00,AST-001,environment,environmental_co2,3549,2.75,low
+16-005,2026-09-05 08:00,AST-001,environment,environmental_co2,3457,2.55,low
+16-006,2026-09-06 08:00,AST-001,environment,environmental_co2,3285,2.29,low
+16-007,2026-09-07 08:00,AST-001,environment,environmental_co2,3279,2.39,low
+16-008,2026-09-08 08:00,AST-001,environment,environmental_co2,3388,2.45,low
+16-009,2026-09-09 08:00,AST-001,environment,environmental_co2,3572,2.78,low
+16-010,2026-09-10 08:00,AST-001,environment,environmental_co2,3266,2.64,low
+16-011,2026-09-11 08:00,AST-001,environment,environmental_co2,3311,2.57,low
+16-012,2026-09-12 08:00,AST-001,environment,environmental_co2,3349,2.77,low
+16-013,2026-09-13 08:00,AST-001,environment,environmental_co2,3583,2.36,low
+16-014,2026-09-14 08:00,AST-001,environment,environmental_co2,3628,2.5,low
+16-015,2026-09-15 08:00,AST-001,environment,environmental_co2,3581,2.45,low
+16-016,2026-09-16 08:00,AST-001,environment,environmental_co2,3495,2.88,low
+16-017,2026-09-17 08:00,AST-001,environment,environmental_co2,3775,2.46,low
+16-018,2026-09-18 08:00,AST-001,environment,environmental_co2,3385,2.63,low
+16-019,2026-09-19 08:00,AST-001,environment,environmental_co2,3740,2.77,low
+16-020,2026-09-20 08:00,AST-001,environment,environmental_co2,3588,2.85,low
+16-021,2026-09-21 08:00,AST-001,environment,environmental_co2,4195,2.77,low
+16-022,2026-09-22 08:00,AST-001,environment,environmental_co2,3215,2.73,low
+16-023,2026-09-23 08:00,AST-001,environment,environmental_co2,3781,2.55,low
+16-024,2026-09-24 08:00,AST-001,environment,environmental_co2,3684,2.95,low
+16-025,2026-09-25 08:00,AST-001,environment,environmental_co2,3924,2.83,low

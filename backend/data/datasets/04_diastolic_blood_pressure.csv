@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,diastolic_mmHg,risk_level
+04-001,2026-09-01 08:00,AST-001,microgravity,diastolic_blood_pressure,80,low
+04-002,2026-09-02 08:00,AST-001,microgravity,diastolic_blood_pressure,82,low
+04-003,2026-09-03 08:00,AST-001,microgravity,diastolic_blood_pressure,78,low
+04-004,2026-09-04 08:00,AST-001,microgravity,diastolic_blood_pressure,75,low
+04-005,2026-09-05 08:00,AST-001,microgravity,diastolic_blood_pressure,75,low
+04-006,2026-09-06 08:00,AST-001,microgravity,diastolic_blood_pressure,75,low
+04-007,2026-09-07 08:00,AST-001,microgravity,diastolic_blood_pressure,69,low
+04-008,2026-09-08 08:00,AST-001,microgravity,diastolic_blood_pressure,79,low
+04-009,2026-09-09 08:00,AST-001,microgravity,diastolic_blood_pressure,78,low
+04-010,2026-09-10 08:00,AST-001,microgravity,diastolic_blood_pressure,75,low
+04-011,2026-09-11 08:00,AST-001,microgravity,diastolic_blood_pressure,76,low
+04-012,2026-09-12 08:00,AST-001,microgravity,diastolic_blood_pressure,79,low
+04-013,2026-09-13 08:00,AST-001,microgravity,diastolic_blood_pressure,81,low
+04-014,2026-09-14 08:00,AST-001,microgravity,diastolic_blood_pressure,78,low
+04-015,2026-09-15 08:00,AST-001,microgravity,diastolic_blood_pressure,76,low
+04-016,2026-09-16 08:00,AST-001,microgravity,diastolic_blood_pressure,80,low
+04-017,2026-09-17 08:00,AST-001,microgravity,diastolic_blood_pressure,70,low
+04-018,2026-09-18 08:00,AST-001,microgravity,diastolic_blood_pressure,82,low
+04-019,2026-09-19 08:00,AST-001,microgravity,diastolic_blood_pressure,81,low
+04-020,2026-09-20 08:00,AST-001,microgravity,diastolic_blood_pressure,77,low
+04-021,2026-09-21 08:00,AST-001,microgravity,diastolic_blood_pressure,77,low
+04-022,2026-09-22 08:00,AST-001,microgravity,diastolic_blood_pressure,83,low
+04-023,2026-09-23 08:00,AST-001,microgravity,diastolic_blood_pressure,82,low
+04-024,2026-09-24 08:00,AST-001,microgravity,diastolic_blood_pressure,78,low
+04-025,2026-09-25 08:00,AST-001,microgravity,diastolic_blood_pressure,82,low

@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,heart_rate_bpm,pr_interval_ms,qrs_duration_ms,qtc_interval_ms,risk_level
+07-001,2026-09-01 08:00,AST-001,microgravity,ecg_standard_12_lead,60,160,95,411,low
+07-002,2026-09-04 08:00,AST-001,microgravity,ecg_standard_12_lead,62,171,93,424,low
+07-003,2026-09-07 08:00,AST-001,microgravity,ecg_standard_12_lead,78,149,100,422,low
+07-004,2026-09-10 08:00,AST-001,microgravity,ecg_standard_12_lead,65,155,88,415,low
+07-005,2026-09-13 08:00,AST-001,microgravity,ecg_standard_12_lead,69,162,88,399,low
+07-006,2026-09-16 08:00,AST-001,microgravity,ecg_standard_12_lead,67,166,88,441,low
+07-007,2026-09-19 08:00,AST-001,microgravity,ecg_standard_12_lead,69,160,99,421,low
+07-008,2026-09-22 08:00,AST-001,microgravity,ecg_standard_12_lead,67,154,90,421,low
+07-009,2026-09-25 08:00,AST-001,microgravity,ecg_standard_12_lead,62,166,92,425,low
+07-010,2026-09-28 08:00,AST-001,microgravity,ecg_standard_12_lead,66,172,94,397,low
+07-011,2026-10-01 08:00,AST-001,microgravity,ecg_standard_12_lead,67,152,81,419,low
+07-012,2026-10-04 08:00,AST-001,microgravity,ecg_standard_12_lead,65,140,98,434,low
+07-013,2026-10-07 08:00,AST-001,microgravity,ecg_standard_12_lead,65,159,90,432,low
+07-014,2026-10-10 08:00,AST-001,microgravity,ecg_standard_12_lead,65,158,89,415,low
+07-015,2026-10-13 08:00,AST-001,microgravity,ecg_standard_12_lead,62,168,99,406,low
+07-016,2026-10-16 08:00,AST-001,microgravity,ecg_standard_12_lead,74,168,98,402,low
+07-017,2026-10-19 08:00,AST-001,microgravity,ecg_standard_12_lead,74,160,96,425,low
+07-018,2026-10-22 08:00,AST-001,microgravity,ecg_standard_12_lead,62,158,98,416,low
+07-019,2026-10-25 08:00,AST-001,microgravity,ecg_standard_12_lead,63,170,81,421,low
+07-020,2026-10-28 08:00,AST-001,microgravity,ecg_standard_12_lead,61,160,100,419,low
+07-021,2026-10-31 08:00,AST-001,microgravity,ecg_standard_12_lead,67,170,92,415,low
+07-022,2026-11-03 08:00,AST-001,microgravity,ecg_standard_12_lead,77,165,94,440,low
+07-023,2026-11-06 08:00,AST-001,microgravity,ecg_standard_12_lead,68,165,87,436,low
+07-024,2026-11-09 08:00,AST-001,microgravity,ecg_standard_12_lead,65,162,88,419,low
+07-025,2026-11-12 08:00,AST-001,microgravity,ecg_standard_12_lead,71,156,83,441,low

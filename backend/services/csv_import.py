@@ -13,6 +13,13 @@ except ModuleNotFoundError:
 
 
 MAX_ROWS_PER_FILE = 100_000
+REQUIRED_COLUMNS = {
+    "measurement_id",
+    "date",
+    "astronaut_id",
+    "category",
+    "metric",
+}
 
 
 class CSVValidationError(ValueError):
@@ -23,8 +30,41 @@ class SeriesConflictError(ValueError):
     pass
 
 
-def parse_metric_csv(content: str) -> list[tuple[datetime, float]]:
-    """Parse the canonical timestamp,value CSV format for a single metric."""
+def _parse_timestamp(value: str, row_number: int) -> datetime:
+    try:
+        timestamp = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+    except ValueError as error:
+        raise CSVValidationError(
+            f"Row {row_number} has an invalid ISO 8601 date"
+        ) from error
+    if timestamp.tzinfo is None:
+        timestamp = timestamp.replace(tzinfo=timezone.utc)
+    return timestamp.astimezone(timezone.utc)
+
+
+def _parse_cell(value: str | None, row_number: int, column: str) -> object:
+    if value is None or not value.strip():
+        return None
+    text = value.strip()
+    try:
+        number = float(text)
+    except ValueError:
+        return text
+    if not math.isfinite(number):
+        raise CSVValidationError(
+            f"Row {row_number}, column {column!r} has a non-finite number"
+        )
+    if number.is_integer():
+        return int(number)
+    return number
+
+
+def parse_metric_csv(
+    content: str,
+    expected_category: str,
+    expected_metric_key: str,
+) -> list[dict]:
+    """Parse one of the supplied wide-format CSV files without dropping fields."""
     if not content.strip():
         raise CSVValidationError("CSV is empty")
 
@@ -40,13 +80,21 @@ def parse_metric_csv(content: str) -> list[tuple[datetime, float]]:
         raise CSVValidationError("CSV column names cannot be blank")
     if len(set(normalized_headers)) != len(normalized_headers):
         raise CSVValidationError("CSV contains duplicate column names")
-    if not {"timestamp", "value"}.issubset(normalized_headers):
-        raise CSVValidationError("CSV must contain timestamp and value columns")
+    missing = REQUIRED_COLUMNS - set(normalized_headers)
+    if missing:
+        raise CSVValidationError(
+            "CSV is missing required columns: " + ", ".join(sorted(missing))
+        )
 
-    timestamp_column = reader.fieldnames[normalized_headers.index("timestamp")]
-    value_column = reader.fieldnames[normalized_headers.index("value")]
-    points: list[tuple[datetime, float]] = []
-    timestamps: set[datetime] = set()
+    columns = dict(zip(normalized_headers, reader.fieldnames))
+    variable_columns = [
+        (header, columns[header])
+        for header in normalized_headers
+        if header not in REQUIRED_COLUMNS
+    ]
+    records: list[dict] = []
+    seen_record_ids: set[tuple[str, str]] = set()
+    metric_key: str | None = None
 
     for row_number, row in enumerate(reader, start=2):
         if row_number > MAX_ROWS_PER_FILE + 1:
@@ -56,95 +104,114 @@ def parse_metric_csv(content: str) -> list[tuple[datetime, float]]:
         if None in row:
             raise CSVValidationError(f"Row {row_number} has too many columns")
 
-        raw_timestamp = (row.get(timestamp_column) or "").strip()
-        raw_value = (row.get(value_column) or "").strip()
-        if not raw_timestamp or not raw_value:
+        record_id = (row.get(columns["measurement_id"]) or "").strip()
+        astronaut_id = (row.get(columns["astronaut_id"]) or "").strip()
+        category = (row.get(columns["category"]) or "").strip().lower()
+        current_metric_key = (row.get(columns["metric"]) or "").strip()
+        if not record_id or not astronaut_id or not current_metric_key:
             raise CSVValidationError(
-                f"Row {row_number} must have timestamp and value"
+                f"Row {row_number} needs measurement_id, astronaut_id, and metric"
+            )
+        if len(record_id) > 120 or len(astronaut_id) > 64:
+            raise CSVValidationError(
+                f"Row {row_number} has an ID longer than the supported limit"
+            )
+        if category != expected_category:
+            raise CSVValidationError(
+                f"Row {row_number} category {category!r} does not match "
+                f"catalog category {expected_category!r}"
+            )
+        if current_metric_key != expected_metric_key:
+            raise CSVValidationError(
+                f"Row {row_number} metric {current_metric_key!r} does not match "
+                f"catalog dataset key {expected_metric_key!r}"
+            )
+        if metric_key is None:
+            metric_key = current_metric_key
+        elif current_metric_key != metric_key:
+            raise CSVValidationError(
+                f"Row {row_number} metric does not match the rest of this file"
             )
 
-        try:
-            timestamp = datetime.fromisoformat(raw_timestamp.replace("Z", "+00:00"))
-        except ValueError as error:
+        record_key = (astronaut_id, record_id)
+        if record_key in seen_record_ids:
             raise CSVValidationError(
-                f"Row {row_number} has an invalid ISO 8601 timestamp"
-            ) from error
-        if timestamp.tzinfo is None:
-            timestamp = timestamp.replace(tzinfo=timezone.utc)
-        timestamp = timestamp.astimezone(timezone.utc)
-
-        try:
-            value = float(raw_value)
-        except ValueError as error:
-            raise CSVValidationError(
-                f"Row {row_number} has a non-numeric value"
-            ) from error
-        if not math.isfinite(value):
-            raise CSVValidationError(
-                f"Row {row_number} value must be a finite number"
+                f"Duplicate measurement_id {record_id!r} for {astronaut_id!r}"
             )
-        if timestamp in timestamps:
-            raise CSVValidationError(
-                f"Timestamp {raw_timestamp!r} appears more than once"
-            )
+        seen_record_ids.add(record_key)
 
-        timestamps.add(timestamp)
-        points.append((timestamp, value))
+        timestamp = _parse_timestamp(
+            row.get(columns["date"]) or "",
+            row_number,
+        )
+        values = {
+            header: _parse_cell(row.get(original), row_number, header)
+            for header, original in variable_columns
+        }
+        records.append({
+            "record_id": record_id,
+            "astronaut_id": astronaut_id,
+            "recorded_at": timestamp,
+            "metric_key": metric_key,
+            "values": values,
+        })
 
-    if not points:
+    if not records:
         raise CSVValidationError("CSV contains no measurement rows")
+    records.sort(key=lambda record: (record["astronaut_id"], record["recorded_at"]))
+    return records
 
-    points.sort(key=lambda point: point[0])
-    return points
 
-
-def store_metric_series(
+def store_metric_records(
     db: Session,
-    astronaut_id: str,
     metric_id: int,
-    points: list[tuple[datetime, float]],
+    records: list[dict],
     source: str,
     replace_existing: bool = True,
 ) -> int:
-    """Stage one complete series in a session; the caller controls commit."""
+    """Stage one CSV's records in a session; the caller controls commit."""
     existing = db.scalars(
-        select(Measurement).where(
-            Measurement.astronaut_id == astronaut_id,
-            Measurement.metric_id == metric_id,
-        )
+        select(Measurement).where(Measurement.metric_id == metric_id)
     ).all()
 
     replaced_count = 0
     if replace_existing:
         replaced_count = len(existing)
         db.execute(
-            delete(Measurement).where(
-                Measurement.astronaut_id == astronaut_id,
-                Measurement.metric_id == metric_id,
-            )
+            delete(Measurement).where(Measurement.metric_id == metric_id)
         )
     else:
-        existing_timestamps = {
-            row.recorded_at.replace(tzinfo=None)
+        existing_record_ids = {
+            (row.astronaut_id, row.record_id)
             for row in existing
         }
-        if any(timestamp.replace(tzinfo=None) in existing_timestamps for timestamp, _ in points):
+        incoming_record_ids = {
+            (record["astronaut_id"], record["record_id"])
+            for record in records
+        }
+        if incoming_record_ids & existing_record_ids:
             raise SeriesConflictError(
-                "Series contains timestamps already stored for this astronaut and metric"
+                "CSV contains measurement IDs already stored for this metric"
             )
 
-    if db.get(Astronaut, astronaut_id) is None:
-        db.add(Astronaut(id=astronaut_id))
+    astronaut_ids = {record["astronaut_id"] for record in records}
+    existing_astronaut_ids = set(db.scalars(
+        select(Astronaut.id).where(Astronaut.id.in_(astronaut_ids))
+    ).all())
+    new_astronauts = astronaut_ids - existing_astronaut_ids
+    if new_astronauts:
+        db.add_all(Astronaut(id=astronaut_id) for astronaut_id in new_astronauts)
         db.flush()
 
     db.add_all([
         Measurement(
-            astronaut_id=astronaut_id,
+            astronaut_id=record["astronaut_id"],
             metric_id=metric_id,
-            value=value,
-            recorded_at=timestamp,
+            record_id=record["record_id"],
+            recorded_at=record["recorded_at"],
+            values_json=record["values"],
             source=source,
         )
-        for timestamp, value in points
+        for record in records
     ])
     return replaced_count

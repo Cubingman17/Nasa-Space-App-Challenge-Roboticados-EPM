@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,sleep_duration_h,sleep_efficiency_pct,awakenings,sleep_onset_latency_min,risk_level
+22-001,2026-09-01 08:00,AST-001,psychology,wrist_actigraphy_sleep,7.54,88.5,4,12,low
+22-002,2026-09-02 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.97,91.8,1,20,low
+22-003,2026-09-03 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.59,93.5,3,18,low
+22-004,2026-09-04 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.51,88.7,2,6,low
+22-005,2026-09-05 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.56,92.0,1,23,low
+22-006,2026-09-06 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.48,89.9,1,20,medium
+22-007,2026-09-07 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.98,92.2,4,24,low
+22-008,2026-09-08 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.81,84.9,4,11,low
+22-009,2026-09-09 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.45,90.5,3,26,medium
+22-010,2026-09-10 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.62,83.1,2,20,low
+22-011,2026-09-11 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.41,92.2,2,12,medium
+22-012,2026-09-12 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.78,84.3,4,21,low
+22-013,2026-09-13 08:00,AST-001,psychology,wrist_actigraphy_sleep,5.8,90.7,5,10,medium
+22-014,2026-09-14 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.91,88.7,3,22,low
+22-015,2026-09-15 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.66,85.0,4,14,low
+22-016,2026-09-16 08:00,AST-001,psychology,wrist_actigraphy_sleep,7.35,91.5,1,21,low
+22-017,2026-09-17 08:00,AST-001,psychology,wrist_actigraphy_sleep,7.04,85.2,3,20,low
+22-018,2026-09-18 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.88,84.6,3,25,low
+22-019,2026-09-19 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.15,83.7,1,15,medium
+22-020,2026-09-20 08:00,AST-001,psychology,wrist_actigraphy_sleep,5.62,80.9,2,24,medium
+22-021,2026-09-21 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.19,83.4,2,18,medium
+22-022,2026-09-22 08:00,AST-001,psychology,wrist_actigraphy_sleep,5.43,81.9,4,17,medium
+22-023,2026-09-23 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.09,83.6,5,15,medium
+22-024,2026-09-24 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.14,84.2,2,26,medium
+22-025,2026-09-25 08:00,AST-001,psychology,wrist_actigraphy_sleep,6.08,81.8,3,27,medium

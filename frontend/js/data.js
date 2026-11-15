@@ -1,121 +1,234 @@
-let detailChartInstance = null;
-
-// The 5 NASA spaceflight hazards: radiation, isolation, altered gravity,
-// hostile environment, and distance (behavioral health).
-const risksDatabase = {
-    radiation: {
-        title: "RADIATION & BIODOSIMETRY",
-        badge: "NASA LSDA Dataset",
-        description: "Assessment of chromosomal aberrations induced by space ionizing radiation.",
-        pre: "2.4 c/cell",
-        inFlight: "8.9 c/cell",
-        post: "8.2 c/cell",
-        chartColor: "#f43f5e",
-        bgTint: "rgba(244, 63, 94, 0.12)",
-        borderTint: "rgba(244, 63, 94, 0.5)",
-        dataValues: [2.4, 8.9, 8.2]
-    },
-    isolation: {
-        title: "ISOLATION & CONFINEMENT",
-        badge: "Crew Self-Reports (n=3)",
-        description: "Decline in mood and rising fatigue caused by prolonged isolation and confinement inside a closed habitat.",
-        pre: "8.1 /10",
-        inFlight: "5.6 /10",
-        post: "7.2 /10",
-        chartColor: "#8b5cf6",
-        bgTint: "rgba(139, 92, 246, 0.12)",
-        borderTint: "rgba(139, 92, 246, 0.5)",
-        dataValues: [8.1, 5.6, 7.2]
-    },
-    gravity: {
-        title: "GRAVITY (Bone Mineral Density)",
-        badge: "NASA OSDR Dataset",
-        description: "Bone mass loss in hip and spine caused by prolonged microgravity exposure.",
-        pre: "1.18 g/cm²",
-        inFlight: "1.09 g/cm²",
-        post: "1.11 g/cm²",
-        chartColor: "#fbbf24",
-        bgTint: "rgba(251, 191, 36, 0.12)",
-        borderTint: "rgba(251, 191, 36, 0.5)",
-        dataValues: [1.18, 1.09, 1.11]
-    },
-    environment: {
-        title: "HOSTILE ENVIRONMENT (Cabin / Analog)",
-        badge: "Environmental Control",
-        description: "Stability of cabin CO2, ambient oxygen levels, pressure and controlled test conditions on Earth.",
-        pre: "99% Nominal",
-        inFlight: "98% Nominal",
-        post: "99% Nominal",
-        chartColor: "#10b981",
-        bgTint: "rgba(16, 185, 129, 0.12)",
-        borderTint: "rgba(16, 185, 129, 0.5)",
-        dataValues: [99, 98, 99]
-    },
-    distance: {
-        title: "DISTANCE & BEHAVIORAL HEALTH (PVT)",
-        badge: "Part 1 Model (n=3)",
-        description: "Increase in reaction times (>500 ms = lapse) associated with sleep deprivation and the behavioral load of deep-space operations.",
-        pre: "235 ms",
-        inFlight: "410 ms",
-        post: "260 ms",
-        chartColor: "#0ea5e9",
-        bgTint: "rgba(14, 165, 233, 0.12)",
-        borderTint: "rgba(14, 165, 233, 0.5)",
-        dataValues: [235, 410, 260]
-    }
+const DATA_API_URL = `${PYTHON_API_URL}/data`;
+const datasetCharts = [];
+const categoryCountIds = {
+    radiation: "category-count-radiation",
+    microgravity: "category-count-microgravity",
+    psychology: "category-count-psychology",
+    environment: "category-count-environment"
 };
+const chartColors = ["#38bdf8", "#a78bfa", "#fb7185", "#34d399", "#fbbf24"];
 
-function openRiskDetail(riskKey) {
-    const info = risksDatabase[riskKey];
-    if (!info) return;
+async function requestDataApi(path) {
+    const response = await fetch(`${DATA_API_URL}${path}`);
+    if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Data API request failed (${response.status})`);
+    }
+    return response.json();
+}
 
+async function loadDataCategories() {
+    try {
+        const payload = await requestDataApi("");
+        for (const category of payload.categories || []) {
+            const count = document.getElementById(categoryCountIds[category.id]);
+            if (count) {
+                count.textContent = `${category.metrics.length} metric tables · ${category.observation_count} records`;
+            }
+        }
+    } catch (error) {
+        Object.values(categoryCountIds).forEach((id) => {
+            const count = document.getElementById(id);
+            if (count) count.textContent = "Data service unavailable";
+        });
+    }
+}
+
+function clearDatasetCharts() {
+    while (datasetCharts.length) datasetCharts.pop().destroy();
+}
+
+function humanizeFieldName(value) {
+    return value.replaceAll("_", " ").replace(/\b[a-z]/g, (letter) => letter.toUpperCase());
+}
+
+function createRawTable(records, container) {
+    if (!records.length) return;
+
+    const detail = document.createElement("details");
+    detail.className = "mt-4 rounded-xl border border-slate-700 bg-slate-950/60";
+    const summary = document.createElement("summary");
+    summary.className = "cursor-pointer px-3 py-2 text-xs font-bold text-slate-300";
+    summary.textContent = `View source table (${records.length} records)`;
+    detail.appendChild(summary);
+
+    const tableWrap = document.createElement("div");
+    tableWrap.className = "overflow-x-auto max-h-72";
+    const table = document.createElement("table");
+    table.className = "min-w-full text-left text-[11px] text-slate-300";
+    const fieldNames = [...new Set(records.flatMap((record) => Object.keys(record.values || {})))];
+    const columns = ["measurement_id", "astronaut_id", "timestamp", ...fieldNames];
+    const thead = document.createElement("thead");
+    thead.className = "sticky top-0 bg-slate-800 text-slate-200";
+    const headerRow = document.createElement("tr");
+    columns.forEach((column) => {
+        const th = document.createElement("th");
+        th.className = "px-3 py-2 whitespace-nowrap";
+        th.textContent = humanizeFieldName(column);
+        headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    records.forEach((record) => {
+        const row = document.createElement("tr");
+        row.className = "border-t border-slate-800";
+        const values = [record.measurement_id, record.astronaut_id, record.timestamp];
+        fieldNames.forEach((field) => values.push(record.values?.[field]));
+        values.forEach((value) => {
+            const cell = document.createElement("td");
+            cell.className = "px-3 py-1.5 whitespace-nowrap";
+            cell.textContent = value == null ? "—" : String(value);
+            row.appendChild(cell);
+        });
+        tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    detail.appendChild(tableWrap);
+    container.appendChild(detail);
+}
+
+function renderMetricCharts(metric, payload, chartGrid) {
+    const series = payload.series || [];
+    if (!series.length) {
+        const message = document.createElement("p");
+        message.className = "text-xs text-slate-400";
+        message.textContent = "No numeric columns are available to graph.";
+        chartGrid.appendChild(message);
+        return;
+    }
+
+    series.forEach((line, index) => {
+        const chartCard = document.createElement("div");
+        chartCard.className = "rounded-xl border border-slate-700 bg-slate-950/60 p-3";
+        const title = document.createElement("h5");
+        title.className = "mb-2 text-xs font-bold text-slate-200";
+        title.textContent = humanizeFieldName(line.key);
+        const canvasWrap = document.createElement("div");
+        canvasWrap.className = "relative h-56";
+        const canvas = document.createElement("canvas");
+        canvas.setAttribute("aria-label", `${metric.name}: ${humanizeFieldName(line.key)}`);
+        canvasWrap.appendChild(canvas);
+        chartCard.append(title, canvasWrap);
+        chartGrid.appendChild(chartCard);
+
+        const points = line.points || [];
+        const color = chartColors[index % chartColors.length];
+        datasetCharts.push(new Chart(canvas.getContext("2d"), {
+            type: "line",
+            data: {
+                labels: points.map((point) => new Date(point.timestamp).toLocaleString()),
+                datasets: [{
+                    label: humanizeFieldName(line.key),
+                    data: points.map((point) => point.value),
+                    borderColor: color,
+                    backgroundColor: `${color}22`,
+                    pointRadius: 2,
+                    borderWidth: 2,
+                    tension: 0.2,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: "index" },
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: {
+                        grid: { color: "rgba(255,255,255,0.06)" },
+                        ticks: { color: "#94a3b8", maxTicksLimit: 7, maxRotation: 0 }
+                    },
+                    y: {
+                        grid: { color: "rgba(255,255,255,0.08)" },
+                        ticks: { color: "#cbd5e1" }
+                    }
+                }
+            }
+        }));
+    });
+}
+
+async function renderMetricDataset(metric, container) {
+    const card = document.createElement("article");
+    card.className = "ui-card p-4 md:p-5";
+    const header = document.createElement("div");
+    header.className = "mb-3 flex flex-wrap items-start justify-between gap-2 border-b border-slate-700 pb-3";
+    const headingGroup = document.createElement("div");
+    const title = document.createElement("h4");
+    title.className = "font-extrabold text-sm md:text-base text-white";
+    title.textContent = `${String(metric.id).padStart(2, "0")} · ${metric.name}`;
+    const description = document.createElement("p");
+    description.className = "mt-1 text-xs text-slate-400";
+    description.textContent = metric.description;
+    headingGroup.append(title, description);
+    const recordCount = document.createElement("span");
+    recordCount.className = "rounded-lg bg-slate-800 px-2 py-1 text-[10px] font-bold text-slate-300";
+    recordCount.textContent = `${metric.observation_count || 0} records`;
+    header.append(headingGroup, recordCount);
+    const chartGrid = document.createElement("div");
+    chartGrid.className = "grid grid-cols-1 xl:grid-cols-2 gap-3";
+    card.append(header, chartGrid);
+    container.appendChild(card);
+
+    try {
+        const payload = await requestDataApi(`/metrics/${metric.id}/observations`);
+        recordCount.textContent = `${payload.observations.length} records`;
+        if (payload.observations.length) {
+            renderMetricCharts(metric, payload, chartGrid);
+            createRawTable(payload.observations, card);
+        } else {
+            const empty = document.createElement("p");
+            empty.className = "text-xs text-slate-400";
+            empty.textContent = "No records imported for this dataset yet.";
+            chartGrid.appendChild(empty);
+        }
+    } catch (error) {
+        const message = document.createElement("p");
+        message.className = "text-xs text-rose-300";
+        message.textContent = `Could not load this dataset: ${error.message}`;
+        chartGrid.appendChild(message);
+    }
+}
+
+async function openRiskDetail(categoryId) {
+    clearDatasetCharts();
     document.getElementById("data-overview").classList.add("hidden");
     document.getElementById("data-detail-view").classList.remove("hidden");
     document.getElementById("btn-back-data").classList.remove("hidden");
 
-    document.getElementById("detail-badge").innerText = info.badge;
-    document.getElementById("detail-title").innerText = info.title;
-    document.getElementById("detail-description").innerText = info.description;
-    document.getElementById("stat-pre").innerText = info.pre;
-    document.getElementById("stat-in").innerText = info.inFlight;
-    document.getElementById("stat-post").innerText = info.post;
+    const title = document.getElementById("detail-title");
+    const description = document.getElementById("detail-description");
+    const status = document.getElementById("dataset-load-status");
+    const container = document.getElementById("metric-datasets");
+    const categoryName = categoryId.charAt(0).toUpperCase() + categoryId.slice(1);
+    title.textContent = categoryName;
+    description.textContent = "Loading metric tables and charts…";
+    status.textContent = "";
+    container.replaceChildren();
 
-    const chartContainer = document.getElementById("detail-chart-container");
-    chartContainer.style.backgroundColor = info.bgTint;
-    chartContainer.style.borderColor = info.borderTint;
-
-    const ctx = document.getElementById("riskDetailChart").getContext("2d");
-    if (detailChartInstance) detailChartInstance.destroy();
-
-    detailChartInstance = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: ["Pre-Flight", "In-Flight", "Post-Flight"],
-            datasets: [{
-                label: info.title,
-                data: info.dataValues,
-                backgroundColor: [info.chartColor, "#3b82f6", "#8b5cf6"],
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { grid: { color: "rgba(255,255,255,0.08)" }, ticks: { color: "#cbd5e1" } },
-                x: { grid: { display: false }, ticks: { color: "#cbd5e1", font: { weight: "bold" } } }
-            }
-        }
-    });
+    try {
+        const category = await requestDataApi(`/${encodeURIComponent(categoryId)}`);
+        title.textContent = category.name;
+        description.textContent = category.description;
+        status.textContent = `${category.metrics.length} metric tables · ${category.observation_count} total records`;
+        await Promise.all(category.metrics.map((metric) => renderMetricDataset(metric, container)));
+    } catch (error) {
+        description.textContent = "Could not load this category.";
+        status.textContent = error.message;
+    }
 }
 
 function closeRiskDetail() {
+    clearDatasetCharts();
     document.getElementById("data-detail-view").classList.add("hidden");
     document.getElementById("btn-back-data").classList.add("hidden");
     document.getElementById("data-overview").classList.remove("hidden");
 }
 
+loadDataCategories();
 // Floating Manual Entry Modal
 function toggleManualModal(show) {
     const modal = document.getElementById("manual-data-modal");
@@ -174,46 +287,6 @@ function validateRanges(payload) {
     }
     return invalid;
 }
-
-// Status dot per NASA hazard, from the subject's last reading.
-// Static fallback = the risk level shown on each card (NASA dataset context).
-function updateHazardDots() {
-    const subject = typeof getSelectedSubject === "function" ? getSelectedSubject() : "A";
-    const reading = typeof getLastReading === "function" ? getLastReading(subject) : null;
-    const metrics = reading ? (reading.metrics || {}) : {};
-
-    const worst = (statuses) => {
-        const order = { normal: 0, atention: 1, bad: 2, critical: 3 };
-        let worstStatus = "normal";
-        statuses.forEach(s => {
-            if (s && order[s.split(":")[0].trim()] > order[worstStatus]) worstStatus = s.split(":")[0].trim();
-        });
-        return worstStatus;
-    };
-
-    const dots = {
-        "py-dot-radiation": metrics.radiation ? metrics.radiation.status : "critical",
-        "py-dot-isolation": metrics.mood || metrics.fatigue
-            ? worst([metrics.mood && metrics.mood.status, metrics.fatigue && metrics.fatigue.status])
-            : "atention",
-        "py-dot-gravity": "atention",
-        "py-dot-environment": metrics.cabin_co2 || metrics.spO2
-            ? worst([metrics.cabin_co2 && metrics.cabin_co2.status, metrics.spO2 && metrics.spO2.status])
-            : "normal",
-        "py-dot-distance": metrics.reaction || metrics.sleep
-            ? worst([metrics.reaction && metrics.reaction.status, metrics.sleep && metrics.sleep.status])
-            : "critical"
-    };
-
-    Object.entries(dots).forEach(([id, status]) => {
-        const dot = document.getElementById(id);
-        if (dot) dot.style.background = statusColor(status);
-    });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    updateHazardDots();
-});
 
 async function submitManualSensors() {
     const payload = {
@@ -275,8 +348,6 @@ async function submitManualSensors() {
         // localStorage unavailable: continue without persisting
     }
     if (typeof applyHealthState === "function") applyHealthState(overall);
-    updateHazardDots();
-
     // Gamification: XP, points and streak for this astronaut
     if (typeof updateProfileProgress === "function") {
         const result = updateProfileProgress(payload.subject_id, payload, response);

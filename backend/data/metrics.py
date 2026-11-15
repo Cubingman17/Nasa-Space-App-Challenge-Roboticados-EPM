@@ -281,6 +281,43 @@ METRICS = [
 # Stable lookups used by the CSV importer and the data API. Keep METRICS as the
 # single source of truth so a metric ID always maps to one category and unit.
 METRICS_BY_ID = {metric["id"]: metric for metric in METRICS}
+METRIC_DATASET_KEYS = {
+    1: "active_radiation_dosimetry",
+    2: "passive_radiation_dosimetry",
+    3: "systolic_blood_pressure",
+    4: "diastolic_blood_pressure",
+    5: "continuous_blood_pressure",
+    6: "heart_rate",
+    7: "ecg_standard_12_lead",
+    8: "ecg_holter_ambulatory",
+    9: "ocular_ultrasound_globe",
+    10: "ocular_ultrasound_optic_nerve",
+    11: "dexa_lumbar_spine",
+    12: "dexa_hip",
+    13: "dexa_whole_body",
+    14: "blood_biochemistry",
+    15: "urine_biochemistry",
+    16: "environmental_co2",
+    17: "environmental_o2",
+    18: "environmental_barometric_pressure",
+    19: "station_surface_microbiology",
+    20: "ambient_air_microbiology",
+    21: "astronaut_body_microbiology",
+    22: "wrist_actigraphy_sleep",
+    23: "chronobiological_rest_alert",
+    24: "neurocognitive_reaction_time",
+    25: "mood_psychological_wellbeing",
+    26: "pulse_oximetry_spo2",
+    27: "heart_rate_variability",
+    28: "core_body_temperature",
+    29: "bioelectrical_impedance",
+    30: "anthropometry_body_mass",
+    31: "dynamic_vestibular_function",
+    32: "static_balance_orthostatic",
+}
+for metric_id, dataset_key in METRIC_DATASET_KEYS.items():
+    METRICS_BY_ID[metric_id]["dataset_key"] = dataset_key
+
 METRICS_BY_CATEGORY = {
     category: [metric for metric in METRICS if metric["category"] == category]
     for category in dict.fromkeys(metric["category"] for metric in METRICS)
@@ -290,4 +327,6 @@ if len(METRICS_BY_ID) != len(METRICS):
     raise ValueError("Metric IDs must be unique")
 if set(METRICS_BY_ID) != set(range(1, 33)):
     raise ValueError("The metric catalog must contain every ID from 1 through 32")
+if set(METRIC_DATASET_KEYS) != set(METRICS_BY_ID):
+    raise ValueError("Every metric needs exactly one CSV dataset key")
 

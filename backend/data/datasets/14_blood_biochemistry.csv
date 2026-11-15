@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,glucose_mg_dL,calcium_mg_dL,creatinine_mg_dL,vitamin_d_ng_mL,crp_mg_L,risk_level
+14-001,2026-09-01 08:00,AST-001,microgravity,blood_biochemistry,99,9.21,0.97,33.8,0.93,low
+14-002,2026-09-06 08:00,AST-001,microgravity,blood_biochemistry,91,9.76,1.06,33.9,1.56,low
+14-003,2026-09-11 08:00,AST-001,microgravity,blood_biochemistry,92,9.82,0.94,29.9,1.34,low
+14-004,2026-09-16 08:00,AST-001,microgravity,blood_biochemistry,103,9.54,0.99,32.5,1.06,medium
+14-005,2026-09-21 08:00,AST-001,microgravity,blood_biochemistry,96,9.54,0.95,32.0,0.95,low
+14-006,2026-09-26 08:00,AST-001,microgravity,blood_biochemistry,103,9.58,0.98,25.4,1.88,medium
+14-007,2026-10-01 08:00,AST-001,microgravity,blood_biochemistry,89,9.79,0.87,30.7,1.06,low
+14-008,2026-10-06 08:00,AST-001,microgravity,blood_biochemistry,95,9.45,0.98,31.7,1.4,low
+14-009,2026-10-11 08:00,AST-001,microgravity,blood_biochemistry,85,9.55,0.94,32.3,1.72,low
+14-010,2026-10-16 08:00,AST-001,microgravity,blood_biochemistry,103,9.7,1.02,30.1,2.02,medium
+14-011,2026-10-21 08:00,AST-001,microgravity,blood_biochemistry,103,9.53,1.02,30.6,2.12,medium
+14-012,2026-10-26 08:00,AST-001,microgravity,blood_biochemistry,98,9.5,0.93,29.2,1.93,low
+14-013,2026-10-31 08:00,AST-001,microgravity,blood_biochemistry,105,10.14,0.93,27.9,2.28,medium
+14-014,2026-11-05 08:00,AST-001,microgravity,blood_biochemistry,97,9.45,1.05,30.3,1.62,low
+14-015,2026-11-10 08:00,AST-001,microgravity,blood_biochemistry,103,9.58,0.93,29.9,1.13,medium
+14-016,2026-11-15 08:00,AST-001,microgravity,blood_biochemistry,100,9.8,0.98,29.3,1.12,low
+14-017,2026-11-20 08:00,AST-001,microgravity,blood_biochemistry,102,9.69,1.03,26.8,1.31,medium
+14-018,2026-11-25 08:00,AST-001,microgravity,blood_biochemistry,94,9.51,0.9,24.5,1.37,low
+14-019,2026-11-30 08:00,AST-001,microgravity,blood_biochemistry,103,9.55,0.93,24.5,1.79,medium
+14-020,2026-12-05 08:00,AST-001,microgravity,blood_biochemistry,95,9.66,1.0,27.4,1.87,low
+14-021,2026-12-10 08:00,AST-001,microgravity,blood_biochemistry,97,9.77,1.05,25.5,1.95,low
+14-022,2026-12-15 08:00,AST-001,microgravity,blood_biochemistry,105,9.67,0.93,26.1,1.6,medium
+14-023,2026-12-20 08:00,AST-001,microgravity,blood_biochemistry,87,9.56,0.92,23.0,1.12,low
+14-024,2026-12-25 08:00,AST-001,microgravity,blood_biochemistry,96,10.09,1.01,28.4,1.81,low
+14-025,2026-12-30 08:00,AST-001,microgravity,blood_biochemistry,103,9.99,0.99,28.3,1.47,medium

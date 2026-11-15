@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,mean_reaction_time_ms,lapses_count,accuracy_pct,risk_level
+24-001,2026-09-01 08:00,AST-001,psychology,neurocognitive_reaction_time,255,0,95.5,low
+24-002,2026-09-02 08:00,AST-001,psychology,neurocognitive_reaction_time,266,1,96.7,low
+24-003,2026-09-03 08:00,AST-001,psychology,neurocognitive_reaction_time,259,2,96.5,low
+24-004,2026-09-04 08:00,AST-001,psychology,neurocognitive_reaction_time,276,1,98.0,low
+24-005,2026-09-05 08:00,AST-001,psychology,neurocognitive_reaction_time,283,0,97.9,low
+24-006,2026-09-06 08:00,AST-001,psychology,neurocognitive_reaction_time,292,0,96.3,low
+24-007,2026-09-07 08:00,AST-001,psychology,neurocognitive_reaction_time,261,2,97.0,low
+24-008,2026-09-08 08:00,AST-001,psychology,neurocognitive_reaction_time,257,3,94.8,low
+24-009,2026-09-09 08:00,AST-001,psychology,neurocognitive_reaction_time,266,3,98.9,low
+24-010,2026-09-10 08:00,AST-001,psychology,neurocognitive_reaction_time,262,3,96.2,low
+24-011,2026-09-11 08:00,AST-001,psychology,neurocognitive_reaction_time,247,1,93.9,low
+24-012,2026-09-12 08:00,AST-001,psychology,neurocognitive_reaction_time,264,1,95.7,low
+24-013,2026-09-13 08:00,AST-001,psychology,neurocognitive_reaction_time,292,2,99.5,low
+24-014,2026-09-14 08:00,AST-001,psychology,neurocognitive_reaction_time,270,3,96.0,low
+24-015,2026-09-15 08:00,AST-001,psychology,neurocognitive_reaction_time,297,2,96.5,low
+24-016,2026-09-16 08:00,AST-001,psychology,neurocognitive_reaction_time,300,2,95.0,low
+24-017,2026-09-17 08:00,AST-001,psychology,neurocognitive_reaction_time,284,2,93.7,low
+24-018,2026-09-18 08:00,AST-001,psychology,neurocognitive_reaction_time,305,2,97.5,low
+24-019,2026-09-19 08:00,AST-001,psychology,neurocognitive_reaction_time,271,2,95.9,low
+24-020,2026-09-20 08:00,AST-001,psychology,neurocognitive_reaction_time,277,2,93.5,low
+24-021,2026-09-21 08:00,AST-001,psychology,neurocognitive_reaction_time,285,2,94.6,low
+24-022,2026-09-22 08:00,AST-001,psychology,neurocognitive_reaction_time,248,2,94.1,low
+24-023,2026-09-23 08:00,AST-001,psychology,neurocognitive_reaction_time,275,2,92.9,low
+24-024,2026-09-24 08:00,AST-001,psychology,neurocognitive_reaction_time,285,4,92.0,low
+24-025,2026-09-25 08:00,AST-001,psychology,neurocognitive_reaction_time,281,4,94.5,low

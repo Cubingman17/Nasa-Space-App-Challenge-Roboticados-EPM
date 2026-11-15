@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,skin_bacteria_cfu,oral_bacteria_cfu,nasal_bacteria_cfu,pathogen_detected,risk_level
+21-001,2026-09-01 08:00,AST-001,environment,astronaut_body_microbiology,1251,5162,227,0,low
+21-002,2026-09-06 08:00,AST-001,environment,astronaut_body_microbiology,1179,5231,173,0,low
+21-003,2026-09-11 08:00,AST-001,environment,astronaut_body_microbiology,1162,5378,324,0,low
+21-004,2026-09-16 08:00,AST-001,environment,astronaut_body_microbiology,817,3746,335,0,low
+21-005,2026-09-21 08:00,AST-001,environment,astronaut_body_microbiology,969,4832,324,0,low
+21-006,2026-09-26 08:00,AST-001,environment,astronaut_body_microbiology,734,5744,327,1,low
+21-007,2026-10-01 08:00,AST-001,environment,astronaut_body_microbiology,1182,4760,415,0,low
+21-008,2026-10-06 08:00,AST-001,environment,astronaut_body_microbiology,956,5245,265,0,low
+21-009,2026-10-11 08:00,AST-001,environment,astronaut_body_microbiology,1061,3497,300,0,low
+21-010,2026-10-16 08:00,AST-001,environment,astronaut_body_microbiology,1084,6441,238,0,low
+21-011,2026-10-21 08:00,AST-001,environment,astronaut_body_microbiology,596,6920,231,0,low
+21-012,2026-10-26 08:00,AST-001,environment,astronaut_body_microbiology,1020,3761,310,0,low
+21-013,2026-10-31 08:00,AST-001,environment,astronaut_body_microbiology,1264,5982,374,0,low
+21-014,2026-11-05 08:00,AST-001,environment,astronaut_body_microbiology,810,6593,389,0,low
+21-015,2026-11-10 08:00,AST-001,environment,astronaut_body_microbiology,877,4897,307,1,low
+21-016,2026-11-15 08:00,AST-001,environment,astronaut_body_microbiology,883,6075,283,0,low
+21-017,2026-11-20 08:00,AST-001,environment,astronaut_body_microbiology,981,8021,370,0,low
+21-018,2026-11-25 08:00,AST-001,environment,astronaut_body_microbiology,1052,4510,451,0,low
+21-019,2026-11-30 08:00,AST-001,environment,astronaut_body_microbiology,1194,5454,236,1,low
+21-020,2026-12-05 08:00,AST-001,environment,astronaut_body_microbiology,880,7059,404,0,low
+21-021,2026-12-10 08:00,AST-001,environment,astronaut_body_microbiology,916,6449,255,0,low
+21-022,2026-12-15 08:00,AST-001,environment,astronaut_body_microbiology,934,4640,450,0,low
+21-023,2026-12-20 08:00,AST-001,environment,astronaut_body_microbiology,931,5566,319,0,low
+21-024,2026-12-25 08:00,AST-001,environment,astronaut_body_microbiology,1017,5672,264,0,low
+21-025,2026-12-30 08:00,AST-001,environment,astronaut_body_microbiology,1006,5535,354,0,low

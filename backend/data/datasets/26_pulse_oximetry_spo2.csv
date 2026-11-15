@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,spo2_percent,pulse_rate_bpm,risk_level
+26-001,2026-09-01 08:00,AST-001,microgravity,pulse_oximetry_spo2,96.8,71,low
+26-002,2026-09-02 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.9,71,low
+26-003,2026-09-03 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.9,71,low
+26-004,2026-09-04 08:00,AST-001,microgravity,pulse_oximetry_spo2,96.9,68,low
+26-005,2026-09-05 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.3,72,low
+26-006,2026-09-06 08:00,AST-001,microgravity,pulse_oximetry_spo2,97.5,68,low
+26-007,2026-09-07 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.1,75,low
+26-008,2026-09-08 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.6,72,low
+26-009,2026-09-09 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.1,64,low
+26-010,2026-09-10 08:00,AST-001,microgravity,pulse_oximetry_spo2,96.9,68,low
+26-011,2026-09-11 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.6,71,low
+26-012,2026-09-12 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.2,61,low
+26-013,2026-09-13 08:00,AST-001,microgravity,pulse_oximetry_spo2,96.5,75,low
+26-014,2026-09-14 08:00,AST-001,microgravity,pulse_oximetry_spo2,97.6,63,low
+26-015,2026-09-15 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.4,70,low
+26-016,2026-09-16 08:00,AST-001,microgravity,pulse_oximetry_spo2,100.0,76,low
+26-017,2026-09-17 08:00,AST-001,microgravity,pulse_oximetry_spo2,97.9,69,low
+26-018,2026-09-18 08:00,AST-001,microgravity,pulse_oximetry_spo2,97.8,69,low
+26-019,2026-09-19 08:00,AST-001,microgravity,pulse_oximetry_spo2,96.4,74,low
+26-020,2026-09-20 08:00,AST-001,microgravity,pulse_oximetry_spo2,97.7,56,low
+26-021,2026-09-21 08:00,AST-001,microgravity,pulse_oximetry_spo2,97.0,66,low
+26-022,2026-09-22 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.3,70,low
+26-023,2026-09-23 08:00,AST-001,microgravity,pulse_oximetry_spo2,98.6,62,low
+26-024,2026-09-24 08:00,AST-001,microgravity,pulse_oximetry_spo2,96.6,75,low
+26-025,2026-09-25 08:00,AST-001,microgravity,pulse_oximetry_spo2,96.9,65,low

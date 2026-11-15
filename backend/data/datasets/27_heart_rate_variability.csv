@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,rmssd_ms,sdnn_ms,lf_hf_ratio,hrv_pnn50_pct,risk_level
+27-001,2026-09-01 08:00,AST-001,microgravity,heart_rate_variability,44.8,56.7,1.51,23.4,low
+27-002,2026-09-02 08:00,AST-001,microgravity,heart_rate_variability,38.2,59.7,1.42,20.1,low
+27-003,2026-09-03 08:00,AST-001,microgravity,heart_rate_variability,52.5,62.3,1.31,16.4,low
+27-004,2026-09-04 08:00,AST-001,microgravity,heart_rate_variability,36.3,58.7,1.44,22.4,low
+27-005,2026-09-05 08:00,AST-001,microgravity,heart_rate_variability,44.7,77.3,1.43,18.0,low
+27-006,2026-09-06 08:00,AST-001,microgravity,heart_rate_variability,49.0,54.0,1.5,13.2,low
+27-007,2026-09-07 08:00,AST-001,microgravity,heart_rate_variability,50.6,61.0,1.52,19.7,low
+27-008,2026-09-08 08:00,AST-001,microgravity,heart_rate_variability,38.6,54.0,1.8,20.6,low
+27-009,2026-09-09 08:00,AST-001,microgravity,heart_rate_variability,42.4,62.9,1.58,24.9,low
+27-010,2026-09-10 08:00,AST-001,microgravity,heart_rate_variability,52.4,62.6,1.42,24.2,low
+27-011,2026-09-11 08:00,AST-001,microgravity,heart_rate_variability,44.9,53.4,1.28,16.2,low
+27-012,2026-09-12 08:00,AST-001,microgravity,heart_rate_variability,43.1,64.6,1.72,22.1,low
+27-013,2026-09-13 08:00,AST-001,microgravity,heart_rate_variability,45.9,64.8,2.0,21.2,low
+27-014,2026-09-14 08:00,AST-001,microgravity,heart_rate_variability,54.4,48.2,1.41,16.1,low
+27-015,2026-09-15 08:00,AST-001,microgravity,heart_rate_variability,28.4,59.0,1.85,16.6,low
+27-016,2026-09-16 08:00,AST-001,microgravity,heart_rate_variability,45.4,52.3,1.49,19.0,low
+27-017,2026-09-17 08:00,AST-001,microgravity,heart_rate_variability,36.8,66.2,1.22,19.0,low
+27-018,2026-09-18 08:00,AST-001,microgravity,heart_rate_variability,40.8,68.2,1.76,11.6,low
+27-019,2026-09-19 08:00,AST-001,microgravity,heart_rate_variability,29.0,50.5,1.52,17.2,low
+27-020,2026-09-20 08:00,AST-001,microgravity,heart_rate_variability,43.4,62.0,1.36,12.2,low
+27-021,2026-09-21 08:00,AST-001,microgravity,heart_rate_variability,44.5,54.5,1.63,15.6,low
+27-022,2026-09-22 08:00,AST-001,microgravity,heart_rate_variability,41.7,67.2,1.34,13.7,low
+27-023,2026-09-23 08:00,AST-001,microgravity,heart_rate_variability,46.3,67.5,1.63,13.5,low
+27-024,2026-09-24 08:00,AST-001,microgravity,heart_rate_variability,30.2,58.1,1.44,23.7,low
+27-025,2026-09-25 08:00,AST-001,microgravity,heart_rate_variability,56.0,57.6,1.8,16.6,low

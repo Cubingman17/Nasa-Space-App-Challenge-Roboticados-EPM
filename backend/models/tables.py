@@ -6,6 +6,7 @@ from sqlalchemy import (
     ForeignKey,
     Index,
     Integer,
+    JSON,
     String,
     Text,
     UniqueConstraint,
@@ -19,12 +20,13 @@ except ModuleNotFoundError:
 
 
 class MetricCatalog(Base):
-    """Canonical catalog entry corresponding to one row in data/metrics.py."""
+    """Canonical catalog entry corresponding to one of the 32 CSV files."""
 
     __tablename__ = "metric_catalog"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(160), nullable=False)
+    dataset_key: Mapped[str] = mapped_column(String(96), unique=True, nullable=False)
     category: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
     unit: Mapped[str] = mapped_column(String(48), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
@@ -52,6 +54,8 @@ class Astronaut(Base):
 
 
 class Measurement(Base):
+    """One source CSV row; variable fields remain intact in JSON."""
+
     __tablename__ = "measurements"
     __table_args__ = (
         Index(
@@ -63,8 +67,8 @@ class Measurement(Base):
         UniqueConstraint(
             "astronaut_id",
             "metric_id",
-            "recorded_at",
-            name="uq_measurement_subject_metric_timestamp",
+            "record_id",
+            name="uq_measurement_subject_metric_record",
         ),
     )
 
@@ -78,14 +82,14 @@ class Measurement(Base):
         nullable=False,
         index=True,
     )
-    value: Mapped[float] = mapped_column(Float, nullable=False)
+    record_id: Mapped[str] = mapped_column(String(120), nullable=False)
     recorded_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
         default=lambda: datetime.now(timezone.utc),
     )
+    values_json: Mapped[dict[str, object]] = mapped_column(JSON, nullable=False)
     source: Mapped[str | None] = mapped_column(String(120), nullable=True)
-    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     astronaut: Mapped[Astronaut] = relationship(back_populates="measurements")
     metric: Mapped[MetricCatalog] = relationship(back_populates="measurements")

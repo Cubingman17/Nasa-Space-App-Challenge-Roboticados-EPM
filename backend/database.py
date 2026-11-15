@@ -65,6 +65,7 @@ def init_db() -> None:
                 session.add(metric)
 
             metric.name = definition["name"]
+            metric.dataset_key = definition["dataset_key"]
             metric.category = definition["category"]
             metric.unit = definition["unit"]
             metric.description = definition["description"]

@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,vor_gain,otolith_ocular_reflex_deg,motion_sickness_score_0_10,gaze_stabilization_error_deg,risk_level
+31-001,2026-09-01 08:00,AST-001,microgravity,dynamic_vestibular_function,0.907,8.6,1.3,1.35,low
+31-002,2026-09-04 08:00,AST-001,microgravity,dynamic_vestibular_function,0.952,7.6,2.2,0.98,low
+31-003,2026-09-07 08:00,AST-001,microgravity,dynamic_vestibular_function,0.935,7.6,2.1,1.22,low
+31-004,2026-09-10 08:00,AST-001,microgravity,dynamic_vestibular_function,0.948,8.8,0.0,1.06,low
+31-005,2026-09-13 08:00,AST-001,microgravity,dynamic_vestibular_function,0.94,9.3,2.2,1.53,low
+31-006,2026-09-16 08:00,AST-001,microgravity,dynamic_vestibular_function,0.927,8.5,1.5,1.2,low
+31-007,2026-09-19 08:00,AST-001,microgravity,dynamic_vestibular_function,0.905,8.0,1.7,1.17,low
+31-008,2026-09-22 08:00,AST-001,microgravity,dynamic_vestibular_function,0.927,6.8,2.2,1.35,low
+31-009,2026-09-25 08:00,AST-001,microgravity,dynamic_vestibular_function,0.937,8.2,1.6,1.53,low
+31-010,2026-09-28 08:00,AST-001,microgravity,dynamic_vestibular_function,0.915,10.7,1.1,1.3,low
+31-011,2026-10-01 08:00,AST-001,microgravity,dynamic_vestibular_function,0.883,8.0,1.6,1.27,low
+31-012,2026-10-04 08:00,AST-001,microgravity,dynamic_vestibular_function,0.937,7.8,2.6,1.1,low
+31-013,2026-10-07 08:00,AST-001,microgravity,dynamic_vestibular_function,0.898,10.3,2.6,1.45,low
+31-014,2026-10-10 08:00,AST-001,microgravity,dynamic_vestibular_function,0.926,9.7,2.8,1.7,low
+31-015,2026-10-13 08:00,AST-001,microgravity,dynamic_vestibular_function,0.872,9.1,2.8,1.58,low
+31-016,2026-10-16 08:00,AST-001,microgravity,dynamic_vestibular_function,0.917,10.6,2.1,1.18,low
+31-017,2026-10-19 08:00,AST-001,microgravity,dynamic_vestibular_function,0.935,9.3,2.1,1.47,low
+31-018,2026-10-22 08:00,AST-001,microgravity,dynamic_vestibular_function,0.88,10.4,3.2,1.55,low
+31-019,2026-10-25 08:00,AST-001,microgravity,dynamic_vestibular_function,0.906,9.5,3.3,1.03,low
+31-020,2026-10-28 08:00,AST-001,microgravity,dynamic_vestibular_function,0.852,9.5,2.4,1.33,low
+31-021,2026-10-31 08:00,AST-001,microgravity,dynamic_vestibular_function,0.902,8.7,2.9,1.56,low
+31-022,2026-11-03 08:00,AST-001,microgravity,dynamic_vestibular_function,0.882,8.9,2.7,1.8,low
+31-023,2026-11-06 08:00,AST-001,microgravity,dynamic_vestibular_function,0.893,10.8,2.8,1.23,low
+31-024,2026-11-09 08:00,AST-001,microgravity,dynamic_vestibular_function,0.859,9.8,3.8,1.81,low
+31-025,2026-11-12 08:00,AST-001,microgravity,dynamic_vestibular_function,0.883,9.1,3.1,1.55,low

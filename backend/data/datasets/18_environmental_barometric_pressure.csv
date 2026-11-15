@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,pressure_kPa,pressure_mmHg,risk_level
+18-001,2026-09-01 08:00,AST-001,environment,environmental_barometric_pressure,100.74,756,low
+18-002,2026-09-02 08:00,AST-001,environment,environmental_barometric_pressure,100.6,758,low
+18-003,2026-09-03 08:00,AST-001,environment,environmental_barometric_pressure,102.0,759,low
+18-004,2026-09-04 08:00,AST-001,environment,environmental_barometric_pressure,101.57,757,low
+18-005,2026-09-05 08:00,AST-001,environment,environmental_barometric_pressure,101.35,761,low
+18-006,2026-09-06 08:00,AST-001,environment,environmental_barometric_pressure,100.87,759,low
+18-007,2026-09-07 08:00,AST-001,environment,environmental_barometric_pressure,101.34,759,low
+18-008,2026-09-08 08:00,AST-001,environment,environmental_barometric_pressure,101.26,758,low
+18-009,2026-09-09 08:00,AST-001,environment,environmental_barometric_pressure,101.41,756,low
+18-010,2026-09-10 08:00,AST-001,environment,environmental_barometric_pressure,100.57,762,low
+18-011,2026-09-11 08:00,AST-001,environment,environmental_barometric_pressure,101.43,757,low
+18-012,2026-09-12 08:00,AST-001,environment,environmental_barometric_pressure,101.47,762,low
+18-013,2026-09-13 08:00,AST-001,environment,environmental_barometric_pressure,101.06,763,low
+18-014,2026-09-14 08:00,AST-001,environment,environmental_barometric_pressure,101.36,758,low
+18-015,2026-09-15 08:00,AST-001,environment,environmental_barometric_pressure,101.1,757,low
+18-016,2026-09-16 08:00,AST-001,environment,environmental_barometric_pressure,100.96,761,low
+18-017,2026-09-17 08:00,AST-001,environment,environmental_barometric_pressure,101.08,760,low
+18-018,2026-09-18 08:00,AST-001,environment,environmental_barometric_pressure,100.63,760,low
+18-019,2026-09-19 08:00,AST-001,environment,environmental_barometric_pressure,101.14,759,low
+18-020,2026-09-20 08:00,AST-001,environment,environmental_barometric_pressure,101.07,757,low
+18-021,2026-09-21 08:00,AST-001,environment,environmental_barometric_pressure,100.25,756,low
+18-022,2026-09-22 08:00,AST-001,environment,environmental_barometric_pressure,101.06,756,low
+18-023,2026-09-23 08:00,AST-001,environment,environmental_barometric_pressure,101.62,756,low
+18-024,2026-09-24 08:00,AST-001,environment,environmental_barometric_pressure,101.44,758,low
+18-025,2026-09-25 08:00,AST-001,environment,environmental_barometric_pressure,101.01,757,low

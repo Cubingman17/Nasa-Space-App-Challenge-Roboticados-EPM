@@ -12,6 +12,7 @@ MetricCategory = Literal[
 class Metric(BaseModel):
     id: int = Field(ge=1)
     name: str
+    dataset_key: str
     category: MetricCategory
     unit: str
     description: str

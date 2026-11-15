@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,onsd_mm,optic_disc_elevation_um,risk_level
+10-001,2026-09-01 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,4.77,22,low
+10-002,2026-09-08 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,4.99,22,low
+10-003,2026-09-15 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,4.99,30,low
+10-004,2026-09-22 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.06,36,low
+10-005,2026-09-29 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,4.94,32,low
+10-006,2026-10-06 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,4.8,49,low
+10-007,2026-10-13 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,4.97,25,low
+10-008,2026-10-20 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,4.99,31,low
+10-009,2026-10-27 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.16,43,low
+10-010,2026-11-03 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.05,43,low
+10-011,2026-11-10 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.39,29,low
+10-012,2026-11-17 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.27,46,low
+10-013,2026-11-24 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.17,46,low
+10-014,2026-12-01 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.23,25,low
+10-015,2026-12-08 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.51,36,low
+10-016,2026-12-15 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.21,46,low
+10-017,2026-12-22 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.19,52,low
+10-018,2026-12-29 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.32,43,low
+10-019,2027-01-05 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.42,45,low
+10-020,2027-01-12 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.52,40,low
+10-021,2027-01-19 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.33,41,low
+10-022,2027-01-26 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.47,47,low
+10-023,2027-02-02 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.23,48,low
+10-024,2027-02-09 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.5,47,low
+10-025,2027-02-16 08:00,AST-001,microgravity,ocular_ultrasound_optic_nerve,5.45,47,low

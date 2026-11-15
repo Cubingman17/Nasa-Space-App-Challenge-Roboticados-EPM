@@ -1,0 +1,26 @@
+measurement_id,date,astronaut_id,category,metric,axial_length_mm,posterior_flattening_um,choroid_thickness_um,risk_level
+09-001,2026-09-01 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.86,0,331,low
+09-002,2026-09-08 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.99,0,330,low
+09-003,2026-09-15 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.98,0,313,low
+09-004,2026-09-22 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.88,0,338,low
+09-005,2026-09-29 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.97,0,320,low
+09-006,2026-10-06 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.76,0,314,low
+09-007,2026-10-13 08:00,AST-001,microgravity,ocular_ultrasound_globe,24.05,5,350,low
+09-008,2026-10-20 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.94,0,333,low
+09-009,2026-10-27 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.85,0,317,low
+09-010,2026-11-03 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.95,0,352,low
+09-011,2026-11-10 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.95,3,334,low
+09-012,2026-11-17 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.92,4,327,low
+09-013,2026-11-24 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.97,0,345,low
+09-014,2026-12-01 08:00,AST-001,microgravity,ocular_ultrasound_globe,24.0,2,345,low
+09-015,2026-12-08 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.97,0,339,low
+09-016,2026-12-15 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.8,0,345,low
+09-017,2026-12-22 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.84,9,329,low
+09-018,2026-12-29 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.91,10,353,low
+09-019,2027-01-05 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.91,0,351,low
+09-020,2027-01-12 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.83,4,339,low
+09-021,2027-01-19 08:00,AST-001,microgravity,ocular_ultrasound_globe,24.02,5,359,low
+09-022,2027-01-26 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.91,11,345,low
+09-023,2027-02-02 08:00,AST-001,microgravity,ocular_ultrasound_globe,24.05,13,338,low
+09-024,2027-02-09 08:00,AST-001,microgravity,ocular_ultrasound_globe,23.9,9,350,low
+09-025,2027-02-16 08:00,AST-001,microgravity,ocular_ultrasound_globe,24.03,6,347,low

@@ -7,7 +7,7 @@ try:
     from services.csv_import import (
         CSVValidationError,
         parse_metric_csv,
-        store_metric_series,
+        store_metric_records,
     )
 except ModuleNotFoundError:
     from backend.data.metrics import METRICS_BY_ID
@@ -15,78 +15,78 @@ except ModuleNotFoundError:
     from backend.services.csv_import import (
         CSVValidationError,
         parse_metric_csv,
-        store_metric_series,
+        store_metric_records,
     )
 
 
 DEFAULT_DIRECTORY = Path(__file__).resolve().parents[1] / "data" / "datasets"
 
 
-def import_directory(
-    directory: Path,
-    astronaut_id: str,
-    source: str = "synthetic_csv",
-) -> int:
-    astronaut_id = astronaut_id.strip()
+def import_directory(directory: Path, source: str = "synthetic_csv") -> int:
     source = source.strip()
-    if not astronaut_id or len(astronaut_id) > 64:
-        raise ValueError("astronaut_id must contain 1 to 64 characters")
     if not source or len(source) > 120:
         raise ValueError("source must contain 1 to 120 characters")
 
-    expected_files = {
-        metric_id: directory / f"metric_{metric_id:02d}.csv"
-        for metric_id in METRICS_BY_ID
-    }
-    missing = [path.name for path in expected_files.values() if not path.is_file()]
-    if missing:
-        raise FileNotFoundError(
-            "Missing metric CSV files: " + ", ".join(missing)
-        )
+    files_by_metric: dict[int, Path] = {}
+    missing = []
+    duplicates = []
+    for metric_id in METRICS_BY_ID:
+        matches = sorted(directory.glob(f"{metric_id:02d}_*.csv"))
+        if not matches:
+            missing.append(f"{metric_id:02d}_*.csv")
+        elif len(matches) > 1:
+            duplicates.extend(path.name for path in matches)
+        else:
+            files_by_metric[metric_id] = matches[0]
 
-    # Validate every file before changing the database, so a malformed file
-    # cannot leave a partially imported 32-metric dataset.
-    parsed_series = {
-        metric_id: parse_metric_csv(path.read_text(encoding="utf-8-sig"))
-        for metric_id, path in expected_files.items()
+    if missing or duplicates:
+        problems = []
+        if missing:
+            problems.append("Missing files: " + ", ".join(missing))
+        if duplicates:
+            problems.append("Multiple files for metric IDs: " + ", ".join(duplicates))
+        raise FileNotFoundError("; ".join(problems))
+
+    # Validate all 32 files before touching measurement rows in the database.
+    parsed_records = {
+        metric_id: parse_metric_csv(
+            path.read_text(encoding="utf-8-sig"),
+            METRICS_BY_ID[metric_id]["category"],
+            METRICS_BY_ID[metric_id]["dataset_key"],
+        )
+        for metric_id, path in files_by_metric.items()
     }
 
     init_db()
-    total_points = 0
+    total_records = 0
     with SessionLocal() as db:
         try:
-            for metric_id, points in parsed_series.items():
-                store_metric_series(
+            for metric_id, records in parsed_records.items():
+                store_metric_records(
                     db,
-                    astronaut_id=astronaut_id,
                     metric_id=metric_id,
-                    points=points,
+                    records=records,
                     source=source,
                     replace_existing=True,
                 )
-                total_points += len(points)
+                total_records += len(records)
             db.commit()
         except Exception:
             db.rollback()
             raise
 
-    return total_points
+    return total_records
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Validate and import one CSV per metric into SQLite."
+        description="Validate and import all 32 metric CSV datasets into SQLite."
     )
     parser.add_argument(
         "--directory",
         type=Path,
         default=DEFAULT_DIRECTORY,
-        help="Directory containing metric_01.csv through metric_32.csv",
-    )
-    parser.add_argument(
-        "--astronaut-id",
-        required=True,
-        help="Identifier shared by the imported time series",
+        help="Directory containing the numbered metric CSV files",
     )
     parser.add_argument(
         "--source",
@@ -96,11 +96,11 @@ def main() -> None:
     args = parser.parse_args()
 
     try:
-        count = import_directory(args.directory, args.astronaut_id, args.source)
+        count = import_directory(args.directory, args.source)
     except (CSVValidationError, OSError, ValueError) as error:
         parser.error(str(error))
 
-    print(f"Imported {count} observations for {len(METRICS_BY_ID)} metrics.")
+    print(f"Imported {count} records across {len(METRICS_BY_ID)} metric datasets.")
 
 
 if __name__ == "__main__":

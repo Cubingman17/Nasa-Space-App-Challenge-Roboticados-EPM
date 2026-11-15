@@ -28,9 +28,10 @@ AstroHealth AI is a tablet-style mission console with four screens:
 ## Architecture
 
 ```
-frontend/app.py      Native Streamlit interface (Home, Data, AstroAI, Profile)
-frontend/            Existing HTML/JS client assets
-backend/             FastAPI (port 5000)
+app.py              Native Streamlit interface (Home, Data, AstroAI, Profile)
+index.html          HTML/JS client entry point (assets in frontend/)
+frontend/           HTML/JS client assets (css, js, pages)
+backend/            FastAPI (port 5000)
 ├── routers/         /api/predict, /api/chat, data, profile, home
 ├── ai/
 │   ├── ia.py            Rule-based metric evaluators (62 unit tests)
@@ -54,7 +55,7 @@ backend/             FastAPI (port 5000)
 ```bash
 py -3 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m streamlit run frontend/app.py
+.\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
 This opens the native Streamlit application at `http://localhost:8501`. It starts the FastAPI backend on port 5000 when one is not already running. The Data screen reads the 32 CSV-backed metric datasets from the API; AstroAI and Profile use the same persistent backend.
@@ -71,7 +72,7 @@ This opens the native Streamlit application at `http://localhost:8501`. It start
    cd backend
    uvicorn main:app --port 5000
    ```
-3. Open `frontend/index.html` in the browser.
+3. Open `index.html` (repo root) in the browser.
 
 > Note: on Streamlit Community Cloud the UI renders as a visual demo; the live backend and the local Ollama model only work when running locally.
 

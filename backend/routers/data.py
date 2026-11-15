@@ -63,18 +63,23 @@ def _utc_timestamp(value: datetime) -> datetime:
     return value.astimezone(timezone.utc)
 
 
-def _observation_counts(db: Session) -> dict[int, int]:
-    rows = db.execute(
-        select(Measurement.metric_id, func.count(Measurement.id))
-        .group_by(Measurement.metric_id)
-    ).all()
+def _observation_counts(db: Session, astronaut_id: str | None = None) -> dict[int, int]:
+    statement = select(Measurement.metric_id, func.count(Measurement.id))
+    if astronaut_id:
+        statement = statement.where(Measurement.astronaut_id == astronaut_id)
+    rows = db.execute(statement.group_by(Measurement.metric_id)).all()
     return {metric_id: count for metric_id, count in rows}
 
 
 @router.get("")
-def list_categories(db: Session = Depends(get_db)) -> dict:
-    """List the four categories and actual imported records per metric."""
-    counts = _observation_counts(db)
+def list_categories(
+    astronaut_id: str | None = None,
+    db: Session = Depends(get_db),
+) -> dict:
+    """List the four categories and actual imported records per metric.
+
+    With astronaut_id, counts only that astronaut's own records."""
+    counts = _observation_counts(db, astronaut_id)
     categories = []
 
     for category_id, details in CATEGORIES.items():
@@ -96,12 +101,18 @@ def list_categories(db: Session = Depends(get_db)) -> dict:
 
 
 @router.get("/{category}")
-def get_category(category: str, db: Session = Depends(get_db)) -> dict:
-    """Return every CSV-backed metric belonging to one of the four categories."""
+def get_category(
+    category: str,
+    astronaut_id: str | None = None,
+    db: Session = Depends(get_db),
+) -> dict:
+    """Return every CSV-backed metric belonging to one of the four categories.
+
+    With astronaut_id, counts only that astronaut's own records."""
     if category not in CATEGORIES:
         raise HTTPException(status_code=404, detail="Category not found")
 
-    counts = _observation_counts(db)
+    counts = _observation_counts(db, astronaut_id)
     metrics = [
         _metric_model(item).model_dump()
         | {"observation_count": counts.get(item["id"], 0)}

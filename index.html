@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AstroHealth AI - Home</title>
-    <link rel="icon" type="image/webp" href="Logo_NASA.webp">
+    <link rel="icon" type="image/webp" href="frontend/Logo_NASA.webp">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/nav.css">
-    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="frontend/css/global.css">
+    <link rel="stylesheet" href="frontend/css/nav.css">
+    <link rel="stylesheet" href="frontend/css/home.css">
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-2 md:p-6">
 
@@ -22,20 +22,20 @@
         <!-- SIDEBAR -->
         <aside class="w-28 md:w-36 flex flex-col justify-between gap-3 shrink-0">
             <div class="ui-card h-20 flex items-center justify-center">
-                <img src="Logo_NASA.webp" alt="Logo" class="w-16 h-16" />
+                <img src="frontend/Logo_NASA.webp" alt="Logo" class="w-16 h-16" />
             </div>
 
             <nav class="flex-1 flex flex-col justify-between gap-3">
                 <a href="index.html" class="nav-btn active flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
                     <span class="text-lg md:text-2xl leading-none">🏠</span>HOME
                 </a>
-                <a href="data.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
+                <a href="frontend/data.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
                     <span class="text-lg md:text-2xl leading-none">📊</span>DATA
                 </a>
-                <a href="ai.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
+                <a href="frontend/ai.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
                     <span class="text-lg md:text-2xl leading-none">🤖</span>AI
                 </a>
-                <a href="profile.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
+                <a href="frontend/profile.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
                     <span class="text-lg md:text-2xl leading-none">👨‍🚀</span>PROFILE
                 </a>
             </nav>
@@ -91,7 +91,7 @@
                     </p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <a href="data.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-600 transition">
+                    <a href="frontend/data.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-600 transition">
                         Data Explorer →
                     </a>
                     <button onclick="toggleManualModal(true)" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition cursor-pointer">
@@ -102,10 +102,10 @@
         </main>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/profiles.js"></script>
-    <script src="js/nav.js"></script>
-    <script src="js/data.js"></script>
-    <script src="js/home.js"></script>
+    <script src="frontend/js/api.js"></script>
+    <script src="frontend/js/profiles.js"></script>
+    <script src="frontend/js/nav.js"></script>
+    <script src="frontend/js/data.js"></script>
+    <script src="frontend/js/home.js"></script>
 </body>
 </html>

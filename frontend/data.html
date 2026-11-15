@@ -6,7 +6,6 @@
     <title>AstroHealth AI - Data</title>
     <link rel="icon" type="image/webp" href="Logo_NASA.webp">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/nav.css">
     <link rel="stylesheet" href="css/data.css">
@@ -26,7 +25,7 @@
             </div>
 
             <nav class="flex-1 flex flex-col justify-between gap-3">
-                <a href="index.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
+                <a href="../index.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
                     <span class="text-lg md:text-2xl leading-none">🏠</span>HOME
                 </a>
                 <a href="data.html" class="nav-btn active flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
@@ -108,15 +107,14 @@
                 </button>
             </div>
 
-            <!-- HAZARD DATASETS AND GENERATED CHARTS -->
+            <!-- HAZARD DETAIL: hazard type + how it is doing right now -->
             <div id="data-detail-view" class="hidden flex flex-1 flex-col min-h-0 overflow-hidden">
                 <div class="mb-3 shrink-0">
                     <h3 id="detail-title" class="font-extrabold text-lg uppercase text-white"></h3>
                     <p id="detail-description" class="text-xs md:text-sm text-slate-400 mt-1"></p>
                     <p id="dataset-load-status" class="text-xs text-slate-400 mt-2"></p>
                 </div>
-                <div id="detail-metrics" class="mb-3 shrink-0 bg-slate-900/60 border border-slate-700 rounded-xl p-3"></div>
-                <div id="metric-datasets" class="flex-1 overflow-y-auto space-y-4 pr-1"></div>
+                <div id="detail-metrics" class="flex-1 overflow-y-auto bg-slate-900/60 border border-slate-700 rounded-xl p-3"></div>
             </div>
 
             <!-- FLOATING BUTTON, BOTTOM RIGHT CORNER -->

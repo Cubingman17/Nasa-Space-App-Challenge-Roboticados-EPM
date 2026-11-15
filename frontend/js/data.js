@@ -1,50 +1,44 @@
-// DATA screen: the 5 NASA spaceflight hazards, fed by the backend metric
-// catalog (/api/data) and by the astronaut's own logged readings.
+// DATA screen: the 5 NASA spaceflight hazards and how the astronaut is
+// doing in each one, based on the metrics logged in Manual Data.
 
 const DATA_API_URL = `${PYTHON_API_URL}/data`;
-const datasetCharts = [];
 
-// The 5 NASA hazards and the catalog category that provides their datasets
+// The 5 NASA hazards and the catalog category that counts their records
 const HAZARDS = {
     radiation: {
         title: "RADIATION",
         emoji: "☢️",
         color: "#f43f5e",
         catalog: "radiation",
-        description: "Space ionizing radiation: chromosomal aberrations and cumulative dose measured by onboard dosimetry.",
-        dotDefault: "critical"
+        description: "Space ionizing radiation: chromosomal aberrations and cumulative dose measured by onboard dosimetry."
     },
     isolation: {
         title: "ISOLATION & CONFINEMENT",
         emoji: "🚪",
         color: "#8b5cf6",
         catalog: "psychology",
-        description: "Confinement in a closed habitat degrades mood, sleep and raises chronic fatigue.",
-        dotDefault: "atention"
+        description: "Confinement in a closed habitat degrades mood, sleep and raises chronic fatigue."
     },
     gravity: {
         title: "ALTERED GRAVITY",
         emoji: "🦴",
         color: "#fbbf24",
         catalog: "microgravity",
-        description: "Microgravity causes bone mineral density loss, muscle atrophy and cardiovascular deconditioning.",
-        dotDefault: "atention"
+        description: "Microgravity causes bone mineral density loss, muscle atrophy and cardiovascular deconditioning."
     },
     environment: {
         title: "HOSTILE ENVIRONMENT",
         emoji: "🏭",
         color: "#10b981",
         catalog: "environment",
-        description: "A closed environment can turn hostile fast: cabin CO2, oxygen, pressure and temperature must stay nominal.",
-        dotDefault: "normal"
+        description: "A closed environment can turn hostile fast: cabin CO2, oxygen, pressure and temperature must stay nominal."
     },
     distance: {
         title: "DISTANCE & BEHAVIORAL HEALTH",
         emoji: "🛰️",
         color: "#0ea5e9",
         catalog: "psychology",
-        description: "Far from Earth there is no real-time ground support: psychomotor vigilance (PVT) and sleep mark the behavioral risk.",
-        dotDefault: "critical"
+        description: "Far from Earth there is no real-time ground support: psychomotor vigilance (PVT) and sleep mark the behavioral risk."
     }
 };
 
@@ -59,7 +53,8 @@ const HAZARD_METRICS = {
         { key: "sleep", label: "Sleep hours", why: "Sleep quality degrades in isolated habitats." }
     ],
     gravity: [
-        { key: "weight_kg", label: "Body mass", why: "Bone/muscle loss in microgravity is tracked via body mass changes (BMD itself comes from the catalog datasets)." }
+        { key: "bpm", label: "Heart rate", why: "Cardiovascular deconditioning in microgravity shows as resting heart rate drift." },
+        { key: "blood_pressure", label: "Blood pressure", why: "Orthostatic intolerance: blood pressure control degrades without gravity." }
     ],
     environment: [
         { key: "cabin_co2", label: "Cabin CO2", why: "CO2 buildup in a closed environment impairs cognition." },
@@ -73,8 +68,6 @@ const HAZARD_METRICS = {
     ]
 };
 
-const chartColors = ["#38bdf8", "#a78bfa", "#fb7185", "#34d399", "#fbbf24"];
-
 async function requestDataApi(path) {
     const response = await fetch(`${DATA_API_URL}${path}`);
     if (!response.ok) {
@@ -84,10 +77,21 @@ async function requestDataApi(path) {
     return response.json();
 }
 
-// Fill the "N metric tables · M records" line of each hazard card
+// The DATA tables must only show the selected astronaut's own real
+// records, never the synthetic CSV dataset rows.
+function currentSubjectId() {
+    const subject = typeof getSelectedSubject === "function" ? getSelectedSubject() : null;
+    return String(subject || "A");
+}
+
+function withSubject(path) {
+    return `${path}${path.includes("?") ? "&" : "?"}astronaut_id=${encodeURIComponent(currentSubjectId())}`;
+}
+
+// Fill the "N records logged" line of each hazard card
 async function loadDataCategories() {
     try {
-        const payload = await requestDataApi("");
+        const payload = await requestDataApi(withSubject(""));
         const byCategory = {};
         for (const category of payload.categories || []) {
             byCategory[category.id] = category;
@@ -97,7 +101,9 @@ async function loadDataCategories() {
             const category = byCategory[hazard.catalog];
             if (count) {
                 count.textContent = category
-                    ? `${category.metrics.length} metric tables · ${category.observation_count} records`
+                    ? (category.observation_count
+                        ? `${category.observation_count} records logged`
+                        : "no records logged yet")
                     : "No catalog data";
             }
         }
@@ -109,166 +115,29 @@ async function loadDataCategories() {
     }
 }
 
-function clearDatasetCharts() {
-    while (datasetCharts.length) datasetCharts.pop().destroy();
+// Severity of a status string: 'normal: nervous/stressed' counts as 'normal'
+function severityOf(status) {
+    const order = { normal: 0, atention: 1, bad: 2, critical: 3 };
+    return order[String(status || "").split(":")[0].trim()] ?? -1;
 }
 
-function humanizeFieldName(value) {
-    return value.replaceAll("_", " ").replace(/\b[a-z]/g, (letter) => letter.toUpperCase());
-}
-
-function createRawTable(records, container) {
-    if (!records.length) return;
-
-    const detail = document.createElement("details");
-    detail.className = "mt-4 rounded-xl border border-slate-700 bg-slate-950/60";
-    const summary = document.createElement("summary");
-    summary.className = "cursor-pointer px-3 py-2 text-xs font-bold text-slate-300";
-    summary.textContent = `View source table (${records.length} records)`;
-    detail.appendChild(summary);
-
-    const tableWrap = document.createElement("div");
-    tableWrap.className = "overflow-x-auto max-h-72";
-    const table = document.createElement("table");
-    table.className = "min-w-full text-left text-[11px] text-slate-300";
-    const fieldNames = [...new Set(records.flatMap((record) => Object.keys(record.values || {})))];
-    const columns = ["measurement_id", "astronaut_id", "timestamp", ...fieldNames];
-    const thead = document.createElement("thead");
-    thead.className = "sticky top-0 bg-slate-800 text-slate-200";
-    const headerRow = document.createElement("tr");
-    columns.forEach((column) => {
-        const th = document.createElement("th");
-        th.className = "px-3 py-2 whitespace-nowrap";
-        th.textContent = humanizeFieldName(column);
-        headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    const tbody = document.createElement("tbody");
-    records.forEach((record) => {
-        const row = document.createElement("tr");
-        row.className = "border-t border-slate-800";
-        const values = [record.measurement_id, record.astronaut_id, record.timestamp];
-        fieldNames.forEach((field) => values.push(record.values?.[field]));
-        values.forEach((value) => {
-            const cell = document.createElement("td");
-            cell.className = "px-3 py-1.5 whitespace-nowrap";
-            cell.textContent = value == null ? "—" : String(value);
-            row.appendChild(cell);
-        });
-        tbody.appendChild(row);
-    });
-    table.appendChild(tbody);
-    tableWrap.appendChild(table);
-    detail.appendChild(tableWrap);
-    container.appendChild(detail);
-}
-
-function renderMetricCharts(metric, payload, chartGrid) {
-    const series = payload.series || [];
-    if (!series.length) {
-        const message = document.createElement("p");
-        message.className = "text-xs text-slate-400";
-        message.textContent = "No numeric columns are available to graph.";
-        chartGrid.appendChild(message);
-        return;
-    }
-
-    series.forEach((line, index) => {
-        const chartCard = document.createElement("div");
-        chartCard.className = "rounded-xl border border-slate-700 bg-slate-950/60 p-3";
-        const title = document.createElement("h5");
-        title.className = "mb-2 text-xs font-bold text-slate-200";
-        title.textContent = humanizeFieldName(line.key);
-        const canvasWrap = document.createElement("div");
-        canvasWrap.className = "relative h-56";
-        const canvas = document.createElement("canvas");
-        canvas.setAttribute("aria-label", `${metric.name}: ${humanizeFieldName(line.key)}`);
-        canvasWrap.appendChild(canvas);
-        chartCard.append(title, canvasWrap);
-        chartGrid.appendChild(chartCard);
-
-        const points = line.points || [];
-        const color = chartColors[index % chartColors.length];
-        datasetCharts.push(new Chart(canvas.getContext("2d"), {
-            type: "line",
-            data: {
-                labels: points.map((point) => new Date(point.timestamp).toLocaleString()),
-                datasets: [{
-                    label: humanizeFieldName(line.key),
-                    data: points.map((point) => point.value),
-                    borderColor: color,
-                    backgroundColor: `${color}22`,
-                    pointRadius: 2,
-                    borderWidth: 2,
-                    tension: 0.2,
-                    fill: false
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { intersect: false, mode: "index" },
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: {
-                        grid: { color: "rgba(255,255,255,0.06)" },
-                        ticks: { color: "#94a3b8", maxTicksLimit: 7, maxRotation: 0 }
-                    },
-                    y: {
-                        grid: { color: "rgba(255,255,255,0.08)" },
-                        ticks: { color: "#cbd5e1" }
-                    }
-                }
-            }
-        }));
-    });
-}
-
-async function renderMetricDataset(metric, container) {
-    const card = document.createElement("article");
-    card.className = "ui-card p-4 md:p-5";
-    const header = document.createElement("div");
-    header.className = "mb-3 flex flex-wrap items-start justify-between gap-2 border-b border-slate-700 pb-3";
-    const headingGroup = document.createElement("div");
-    const title = document.createElement("h4");
-    title.className = "font-extrabold text-sm md:text-base text-white";
-    title.textContent = `${String(metric.id).padStart(2, "0")} · ${metric.name}`;
-    const description = document.createElement("p");
-    description.className = "mt-1 text-xs text-slate-400";
-    description.textContent = metric.description;
-    headingGroup.append(title, description);
-    const recordCount = document.createElement("span");
-    recordCount.className = "rounded-lg bg-slate-800 px-2 py-1 text-[10px] font-bold text-slate-300";
-    recordCount.textContent = `${metric.observation_count || 0} records`;
-    header.append(headingGroup, recordCount);
-    const chartGrid = document.createElement("div");
-    chartGrid.className = "grid grid-cols-1 xl:grid-cols-2 gap-3";
-    card.append(header, chartGrid);
-    container.appendChild(card);
-
-    try {
-        const payload = await requestDataApi(`/metrics/${metric.id}/observations`);
-        recordCount.textContent = `${payload.observations.length} records`;
-        if (payload.observations.length) {
-            renderMetricCharts(metric, payload, chartGrid);
-            createRawTable(payload.observations, card);
-        } else {
-            const empty = document.createElement("p");
-            empty.className = "text-xs text-slate-400";
-            empty.textContent = "No records imported for this dataset yet.";
-            chartGrid.appendChild(empty);
+// Hazard status = the most severe metric logged for that hazard.
+// Returns null when nothing has been logged (no fake defaults).
+function computeHazardStatus(hazardId, metrics) {
+    let worst = null;
+    for (const entry of HAZARD_METRICS[hazardId] || []) {
+        const metric = metrics[entry.key];
+        if (!metric) continue;
+        const base = String(metric.status).split(":")[0].trim();
+        if (worst === null || severityOf(base) > severityOf(worst)) {
+            worst = base;
         }
-    } catch (error) {
-        const message = document.createElement("p");
-        message.className = "text-xs text-rose-300";
-        message.textContent = `Could not load this dataset: ${error.message}`;
-        chartGrid.appendChild(message);
     }
+    return worst;
 }
 
-// Documents, per hazard, the metrics that determine its status
+// Per hazard: its calculated status plus the metrics that determine it,
+// with how each one is doing right now
 function renderHazardMetrics(hazardId) {
     const container = document.getElementById("detail-metrics");
     if (!container) return;
@@ -276,6 +145,17 @@ function renderHazardMetrics(hazardId) {
     const subject = typeof getSelectedSubject === "function" ? getSelectedSubject() : "A";
     const reading = typeof getLastReading === "function" ? getLastReading(subject) : null;
     const metrics = reading ? (reading.metrics || {}) : {};
+
+    const hazardStatus = computeHazardStatus(hazardId, metrics);
+    const pillClass = {
+        NORMAL: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        ATENTION: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+        BAD: "bg-orange-500/20 text-orange-300 border-orange-500/40",
+        CRITICAL: "bg-rose-500/20 text-rose-300 border-rose-500/40"
+    }[hazardStatus ? hazardStatus.toUpperCase() : ""];
+    const statusPill = hazardStatus
+        ? `<span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${pillClass}">HAZARD STATUS: ${hazardStatus.toUpperCase()}</span>`
+        : `<span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border bg-slate-800 text-slate-400 border-slate-600">HAZARD STATUS: NO DATA</span>`;
 
     let rows = "";
     for (const entry of HAZARD_METRICS[hazardId] || []) {
@@ -294,7 +174,11 @@ function renderHazardMetrics(hazardId) {
     }
 
     container.innerHTML = `
-        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-1">Metrics that feed this hazard</p>
+        <div class="flex items-center gap-2 flex-wrap">
+            <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">How is this hazard:</p>
+            ${statusPill}
+        </div>
+        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mt-2 mb-1">Metrics that feed this hazard</p>
         ${rows}
     `;
 }
@@ -303,7 +187,6 @@ async function openRiskDetail(hazardId) {
     const hazard = HAZARDS[hazardId];
     if (!hazard) return;
 
-    clearDatasetCharts();
     document.getElementById("data-overview").classList.add("hidden");
     document.getElementById("data-detail-view").classList.remove("hidden");
     document.getElementById("btn-back-data").classList.remove("hidden");
@@ -311,26 +194,23 @@ async function openRiskDetail(hazardId) {
     const title = document.getElementById("detail-title");
     const description = document.getElementById("detail-description");
     const status = document.getElementById("dataset-load-status");
-    const container = document.getElementById("metric-datasets");
 
     title.textContent = `${hazard.emoji} ${hazard.title}`;
     description.textContent = hazard.description;
-    status.textContent = "Loading metric tables and charts…";
-    container.replaceChildren();
+    status.textContent = "Loading…";
     renderHazardMetrics(hazardId);
 
     try {
-        const category = await requestDataApi(`/${encodeURIComponent(hazard.catalog)}`);
-        status.textContent = `${category.metrics.length} metric tables · ${category.observation_count} total records`;
-        await Promise.all(category.metrics.map((metric) => renderMetricDataset(metric, container)));
+        const category = await requestDataApi(withSubject(`/${encodeURIComponent(hazard.catalog)}`));
+        status.textContent = category.observation_count
+            ? `${category.observation_count} records logged by this astronaut`
+            : "No records logged yet — use ➕ Log Manual Data";
     } catch (error) {
-        description.textContent = "Could not load this category.";
-        status.textContent = error.message;
+        status.textContent = "Records count unavailable (backend offline).";
     }
 }
 
 function closeRiskDetail() {
-    clearDatasetCharts();
     document.getElementById("data-detail-view").classList.add("hidden");
     document.getElementById("btn-back-data").classList.add("hidden");
     document.getElementById("data-overview").classList.remove("hidden");
@@ -344,36 +224,20 @@ function updateHazardDots() {
     const reading = typeof getLastReading === "function" ? getLastReading(subject) : null;
     const metrics = reading ? (reading.metrics || {}) : {};
 
-    const worst = (statuses) => {
-        const order = { normal: 0, atention: 1, bad: 2, critical: 3 };
-        let worstStatus = "normal";
-        statuses.forEach(s => {
-            if (s && order[s.split(":")[0].trim()] > order[worstStatus]) worstStatus = s.split(":")[0].trim();
-        });
-        return worstStatus;
-    };
-
-    const dots = {
-        radiation: metrics.radiation ? metrics.radiation.status : null,
-        isolation: metrics.mood || metrics.fatigue
-            ? worst([metrics.mood && metrics.mood.status, metrics.fatigue && metrics.fatigue.status])
-            : null,
-        gravity: null,
-        environment: metrics.cabin_co2 || metrics.spO2
-            ? worst([metrics.cabin_co2 && metrics.cabin_co2.status, metrics.spO2 && metrics.spO2.status])
-            : null,
-        distance: metrics.reaction || metrics.sleep
-            ? worst([metrics.reaction && metrics.reaction.status, metrics.sleep && metrics.sleep.status])
-            : null
-    };
-
-    Object.entries(dots).forEach(([hazardId, status]) => {
+    // One dot per hazard, computed from its own logged metrics.
+    // Gray = nothing logged yet for that hazard (no fake defaults).
+    for (const hazardId of Object.keys(HAZARDS)) {
         const dot = document.getElementById(`py-dot-${hazardId}`);
-        if (!dot) return;
-        const effective = status || HAZARDS[hazardId].dotDefault;
-        dot.style.background = statusColor(effective);
-        dot.title = `Hazard status: ${effective}`;
-    });
+        if (!dot) continue;
+        const status = computeHazardStatus(hazardId, metrics);
+        if (status) {
+            dot.style.background = statusColor(status);
+            dot.title = `Hazard status: ${status}`;
+        } else {
+            dot.style.background = "#64748b";
+            dot.title = "No data logged for this hazard yet";
+        }
+    }
 
     // Overall panel: the general hazard, separate from the individual ones
     const pill = document.getElementById("py-overall-pill");
@@ -669,6 +533,7 @@ async function submitManualSensors() {
     }
     if (typeof applyHealthState === "function") applyHealthState(overall);
     updateHazardDots();
+    loadDataCategories();
 
     // Gamification: XP, points and streak for this astronaut
     let extraLine = "";

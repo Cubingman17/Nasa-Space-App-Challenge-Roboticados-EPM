@@ -1,6 +1,6 @@
 """Native Streamlit interface for AstroHealth AI.
 
-Run from the repository root with ``streamlit run frontend/app.py``. The
+Run from the repository root with ``streamlit run app.py``. The
 FastAPI service is started locally on port 5000 when it is not already up.
 """
 
@@ -19,7 +19,7 @@ import pandas as pd
 import streamlit as st
 
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
+ROOT_DIR = Path(__file__).resolve().parent
 BACKEND_DIR = ROOT_DIR / "backend"
 API_ROOT = os.environ.get("ASTROHEALTH_API_URL", "http://127.0.0.1:5000/api").rstrip("/")
 PAGE_NAMES = ["Home", "Data", "AstroAI", "Profile"]
@@ -98,12 +98,6 @@ def start_backend() -> dict:
         pass
 
     import subprocess
-    if str(ROOT_DIR) not in sys.path:
-        sys.path.insert(0, str(ROOT_DIR))
-    try:
-        import uvicorn
-        from backend.main import app as api_app
-
     try:
         process = subprocess.Popen(
             [

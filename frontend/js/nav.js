@@ -102,3 +102,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+// Periodic auto-refresh so new data shows without leaving and re-entering
+// the screen. Skipped while the user is typing or the manual-data modal
+// is open, so it never interrupts an entry in progress.
+const AUTO_REFRESH_MS = 45000;
+setInterval(() => {
+    const modal = document.getElementById("manual-data-modal");
+    if (modal && !modal.classList.contains("hidden")) return;
+    const active = document.activeElement;
+    if (active && ["INPUT", "TEXTAREA", "SELECT"].includes(active.tagName)) return;
+    if (active && active.isContentEditable) return;
+    location.reload();
+}, AUTO_REFRESH_MS);

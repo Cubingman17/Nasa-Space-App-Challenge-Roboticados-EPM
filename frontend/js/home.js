@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const subject = localStorage.getItem("selectedSubject") || "A";
     const welcomeText = `WELCOME, ASTRONAUTA ${subject}`;
     const welcomeElement = document.getElementById("welcome-typewriter");
-    
+
     let index = 0;
     function typeWriterEffect() {
         if (index < welcomeText.length) {

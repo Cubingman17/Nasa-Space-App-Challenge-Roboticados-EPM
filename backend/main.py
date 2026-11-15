@@ -1,10 +1,13 @@
 from fastapi import FastAPI
+from backend.routers.data import router as data_router
 
 app = FastAPI(
-    title="Predictive AI API",
-    description="Backend for our predictive AI project",
-    version="0.1.0"
+    title="Astronaut Health API",
+    description="API for astronaut health metrics and data availability.",
+    version="0.1.0",
 )
+
+app.include_router(data_router)
 
 
 @app.get("/")
@@ -18,8 +21,7 @@ def home():
 @app.get("/api/health")
 def health_check():
     return {
-        "status": "healthy",
-        "model_trained": False
+        "status": "healthy"
     }
 
 if __name__ == "__main__":

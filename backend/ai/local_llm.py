@@ -1,10 +1,10 @@
-"""Conversación con la IA local AstroAI (modelo custom de Ollama).
+"""Chat with the local AstroAI (custom Ollama model).
 
-La personalidad del asistente (salud física + apoyo emocional) vive en el
-Modelfile de esta carpeta; se crea con:  python setup_ollama.py
+The assistant persona (physical health + emotional support) lives in the
+Modelfile in this folder; it is created with:  python setup_ollama.py
 
-Usa solo la librería estándar para no agregar dependencias.
-Si Ollama no está corriendo o falla, el router cae a un mensaje de respaldo.
+Uses only the standard library to avoid extra dependencies.
+If Ollama is not running or fails, the router falls back to a canned reply.
 """
 
 import json
@@ -17,7 +17,7 @@ TIMEOUT_SECONDS = 90
 
 
 def is_available() -> bool:
-    """True si el servidor de Ollama responde."""
+    """True if the Ollama server responds."""
     try:
         with urllib.request.urlopen("http://localhost:11434/", timeout=3):
             return True
@@ -26,13 +26,13 @@ def is_available() -> bool:
 
 
 def chat(prompt: str, metrics_context: str = "") -> str:
-    """Envía el mensaje del astronauta a la IA local junto con el contexto
-    de sus métricas. Devuelve el texto de respuesta."""
+    """Sends the astronaut's message to the local AI together with the
+    context of their metrics. Returns the response text."""
     user_content = prompt
     if metrics_context:
         user_content = (
-            f"Métricas actuales del astronauta:\n{metrics_context}\n\n"
-            f"Mensaje del astronauta: {prompt}"
+            f"Current astronaut metrics:\n{metrics_context}\n\n"
+            f"Astronaut message: {prompt}"
         )
 
     payload = json.dumps({

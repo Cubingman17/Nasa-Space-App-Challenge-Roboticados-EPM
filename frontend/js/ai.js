@@ -4,11 +4,11 @@ async function handleSendMessage() {
     const text = input.value.trim();
     if (!text || sendBtn.disabled) return;
 
-    appendBoxMessage("Astronauta", text);
+    appendBoxMessage("Astronaut", text);
     input.value = "";
 
-    // Activar estado "Pensando..." en la mascota IA
-    setMascotState("thinking", "Analizando datos...");
+    // Activate the mascot's "Thinking..." state
+    setMascotState("thinking", "Analyzing data...");
     setChatBusy(true);
     showTypingIndicator();
 
@@ -16,19 +16,19 @@ async function handleSendMessage() {
     try {
         response = await PythonBridge.sendChatMessage(text);
     } catch (error) {
-        response = { reply: "Hubo un problema de conexión con la IA local. Intenta de nuevo." };
+        response = { reply: "There was a connection problem with the local AI. Try again." };
     } finally {
         removeTypingIndicator();
         setChatBusy(false);
     }
 
-    // Activar animación de "Hablando" cuando responde
-    setMascotState("speaking", "Respondiendo...");
+    // Activate the "Speaking" animation when it replies
+    setMascotState("speaking", "Replying...");
     appendBoxMessage("AstroAI Local", response.reply, response.source);
 
-    // Volver a estado normal tras 2.5 segundos
+    // Back to normal after 2.5 seconds
     setTimeout(() => {
-        setMascotState("idle", "Listo para analizar tus registros de salud.");
+        setMascotState("idle", "Ready to analyze your health records.");
     }, 2500);
 }
 
@@ -39,7 +39,7 @@ function setChatBusy(busy) {
     sendBtn.disabled = busy;
     sendBtn.classList.toggle("opacity-50", busy);
     sendBtn.classList.toggle("cursor-not-allowed", busy);
-    sendBtn.innerText = busy ? "..." : "Enviar";
+    sendBtn.innerText = busy ? "..." : "Send";
 }
 
 function showTypingIndicator() {
@@ -67,15 +67,15 @@ function setMascotState(state, captionText) {
 
     if (state === "speaking") {
         face.classList.add("speaking");
-        badge.innerText = "Hablando";
+        badge.innerText = "Speaking";
         badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30";
     } else if (state === "thinking") {
         face.classList.remove("speaking");
-        badge.innerText = "Procesando...";
+        badge.innerText = "Processing...";
         badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
     } else {
         face.classList.remove("speaking");
-        badge.innerText = "En línea";
+        badge.innerText = "Online";
         badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
     }
 }

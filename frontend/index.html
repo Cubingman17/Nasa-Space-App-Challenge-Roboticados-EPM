@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,12 +14,12 @@
 <body class="min-h-screen flex flex-col items-center justify-center p-2 md:p-6">
 
     <div class="w-full max-w-6xl mb-2.5 bg-slate-900 border border-slate-800 text-slate-400 px-4 py-1.5 rounded-full text-center text-xs font-medium">
-        🛡️ <span class="text-slate-300 font-semibold">Prototipo educativo</span> (Análogo terrestre, n=3). No es un dispositivo médico ni reemplaza a un profesional de salud.
+        🛡️ <span class="text-slate-300 font-semibold">Educational prototype</span> (Earth analog, n=3). Not a medical device nor a replacement for a health professional.
     </div>
 
     <div class="tablet-frame w-full max-w-6xl h-[82vh] min-h-[600px] p-4 md:p-6 flex gap-4 md:gap-6 overflow-hidden">
 
-        <!-- BARRA LATERAL -->
+        <!-- SIDEBAR -->
         <aside class="w-28 md:w-36 flex flex-col justify-between gap-3 shrink-0">
             <div class="ui-card h-20 flex items-center justify-center">
                 <img src="Logo_NASA.webp" alt="Logo" class="w-16 h-16" />
@@ -33,7 +33,7 @@
                     <span class="text-lg md:text-2xl leading-none">📊</span>DATA
                 </a>
                 <a href="ai.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
-                    <span class="text-lg md:text-2xl leading-none">🤖</span>IA
+                    <span class="text-lg md:text-2xl leading-none">🤖</span>AI
                 </a>
                 <a href="profile.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
                     <span class="text-lg md:text-2xl leading-none">👨‍🚀</span>PROFILE
@@ -41,26 +41,26 @@
             </nav>
         </aside>
 
-        <!-- CONTENIDO HOME -->
+        <!-- HOME CONTENT -->
         <main class="flex-1 flex flex-col gap-3 overflow-hidden">
-            <!-- WELCOME CON ANIMACIÓN DE ESCRITURA -->
+            <!-- WELCOME WITH TYPEWRITER ANIMATION -->
             <div class="ui-card py-2.5 px-6 flex items-center justify-between">
                 <span id="welcome-typewriter" class="font-extrabold text-sm md:text-base tracking-wide text-blue-400 typing-cursor"></span>
-                <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30" id="py-home-status">ESTADO: ÓPTIMO</span>
+                <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30" id="py-home-status">STATUS: OPTIMAL</span>
             </div>
 
             <!-- LITTLE AI ADVICE -->
             <div class="ui-card py-2.5 px-6 flex items-center gap-3 bg-slate-900/60 border-blue-500/30">
                 <span class="text-lg">🤖</span>
                 <p class="text-xs md:text-sm font-medium text-slate-300" id="py-home-ai-advice">
-                    <strong class="text-blue-400">Little AI Advice:</strong> Tus horas de sueño (7.5h) y estabilidad cardíaca aseguran un óptimo desempeño hoy.
+                    <strong class="text-blue-400">Little AI Advice:</strong> Your sleep hours (7.5h) and cardiac stability ensure optimal performance today.
                 </p>
             </div>
 
-            <!-- BLOQUE CENTRAL -->
+            <!-- CENTRAL BLOCK -->
             <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3 min-h-0">
                 <div class="ui-card p-4 flex flex-col items-center justify-center relative">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Métricas de Rendimiento Diario</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Daily Performance Metrics</h3>
                     <div class="w-full h-44 md:h-52 relative flex items-center justify-center">
                         <canvas id="homePieChart"></canvas>
                     </div>
@@ -70,40 +70,40 @@
                 <div class="ui-card p-4 flex flex-col justify-between overflow-y-auto">
                     <div class="flex items-center justify-between border-b border-slate-700 pb-2">
                         <h3 class="font-extrabold text-xs md:text-sm uppercase tracking-wide text-blue-400">🏆 LEADERBOARD</h3>
-                        <span class="text-[10px] font-bold bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Muestra n=3</span>
+                        <span class="text-[10px] font-bold bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Sample n=3</span>
                     </div>
 
                     <div class="space-y-2 my-auto py-1" id="py-leaderboard-list">
                         <div class="leaderboard-item flex items-center justify-between px-3 py-2 text-xs md:text-sm font-semibold">
-                            <span>🥇 <strong class="text-white">Persona C</strong></span>
+                            <span>🥇 <strong class="text-white">Person C</strong></span>
                             <span class="text-blue-400 font-extrabold">10 pts</span>
                         </div>
                         <div class="leaderboard-item flex items-center justify-between px-3 py-2 text-xs md:text-sm font-semibold">
-                            <span>🥈 <strong class="text-white">Persona A</strong></span>
+                            <span>🥈 <strong class="text-white">Person A</strong></span>
                             <span class="text-blue-400 font-extrabold">8 pts</span>
                         </div>
                         <div class="leaderboard-item flex items-center justify-between px-3 py-2 text-xs md:text-sm font-semibold">
-                            <span>🥉 <strong class="text-white">Persona B</strong></span>
+                            <span>🥉 <strong class="text-white">Person B</strong></span>
                             <span class="text-blue-400 font-extrabold">6 pts</span>
                         </div>
                     </div>
 
                     <p class="text-[11px] font-medium text-slate-400 text-center bg-slate-900/60 py-1.5 rounded-lg border border-slate-800">
-                        ⭐ <span id="py-home-bonus">Wednesday bonus: +2 pts al primero en registrar datos</span>
+                        ⭐ <span id="py-home-bonus">Wednesday bonus: +2 pts for the first one to log data</span>
                     </p>
                 </div>
             </div>
 
-            <!-- MISIONS -->
+            <!-- MISSIONS -->
             <div class="ui-card p-3 px-5 flex items-center justify-between bg-slate-900/40">
                 <div>
-                    <h4 class="font-bold text-xs uppercase text-slate-400">🎯 MISIONS</h4>
+                    <h4 class="font-bold text-xs uppercase text-slate-400">🎯 MISSIONS</h4>
                     <p class="text-xs md:text-sm font-semibold text-slate-200 mt-0.5" id="py-home-missions">
-                        • Test de reacción psicomotora (3 min) &nbsp;|&nbsp; • Registro de sueño y SpO2
+                        • Psychomotor reaction test (3 min) &nbsp;|&nbsp; • Sleep and SpO2 log
                     </p>
                 </div>
                 <a href="data.html" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition">
-                    Ingresar Datos →
+                    Enter Data →
                 </a>
             </div>
         </main>

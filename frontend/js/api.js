@@ -1,6 +1,6 @@
 const PYTHON_API_URL = "http://localhost:5000/api";
 
-// Utilidad compartida: escapa texto para insertarlo de forma segura en HTML
+// Shared utility: escapes text so it can be inserted safely into HTML
 function escapeHtml(text) {
     const div = document.createElement("div");
     div.textContent = text == null ? "" : String(text);
@@ -11,7 +11,7 @@ const PythonBridge = {
     async fetchHomeData(subjectId = "A") {
         try {
             const response = await fetch(`${PYTHON_API_URL}/home?subject=${subjectId}`);
-            if (!response.ok) throw new Error("Servidor Python offline");
+            if (!response.ok) throw new Error("Python server offline");
             return await response.json();
         } catch (error) {
             return null;
@@ -28,7 +28,7 @@ const PythonBridge = {
             return await response.json();
         } catch (error) {
             return {
-                ai_response: `[Simulación Local] Datos recibidos para Sujeto ${payload.subject_id}. Predicción siguiente reacción: ${Math.round(payload.rt_ms * 1.02)} ms.`
+                ai_response: `[Local Simulation] Data received for Subject ${payload.subject_id}. Predicted next reaction: ${Math.round(payload.rt_ms * 1.02)} ms.`
             };
         }
     },
@@ -43,7 +43,7 @@ const PythonBridge = {
             return await response.json();
         } catch (error) {
             return {
-                reply: "[IA Local en entrenamiento] Endpoint /api/chat listo para conectar con Python."
+                reply: "[Local AI] The /api/chat endpoint is ready to connect with Python."
             };
         }
     }

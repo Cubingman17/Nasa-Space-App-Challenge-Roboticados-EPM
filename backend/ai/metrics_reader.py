@@ -1,12 +1,12 @@
-"""Lee las métricas detectadas por ia.py, imprime un reporte en consola
-y construye el payload que el backend envía al frontend."""
+"""Reads the metrics detected by ia.py, prints a console report
+and builds the payload the backend sends to the frontend."""
 
 try:
     from .ia import evaluate_metrics, overall_status
 except ImportError:
     from ia import evaluate_metrics, overall_status
 
-# Valores por defecto si el frontend no envía una métrica
+# Default values when the frontend does not send a metric
 DEFAULTS = {
     'hr_bpm': 75,
     'spo2_pct': 98,
@@ -14,7 +14,7 @@ DEFAULTS = {
     'rt_ms': 250,
 }
 
-# Última lectura recibida (para /api/chat)
+# Last reading received (used by /api/chat)
 _last_reading = None
 
 
@@ -30,8 +30,8 @@ def _fmt(value):
 
 
 def read_metrics(payload):
-    """Recibe el payload del frontend, evalúa las métricas con ia.py,
-    imprime el reporte y devuelve la respuesta JSON para el frontend."""
+    """Takes the frontend payload, evaluates the metrics with ia.py,
+    prints the report and returns the JSON response for the frontend."""
     global _last_reading
     payload = payload or {}
 
@@ -56,21 +56,21 @@ def read_metrics(payload):
 
 
 def build_ai_response(metrics, general):
-    """Resumen en texto que el frontend imprime directamente."""
+    """Text summary the frontend prints directly."""
     parts = [
         f"{m['label']}: {_fmt(m['value'])}{m['unit']} ({m['status']})"
         for m in metrics.values()
     ]
-    return 'Métricas analizadas: ' + ' | '.join(parts) + f'. Estado general: {general}'
+    return 'Metrics analyzed: ' + ' | '.join(parts) + f'. Overall status: {general}'
 
 
 def print_report(reading):
-    print('\n=== REPORTE DE MÉTRICAS ===')
-    print(f"Sujeto: {reading['subject_id']}")
+    print('\n=== METRICS REPORT ===')
+    print(f"Subject: {reading['subject_id']}")
     for m in reading['metrics'].values():
         print(f"  {m['label']}: {_fmt(m['value'])} {m['unit']} -> {m['status']}")
-    print(f"  Estado general: {reading['overall_status']}")
-    print('===========================\n')
+    print(f"  Overall status: {reading['overall_status']}")
+    print('=======================\n')
 
 
 def get_last_reading():
@@ -78,6 +78,6 @@ def get_last_reading():
 
 
 if __name__ == '__main__':
-    # Prueba rápida sin frontend
+    # Quick test without the frontend
     read_metrics({'subject_id': 'A', 'hr_bpm': 72, 'spo2_pct': 96,
                   'sleep_hours': 6.5, 'rt_ms': 420})

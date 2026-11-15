@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,12 +14,12 @@
 <body class="min-h-screen flex flex-col items-center justify-center p-2 md:p-6">
 
     <div class="w-full max-w-6xl mb-2.5 bg-slate-900 border border-slate-800 text-slate-400 px-4 py-1.5 rounded-full text-center text-xs font-medium">
-        🛡️ <span class="text-slate-300 font-semibold">Prototipo educativo</span> (Datasets públicos OSDR & LSDA + Sensores). No es un dispositivo médico.
+        🛡️ <span class="text-slate-300 font-semibold">Educational prototype</span> (Public OSDR & LSDA datasets + Sensors). Not a medical device.
     </div>
 
     <div class="tablet-frame relative w-full max-w-6xl h-[82vh] min-h-[600px] p-4 md:p-6 flex gap-4 md:gap-6 overflow-hidden">
 
-        <!-- BARRA LATERAL -->
+        <!-- SIDEBAR -->
         <aside class="w-28 md:w-36 flex flex-col justify-between gap-3 shrink-0">
             <div class="ui-card h-20 flex items-center justify-center">
                 <img src="Logo_NASA.webp" alt="Logo" class="w-16 h-16" />
@@ -33,7 +33,7 @@
                     <span class="text-lg md:text-2xl leading-none">📊</span>DATA
                 </a>
                 <a href="ai.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
-                    <span class="text-lg md:text-2xl leading-none">🤖</span>IA
+                    <span class="text-lg md:text-2xl leading-none">🤖</span>AI
                 </a>
                 <a href="profile.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
                     <span class="text-lg md:text-2xl leading-none">👨‍🚀</span>PROFILE
@@ -41,67 +41,67 @@
             </nav>
         </aside>
 
-        <!-- CONTENIDO DATA -->
+        <!-- DATA CONTENT -->
         <main class="flex-1 flex flex-col gap-3 overflow-hidden relative">
 
-            <!-- BANNER SUPERIOR LITTLE AI ADVICE -->
+            <!-- TOP BANNER: LITTLE AI ADVICE -->
             <div class="ui-card py-2.5 px-6 flex items-center justify-between bg-slate-900/60 border-blue-500/30">
                 <div class="flex items-center gap-3">
                     <span class="text-lg">🤖</span>
                     <p class="text-xs md:text-sm font-medium text-slate-300" id="py-data-ai-advice">
-                        <strong class="text-blue-400">Little AI Advice:</strong> Inspecciona los riesgos o usa el botón de la esquina para registrar tus mediciones.
+                        <strong class="text-blue-400">Little AI Advice:</strong> Inspect the risks or use the corner button to log your measurements.
                     </p>
                 </div>
                 <button id="btn-back-data" onclick="closeRiskDetail()" class="hidden bg-slate-800 hover:bg-slate-700 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-600">
-                    ← Volver a Riesgos
+                    ← Back to Risks
                 </button>
             </div>
 
-            <!-- VISTA GENERAL: 4 BARRAS DE RIESGO -->
+            <!-- OVERVIEW: 4 RISK BARS -->
             <div id="data-overview" class="flex-1 flex flex-col justify-between gap-3">
                 <div onclick="openRiskDetail('radiation')" class="risk-card flex-1 border border-rose-500/50 hover:border-rose-400 p-4 flex flex-col items-center justify-center cursor-pointer">
                     <h3 class="font-extrabold text-lg md:text-xl text-rose-400 tracking-wider">RADIATION</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-radiation">Risk: ALTO (Aberraciones cromosómicas - Dataset NASA LSDA)</p>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-radiation">Risk: HIGH (Chromosomal aberrations - NASA LSDA Dataset)</p>
                 </div>
 
                 <div onclick="openRiskDetail('gravity')" class="risk-card flex-1 border border-amber-500/50 hover:border-amber-400 p-4 flex flex-col items-center justify-center cursor-pointer">
                     <h3 class="font-extrabold text-lg md:text-xl text-amber-400 tracking-wider">GRAVITY</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-gravity">Risk: MODERADO (Densidad Mineral Ósea - Dataset NASA OSDR)</p>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-gravity">Risk: MODERATE (Bone Mineral Density - NASA OSDR Dataset)</p>
                 </div>
 
                 <div onclick="openRiskDetail('psicology')" class="risk-card flex-1 border border-rose-500/50 hover:border-rose-400 p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-lg md:text-xl text-rose-400 tracking-wider">PSICOLOGY</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-psicology">Risk: ALTO (Vigilancia psicomotora y fatiga por sueño)</p>
+                    <h3 class="font-extrabold text-lg md:text-xl text-rose-400 tracking-wider">PSYCHOLOGY</h3>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-psicology">Risk: HIGH (Psychomotor vigilance and sleep-related fatigue)</p>
                 </div>
 
                 <div onclick="openRiskDetail('environment')" class="risk-card flex-1 border border-emerald-500/50 hover:border-emerald-400 p-4 flex flex-col items-center justify-center cursor-pointer">
                     <h3 class="font-extrabold text-lg md:text-xl text-emerald-400 tracking-wider">ENVIRONMENT</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-environment">Risk: BAJO (Condiciones de cabina y análogo terrestre)</p>
+                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-environment">Risk: LOW (Cabin conditions and Earth analog)</p>
                 </div>
             </div>
 
-            <!-- VISTA DETALLADA -->
+            <!-- DETAIL VIEW -->
             <div id="data-detail-view" class="hidden flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 min-h-0">
                 <div class="md:col-span-4 ui-card p-5 flex flex-col justify-between overflow-y-auto">
                     <div>
-                        <span id="detail-badge" class="text-[10px] font-bold uppercase px-2.5 py-1 rounded bg-slate-800 text-slate-300">Dataset Oficial</span>
+                        <span id="detail-badge" class="text-[10px] font-bold uppercase px-2.5 py-1 rounded bg-slate-800 text-slate-300">Official Dataset</span>
                         <h3 id="detail-title" class="font-extrabold text-lg uppercase mt-3 text-white">RADIATION</h3>
-                        <p class="text-xs font-bold text-slate-400 mt-1">Información base del dato específico:</p>
+                        <p class="text-xs font-bold text-slate-400 mt-1">Base information for this data point:</p>
                         <p id="detail-description" class="text-xs md:text-sm text-slate-300 mt-3 leading-relaxed">
-                            Descripción estadística de los datos obtenidos.
+                            Statistical description of the collected data.
                         </p>
                     </div>
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs space-y-1 mt-4">
-                        <p><strong>Promedio Pre-Vuelo:</strong> <span id="stat-pre">-</span></p>
-                        <p><strong>Promedio En Vuelo:</strong> <span id="stat-in">-</span></p>
-                        <p><strong>Promedio Post-Vuelo:</strong> <span id="stat-post">-</span></p>
+                        <p><strong>Pre-Flight Average:</strong> <span id="stat-pre">-</span></p>
+                        <p><strong>In-Flight Average:</strong> <span id="stat-in">-</span></p>
+                        <p><strong>Post-Flight Average:</strong> <span id="stat-post">-</span></p>
                     </div>
                 </div>
 
                 <div id="detail-chart-container" class="md:col-span-8 rounded-2xl p-5 flex flex-col justify-between border border-slate-700 bg-slate-900/90">
                     <div class="flex items-center justify-between mb-2">
-                        <h4 class="font-extrabold text-sm uppercase text-white">Comparativa por Etapa de Misión</h4>
-                        <span class="text-xs text-slate-400">Fuente: NASA OSDR / LSDA</span>
+                        <h4 class="font-extrabold text-sm uppercase text-white">Comparison by Mission Stage</h4>
+                        <span class="text-xs text-slate-400">Source: NASA OSDR / LSDA</span>
                     </div>
                     <div class="flex-1 relative min-h-0">
                         <canvas id="riskDetailChart"></canvas>
@@ -109,68 +109,68 @@
                 </div>
             </div>
 
-            <!-- BOTÓN SOBREPUESTO EN LA ESQUINA INFERIOR DERECHA -->
+            <!-- FLOATING BUTTON, BOTTOM RIGHT CORNER -->
             <button onclick="toggleManualModal(true)" class="floating-data-btn absolute bottom-3 right-3 z-20 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs md:text-sm px-4 py-3 rounded-2xl flex items-center gap-2 border border-blue-400/50 cursor-pointer">
                 <span>➕</span>
-                <span>Ingresar Datos Manuales</span>
+                <span>Enter Manual Data</span>
             </button>
         </main>
 
-        <!-- MODAL SOBREPUESTO PARA INGRESAR DATOS MANUALES (Movido desde IA + resto de info) -->
+        <!-- MANUAL DATA ENTRY MODAL -->
         <div id="manual-data-modal" class="hidden absolute inset-0 z-30 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="ui-card w-full max-w-2xl p-6 shadow-2xl border-blue-500/40 flex flex-col gap-4">
+            <div class="ui-card w-full max-w-2xl max-h-[88vh] overflow-y-auto p-6 shadow-2xl border-blue-500/40 flex flex-col gap-4">
                 <div class="flex items-center justify-between border-b border-slate-700 pb-3">
                     <div>
-                        <h3 class="font-extrabold text-base uppercase text-blue-400">📡 Registro Manual de Sensores y Bitácora</h3>
-                        <p class="text-xs text-slate-400">Los datos se enviarán directamente al modelo en Python.</p>
+                        <h3 class="font-extrabold text-base uppercase text-blue-400">📡 Manual Sensor & Log Entry</h3>
+                        <p class="text-xs text-slate-400">Data will be sent directly to the Python model.</p>
                     </div>
                     <button onclick="toggleManualModal(false)" class="text-slate-400 hover:text-white font-bold text-lg px-2">✕</button>
                 </div>
 
-                <!-- Grid con los 4 datos principales + información adicional -->
+                <!-- Grid with the 4 main metrics + additional info -->
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">💓 LPM (Pulso)</label>
-                        <input type="number" id="py-input-lpm" placeholder="Ej: 68" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        <label class="font-bold text-slate-300 block mb-1">💓 HR (Pulse)</label>
+                        <input type="number" id="py-input-lpm" placeholder="E.g. 68" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
                     </div>
 
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
                         <label class="font-bold text-slate-300 block mb-1">🫁 SpO2 (%)</label>
-                        <input type="number" id="py-input-spo2" placeholder="Ej: 98" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        <input type="number" id="py-input-spo2" placeholder="E.g. 98" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
                     </div>
 
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">😴 Sueño (Horas)</label>
-                        <input type="number" step="0.1" id="py-input-sleep" placeholder="Ej: 7.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        <label class="font-bold text-slate-300 block mb-1">😴 Sleep (Hours)</label>
+                        <input type="number" step="0.1" id="py-input-sleep" placeholder="E.g. 7.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
                     </div>
 
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">⚡ Reacción (ms)</label>
-                        <input type="number" id="py-input-rt" placeholder="Ej: 240" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        <label class="font-bold text-slate-300 block mb-1">⚡ Reaction (ms)</label>
+                        <input type="number" id="py-input-rt" placeholder="E.g. 240" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
                     </div>
 
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">🧠 Nivel de Fatiga (1-10)</label>
-                        <input type="number" min="1" max="10" id="py-input-fatigue" placeholder="Ej: 3" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        <label class="font-bold text-slate-300 block mb-1">🧠 Fatigue Level (1-10)</label>
+                        <input type="number" min="1" max="10" id="py-input-fatigue" placeholder="E.g. 3" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
                     </div>
 
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">🌡️ Temp / Ambiente (°C)</label>
-                        <input type="number" step="0.1" id="py-input-temp" placeholder="Ej: 22.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        <label class="font-bold text-slate-300 block mb-1">🌡️ Cabin Temp (°C)</label>
+                        <input type="number" step="0.1" id="py-input-temp" placeholder="E.g. 22.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
                     </div>
                 </div>
 
                 <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs">
-                    <label class="font-bold text-slate-300 block mb-1">📝 Notas adicionales de la sesión (Opcional)</label>
-                    <input type="text" id="py-input-notes" placeholder="Ej: Prueba realizada después de ejercicio o en ayunas..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                    <label class="font-bold text-slate-300 block mb-1">📝 Additional session notes (Optional)</label>
+                    <input type="text" id="py-input-notes" placeholder="E.g. Test taken after exercise or fasting..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
                 </div>
 
                 <div id="modal-feedback" class="hidden text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-xl text-center"></div>
 
                 <div class="flex justify-end gap-3 pt-2">
-                    <button onclick="toggleManualModal(false)" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold">Cancelar</button>
+                    <button onclick="toggleManualModal(false)" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold">Cancel</button>
                     <button id="py-submit-sensors" onclick="submitManualSensors()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold uppercase tracking-wider shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-                        📤 Enviar Datos a Python
+                        📤 Send Data to Python
                     </button>
                 </div>
             </div>

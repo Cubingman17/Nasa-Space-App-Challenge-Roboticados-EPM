@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AstroHealth AI - Asistente IA</title>
+    <title>AstroHealth AI - AI Assistant</title>
     <link rel="icon" type="image/webp" href="Logo_NASA.webp">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/global.css">
@@ -13,12 +13,12 @@
 <body class="min-h-screen flex flex-col items-center justify-center p-2 md:p-6">
 
     <div class="w-full max-w-6xl mb-2.5 bg-slate-900 border border-slate-800 text-slate-400 px-4 py-1.5 rounded-full text-center text-xs font-medium">
-        🛡️ <span class="text-slate-300 font-semibold">Prototipo educativo</span> (Prueba de concepto, n=3). No es un dispositivo médico.
+        🛡️ <span class="text-slate-300 font-semibold">Educational prototype</span> (Proof of concept, n=3). Not a medical device.
     </div>
 
     <div class="tablet-frame w-full max-w-6xl h-[82vh] min-h-[600px] p-4 md:p-6 flex gap-4 md:gap-6 overflow-hidden">
 
-        <!-- BARRA LATERAL -->
+        <!-- SIDEBAR -->
         <aside class="w-28 md:w-36 flex flex-col justify-between gap-3 shrink-0">
             <div class="ui-card h-20 flex items-center justify-center">
                 <img src="Logo_NASA.webp" alt="Logo" class="w-16 h-16" />
@@ -32,7 +32,7 @@
                     <span class="text-lg md:text-2xl leading-none">📊</span>DATA
                 </a>
                 <a href="ai.html" class="nav-btn active flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
-                    <span class="text-lg md:text-2xl leading-none">🤖</span>IA
+                    <span class="text-lg md:text-2xl leading-none">🤖</span>AI
                 </a>
                 <a href="profile.html" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs tracking-widest">
                     <span class="text-lg md:text-2xl leading-none">👨‍🚀</span>PROFILE
@@ -40,62 +40,62 @@
             </nav>
         </aside>
 
-        <!-- CONTENIDO IA -->
+        <!-- AI CONTENT -->
         <main class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 overflow-hidden">
 
-            <!-- Columna Izquierda: MASCOTA / CARA ANIMADA DE LA IA (5 Cols) -->
+            <!-- Left Column: AI MASCOT (5 Cols) -->
             <div class="md:col-span-5 ui-card p-6 flex flex-col items-center justify-between text-center bg-slate-900/60">
                 <div class="w-full flex items-center justify-between">
                     <span class="text-[11px] font-bold uppercase tracking-wider text-blue-400">AstroBot Core</span>
-                    <span id="ai-state-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">En línea</span>
+                    <span id="ai-state-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Online</span>
                 </div>
 
-                <!-- CARA ANIMADA DE LA MASCOTA IA -->
+                <!-- ANIMATED MASCOT FACE -->
                 <div id="ai-mascot-face" class="ai-avatar-ring w-44 h-44 md:w-52 md:h-52 rounded-full bg-slate-950 border-4 border-blue-500/50 flex flex-col items-center justify-center relative my-auto">
-                    <!-- Antena espacial -->
+                    <!-- Space antenna -->
                     <div class="absolute -top-5 w-1.5 h-5 bg-blue-500 rounded-full">
                         <div class="w-3 h-3 bg-sky-400 rounded-full -ml-[3px] -mt-2 animate-ping"></div>
                     </div>
 
-                    <!-- Visor / Pantalla del rostro -->
+                    <!-- Visor / face screen -->
                     <div class="w-32 h-24 md:w-36 md:h-28 bg-slate-900 rounded-3xl border border-slate-700 flex flex-col items-center justify-center gap-3 px-4">
-                        <!-- Ojos -->
+                        <!-- Eyes -->
                         <div class="flex items-center justify-between w-full px-3">
                             <div class="ai-eye w-6 h-6 rounded-full bg-sky-400 shadow-[0_0_12px_#38bdf8]"></div>
                             <div class="ai-eye w-6 h-6 rounded-full bg-sky-400 shadow-[0_0_12px_#38bdf8]"></div>
                         </div>
-                        <!-- Boca animada -->
+                        <!-- Animated mouth -->
                         <div class="ai-mouth w-10 h-1.5 bg-sky-400 rounded-full shadow-[0_0_8px_#38bdf8]"></div>
                     </div>
                 </div>
 
                 <div class="space-y-1">
-                    <p id="ai-mascot-caption" class="text-xs font-semibold text-slate-300">Listo para analizar tus registros de salud.</p>
-                    <p class="text-[10px] text-slate-500">Para ingresar nuevos sensores, ve a la pestaña <strong>DATA</strong>.</p>
+                    <p id="ai-mascot-caption" class="text-xs font-semibold text-slate-300">Ready to analyze your health records.</p>
+                    <p class="text-[10px] text-slate-500">To log new sensor data, go to the <strong>DATA</strong> tab.</p>
                 </div>
             </div>
 
-            <!-- Columna Derecha: IA RESPONSES + ASTRONAUTA MENSAJES (7 Cols) -->
-            <div class="md:col-span-7 flex flex-col gap-3 h-full">
+            <!-- Right Column: AI RESPONSES + ASTRONAUT MESSAGES (7 Cols) -->
+            <div class="md:col-span-7 flex flex-col gap-3 h-full min-h-0">
                 <div class="ui-card flex-1 p-4 flex flex-col overflow-hidden">
                     <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
                         <span class="font-bold text-xs uppercase text-blue-400">🧠 IA RESPONSES</span>
-                        <span class="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">IA Local · Ollama</span>
+                        <span class="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">Local AI · Ollama</span>
                     </div>
 
                     <div id="py-ia-responses-box" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs md:text-sm">
                         <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
                             <p class="font-bold text-blue-400 text-xs mb-1">AstroAI Local:</p>
-                            <p class="text-slate-300">¡Hola Astronauta! Escríbeme abajo para consultar tu estado, predicciones o recomendaciones. Recuerda registrar tus sensores en la pestaña DATA para darte un análisis con contexto.</p>
+                            <p class="text-slate-300">Hello Astronaut! Write to me below to check your status, predictions or recommendations. Remember to log your sensors in the DATA tab so I can analyze them with context.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- ASTRONAUTA MENSAJES -->
+                <!-- ASTRONAUT MESSAGES -->
                 <div class="ui-card h-14 px-3 flex items-center gap-2">
-                    <input type="text" id="py-astronaut-msg-input" onkeypress="if(event.key === 'Enter') handleSendMessage()" placeholder="ASTRONAUTA MENSAJES..." class="flex-1 bg-transparent text-xs md:text-sm font-medium text-white placeholder-slate-500 focus:outline-none disabled:opacity-50">
+                    <input type="text" id="py-astronaut-msg-input" onkeypress="if(event.key === 'Enter') handleSendMessage()" placeholder="ASTRONAUT MESSAGES..." class="flex-1 bg-transparent text-xs md:text-sm font-medium text-white placeholder-slate-500 focus:outline-none disabled:opacity-50">
                     <button id="py-send-btn" onclick="handleSendMessage()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition disabled:opacity-50 disabled:cursor-not-allowed">
-                        Enviar
+                        Send
                     </button>
                 </div>
             </div>

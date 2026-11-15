@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     // 1. Animación de escritura (Typewriter) para el texto WELCOME
     const subject = localStorage.getItem("selectedSubject") || "A";
-    const welcomeText = `WELCOME, ASTRONAUTA ${subject}`;
+    const welcomeText = `WELCOME, ASTRONAUT ${subject}`;
     const welcomeElement = document.getElementById("welcome-typewriter");
 
     let index = 0;

@@ -1,10 +1,23 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from routers.ai import router as ai_router
 
 app = FastAPI(
     title="Astronaut Health API",
     description="API for astronaut health metrics and data availability.",
-    version="0.1.0",
+    version="0.1.0"
 )
+
+# The frontend is static (file:// or another port), so it needs CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(ai_router)
 
 
 @app.get("/")

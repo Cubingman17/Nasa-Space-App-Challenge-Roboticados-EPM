@@ -105,13 +105,13 @@ def evaluate_metrics(bpm, spO2, sleep, reaction):
             'status': spO2_value(spO2),
         },
         'sleep': {
-            'label': 'Sueño',
+            'label': 'Sleep',
             'value': sleep,
             'unit': 'h',
             'status': sleep_value(sleep),
         },
         'reaction': {
-            'label': 'Reacción',
+            'label': 'Reaction',
             'value': reaction,
             'unit': 'ms',
             'status': reaction_value(reaction),

@@ -3,8 +3,8 @@ let detailChartInstance = null;
 const risksDatabase = {
     radiation: {
         title: "RADIATION & BIODOSIMETRY",
-        badge: "Dataset NASA LSDA",
-        description: "Evaluación de aberraciones cromosómicas inducidas por radiación ionizante espacial.",
+        badge: "NASA LSDA Dataset",
+        description: "Assessment of chromosomal aberrations induced by space ionizing radiation.",
         pre: "2.4 c/cell",
         inFlight: "8.9 c/cell",
         post: "8.2 c/cell",
@@ -14,9 +14,9 @@ const risksDatabase = {
         dataValues: [2.4, 8.9, 8.2]
     },
     gravity: {
-        title: "GRAVITY (Densidad Mineral Ósea)",
-        badge: "Dataset NASA OSDR",
-        description: "Pérdida de masa ósea en cadera y columna vertebral por exposición prolongada a microgravedad.",
+        title: "GRAVITY (Bone Mineral Density)",
+        badge: "NASA OSDR Dataset",
+        description: "Bone mass loss in hip and spine caused by prolonged microgravity exposure.",
         pre: "1.18 g/cm²",
         inFlight: "1.09 g/cm²",
         post: "1.11 g/cm²",
@@ -26,9 +26,9 @@ const risksDatabase = {
         dataValues: [1.18, 1.09, 1.11]
     },
     psicology: {
-        title: "PSICOLOGY & FATIGUE (PVT)",
-        badge: "Modelo Parte 1 (n=3)",
-        description: "Incremento en tiempos de reacción (>500 ms = lapso) asociado a privación o desajuste del ciclo de sueño.",
+        title: "PSYCHOLOGY & FATIGUE (PVT)",
+        badge: "Part 1 Model (n=3)",
+        description: "Increase in reaction times (>500 ms = lapse) associated with sleep deprivation or cycle disruption.",
         pre: "235 ms",
         inFlight: "410 ms",
         post: "260 ms",
@@ -38,9 +38,9 @@ const risksDatabase = {
         dataValues: [235, 410, 260]
     },
     environment: {
-        title: "ENVIRONMENT (Cabina / Análogo)",
-        badge: "Control Ambiental",
-        description: "Estabilidad de niveles de oxígeno ambiental, presión y condiciones de prueba controlada en Tierra.",
+        title: "ENVIRONMENT (Cabin / Analog)",
+        badge: "Environmental Control",
+        description: "Stability of ambient oxygen levels, pressure and controlled test conditions on Earth.",
         pre: "99% Nominal",
         inFlight: "98% Nominal",
         post: "99% Nominal",
@@ -76,7 +76,7 @@ function openRiskDetail(riskKey) {
     detailChartInstance = new Chart(ctx, {
         type: "bar",
         data: {
-            labels: ["Pre-Vuelo", "En Vuelo", "Post-Vuelo"],
+            labels: ["Pre-Flight", "In-Flight", "Post-Flight"],
             datasets: [{
                 label: info.title,
                 data: info.dataValues,
@@ -102,7 +102,7 @@ function closeRiskDetail() {
     document.getElementById("data-overview").classList.remove("hidden");
 }
 
-// Funciones del Modal Flotante de Ingreso Manual
+// Floating Manual Entry Modal
 function toggleManualModal(show) {
     const modal = document.getElementById("manual-data-modal");
     const feedback = document.getElementById("modal-feedback");
@@ -114,7 +114,7 @@ function toggleManualModal(show) {
     }
 }
 
-// Estilos del feedback según la gravedad del estado general
+// Feedback styles by overall status severity
 const STATUS_STYLES = {
     normal: "text-emerald-300 bg-emerald-500/10 border-emerald-500/30",
     atention: "text-amber-300 bg-amber-500/10 border-amber-500/30",
@@ -140,30 +140,30 @@ async function submitManualSensors() {
 
     if (!payload.hr_bpm || !payload.sleep_hours || !payload.rt_ms) {
         feedback.className = "text-xs font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl text-center";
-        feedback.innerText = "⚠️ Completa al menos LPM, Sueño y Tiempo de Reacción.";
+        feedback.innerText = "⚠️ Complete at least HR, Sleep and Reaction Time.";
         return;
     }
 
     submitBtn.disabled = true;
     feedback.className = "text-xs font-semibold text-sky-300 bg-sky-500/10 border border-sky-500/30 p-2.5 rounded-xl text-center";
-    feedback.innerText = "📡 Enviando datos al modelo...";
+    feedback.innerText = "📡 Sending data to the model...";
 
     const response = await PythonBridge.sendSensorData(payload);
 
     submitBtn.disabled = false;
 
-    // Guardar el estado para el borde de la consola y los banners de IA
+    // Save the state for the console border and the AI banners
     const overall = String(response.overall_status || "normal").split(":")[0].trim();
     try {
         localStorage.setItem("lastOverallStatus", overall);
         localStorage.setItem("lastAiResponse", response.ai_response || "");
     } catch (error) {
-        // localStorage no disponible: se continúa sin persistir
+        // localStorage unavailable: continue without persisting
     }
     if (typeof applyHealthState === "function") applyHealthState(overall);
 
     feedback.className = `text-xs font-semibold p-2.5 rounded-xl text-center border ${STATUS_STYLES[overall] || STATUS_STYLES.normal}`;
-    feedback.innerText = response.ai_response || "Datos registrados correctamente.";
+    feedback.innerText = response.ai_response || "Data recorded successfully.";
 
     setTimeout(() => {
         toggleManualModal(false);

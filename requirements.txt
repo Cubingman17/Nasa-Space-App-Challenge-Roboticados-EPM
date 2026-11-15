@@ -1,8 +1,7 @@
 fastapi
 uvicorn[standard]
-pydantic
-pydantic-settings
 pydantic>=2,<3
+pydantic-settings
 sqlalchemy
 python-dotenv
-openai
+streamlit

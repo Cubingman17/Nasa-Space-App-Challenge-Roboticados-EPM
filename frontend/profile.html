@@ -13,7 +13,7 @@
 <body class="min-h-screen flex flex-col items-center justify-center p-2 md:p-6">
 
     <div class="w-full max-w-6xl mb-2.5 bg-slate-900 border border-slate-800 text-slate-400 px-4 py-1.5 rounded-full text-center text-xs font-medium">
-        🛡️ <span class="text-slate-300 font-semibold">Privacy enabled:</span> Anonymized data (A, B, C) with no names or personal identifiers.
+        🛡️ <span class="text-slate-300 font-semibold">Privacy enabled:</span> All data stays on this device (localStorage + local AI). No cloud, no external servers.
     </div>
 
     <div class="tablet-frame w-full max-w-6xl h-[82vh] min-h-[600px] p-4 md:p-6 flex gap-4 md:gap-6 overflow-hidden">
@@ -70,11 +70,11 @@
                         <h3 class="font-extrabold text-xs md:text-sm uppercase text-blue-400">BASIC DATA: <span id="py-profile-name-title" class="text-white">Person A</span></h3>
                         <div class="flex items-center gap-2">
                             <span class="text-xs font-bold text-slate-400">Subject:</span>
-                            <select id="py-subject-select" onchange="updateProfileSubject(this.value)" class="bg-slate-900 text-white font-bold text-xs py-1 px-2.5 rounded-lg border border-slate-700">
-                                <option value="A">Person A</option>
-                                <option value="B">Person B</option>
-                                <option value="C">Person C</option>
-                            </select>
+                            <select id="py-subject-select" onchange="updateProfileSubject(this.value)" class="bg-slate-900 text-white font-bold text-xs py-1 px-2.5 rounded-lg border border-slate-700"></select>
+                            <button onclick="renameProfile()" title="Rename this astronaut" class="bg-slate-800 hover:bg-slate-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-slate-600 cursor-pointer">✏️ Rename</button>
+                            <button onclick="addProfile()" title="Add a new astronaut" class="bg-emerald-600/80 hover:bg-emerald-500 text-[10px] font-bold px-2 py-1 rounded-lg border border-emerald-500/50 cursor-pointer">➕ Add</button>
+                            <button onclick="removeProfile()" title="Remove this astronaut" class="bg-rose-600/80 hover:bg-rose-500 text-[10px] font-bold px-2 py-1 rounded-lg border border-rose-500/50 cursor-pointer">🗑️ Remove</button>
+                            <button onclick="editBasicData()" title="Edit weight, height, age and HR baseline" class="bg-slate-800 hover:bg-slate-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-slate-600 cursor-pointer">📋 Edit Data</button>
                         </div>
                     </div>
 
@@ -121,18 +121,6 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="stat-box p-4 space-y-2" id="py-profile-ranking">
                             <h4 class="font-bold text-xs uppercase text-slate-400">Points Ranking</h4>
-                            <div class="flex justify-between items-center text-xs md:text-sm font-bold border-b border-slate-800 pb-1.5">
-                                <span>1ST : Person C</span>
-                                <span class="text-blue-400 font-extrabold">10 pts</span>
-                            </div>
-                            <div class="flex justify-between items-center text-xs md:text-sm font-bold border-b border-slate-800 pb-1.5">
-                                <span>2ND : Person A</span>
-                                <span class="text-blue-400 font-extrabold">8 pts</span>
-                            </div>
-                            <div class="flex justify-between items-center text-xs md:text-sm font-bold">
-                                <span>3RD : Person B</span>
-                                <span class="text-blue-400 font-extrabold">6 pts</span>
-                            </div>
                         </div>
 
                         <div class="stat-box p-4">
@@ -150,6 +138,7 @@
     </div>
 
     <script src="js/api.js"></script>
+    <script src="js/profiles.js"></script>
     <script src="js/nav.js"></script>
     <script src="js/profile.js"></script>
 </body>

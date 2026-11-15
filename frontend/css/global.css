@@ -1,8 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap');
+
+/* NASA palette: blue #0B3D91, red #FC3D21 */
+:root {
+    --nasa-blue: #0B3D91;
+    --nasa-red: #FC3D21;
+}
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #0b0f19;
+    background-color: #05070d;
     color: #f8fafc;
 }
 
@@ -24,16 +30,16 @@ body::before {
         radial-gradient(1px 1px at 88% 14%, rgba(248, 250, 252, 0.5), transparent 60%),
         radial-gradient(1.5px 1.5px at 94% 72%, rgba(148, 163, 184, 0.6), transparent 60%),
         radial-gradient(1px 1px at 15% 88%, rgba(248, 250, 252, 0.4), transparent 60%),
-        radial-gradient(700px 420px at 88% 8%, rgba(59, 130, 246, 0.07), transparent 70%),
-        radial-gradient(560px 380px at 6% 92%, rgba(139, 92, 246, 0.06), transparent 70%);
+        radial-gradient(700px 420px at 88% 8%, rgba(11, 61, 145, 0.22), transparent 70%),
+        radial-gradient(560px 380px at 6% 92%, rgba(252, 61, 33, 0.07), transparent 70%);
 }
 
 /* Consola principal con borde dinámico según estado de salud */
 .tablet-frame {
-    background-color: #131b2e;
-    border: 10px solid #1e293b;
+    background-color: #0a1120;
+    border: 10px solid #16233f;
     border-radius: 2.2rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(11, 61, 145, 0.35);
     transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
@@ -52,15 +58,23 @@ body::before {
 }
 
 .ui-card {
-    background-color: #1e293b;
-    border: 1px solid #334155;
+    background-color: #101a2e;
+    border: 1px solid #1e3a5f;
     border-radius: 1.25rem;
     color: #f8fafc;
     transition: all 0.25s ease;
 }
 
 .ui-card:hover {
-    border-color: #475569;
+    border-color: #2d4f7d;
+}
+
+/* Telemetría: los datos se ven como consola de misión */
+input,
+select,
+textarea {
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 0.02em;
 }
 
 .tablet-frame aside,
@@ -79,9 +93,9 @@ a:focus-visible {
     outline-offset: 2px;
 }
 
-/* Barra de experiencia (XP) gamificada */
+/* Barra de experiencia (XP) gamificada: rojo NASA -> azul NASA */
 .xp-bar-fill {
-    background: linear-gradient(90deg, #3b82f6, #38bdf8);
+    background: linear-gradient(90deg, var(--nasa-red), var(--nasa-blue));
     transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

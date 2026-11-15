@@ -15,7 +15,8 @@ DEFAULTS = {
     'fatigue_level': 3,
 }
 
-# Last reading received (used by /api/chat)
+# Last reading per subject (used by /api/chat and /api/home)
+_last_readings = {}
 _last_reading = None
 
 
@@ -52,6 +53,7 @@ def read_metrics(payload):
         'overall_status': general,
         'ai_response': build_ai_response(metrics, general),
     }
+    _last_readings[reading['subject_id']] = reading
     _last_reading = reading
 
     print_report(reading)
@@ -76,7 +78,11 @@ def print_report(reading):
     print('=======================\n')
 
 
-def get_last_reading():
+def get_last_reading(subject_id=None):
+    """Last reading of a subject, or the most recent one if no subject
+    is given."""
+    if subject_id is not None:
+        return _last_readings.get(subject_id)
     return _last_reading
 
 

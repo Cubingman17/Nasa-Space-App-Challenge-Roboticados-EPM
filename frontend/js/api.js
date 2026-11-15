@@ -34,11 +34,14 @@ const PythonBridge = {
     },
 
     async sendChatMessage(prompt) {
+        const subjectId = typeof getSelectedSubject === "function"
+            ? getSelectedSubject()
+            : (localStorage.getItem("selectedSubject") || "A");
         try {
             const response = await fetch(`${PYTHON_API_URL}/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ prompt })
+                body: JSON.stringify({ prompt, subject_id: subjectId })
             });
             return await response.json();
         } catch (error) {

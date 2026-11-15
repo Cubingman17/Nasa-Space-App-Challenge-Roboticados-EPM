@@ -1,45 +1,6 @@
-// Independent database per user (Photo, Weight, Height, Age, etc.)
-const profilesDatabase = {
-    A: {
-        name: "Person A",
-        weight: "70 kg",
-        height: "175 cm",
-        age: "20 years",
-        hr: "68 bpm",
-        avatar: "👨‍🚀",
-        score: "110 XP (8 pts)",
-        streak: "3 Days",
-        zstate: "Optimal (Z < 1.5)"
-    },
-    B: {
-        name: "Person B",
-        weight: "65 kg",
-        height: "168 cm",
-        age: "21 years",
-        hr: "72 bpm",
-        avatar: "👩‍🚀",
-        score: "95 XP (6 pts)",
-        streak: "1 Day",
-        zstate: "Moderate Alert"
-    },
-    C: {
-        name: "Person C",
-        weight: "78 kg",
-        height: "180 cm",
-        age: "19 years",
-        hr: "64 bpm",
-        avatar: "🧑‍🚀",
-        score: "125 XP (10 pts)",
-        streak: "4 Days",
-        zstate: "Excellent (Z < 1.0)"
-    }
-};
+// Profile screen: renders the selected astronaut from the shared store
+// (js/profiles.js) and manages profiles (rename, add, remove, edit data).
 
-function profilePhotoKey(subjectId) {
-    return `profilePhoto_${subjectId}`;
-}
-
-// Shows the saved photo for the subject, or their default avatar emoji
 function renderAvatar(subjectId) {
     const box = document.getElementById("profile-avatar-box");
     if (!box) return;
@@ -54,8 +15,8 @@ function renderAvatar(subjectId) {
     if (photo) {
         box.innerHTML = `<img src="${photo}" alt="Profile photo" class="w-full h-full object-cover rounded-full">`;
     } else {
-        const data = profilesDatabase[subjectId];
-        box.innerText = data ? data.avatar : "👨‍🚀";
+        const profile = getProfile(subjectId);
+        box.innerText = profile ? profile.avatar : "👨‍🚀";
     }
 }
 
@@ -78,7 +39,7 @@ function handleAvatarUpload(event) {
             ctx.drawImage(img, (256 - w) / 2, (256 - h) / 2, w, h);
 
             const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
-            const subject = localStorage.getItem("selectedSubject") || "A";
+            const subject = getSelectedSubject();
             try {
                 localStorage.setItem(profilePhotoKey(subject), dataUrl);
                 renderAvatar(subject);
@@ -92,31 +53,154 @@ function handleAvatarUpload(event) {
     event.target.value = "";
 }
 
-function updateProfileSubject(subjectId) {
-    localStorage.setItem("selectedSubject", subjectId);
-    const data = profilesDatabase[subjectId];
-    if (!data) return;
+function populateSubjectSelector() {
+    const selector = document.getElementById("py-subject-select");
+    if (!selector) return;
 
-    // Update the independent profile fields
-    document.getElementById("py-prof-weight").innerText = data.weight;
-    document.getElementById("py-prof-height").innerText = data.height;
-    document.getElementById("py-prof-age").innerText = data.age;
-    document.getElementById("py-prof-hr").innerText = data.hr;
+    const current = getSelectedSubject();
+    selector.innerHTML = "";
+    loadProfiles().forEach((profile) => {
+        const option = document.createElement("option");
+        option.value = profile.id;
+        option.innerText = profile.name;
+        selector.appendChild(option);
+    });
+    selector.value = current;
+}
+
+function renderRanking() {
+    const container = document.getElementById("py-profile-ranking");
+    if (!container) return;
+
+    const ranking = computeRanking();
+    const medals = ["1ST", "2ND", "3RD", "4TH", "5TH", "6TH", "7TH", "8TH"];
+    const selected = getSelectedSubject();
+
+    let rows = "";
+    ranking.forEach((profile, index) => {
+        const highlight = profile.id === selected ? "text-blue-300" : "text-slate-300";
+        rows += `<div class="flex justify-between items-center text-xs md:text-sm font-bold border-b border-slate-800 pb-1.5 ${highlight}">
+            <span>${medals[index] || (index + 1) + "TH"} : ${escapeHtml(profile.name)}</span>
+            <span class="text-blue-400 font-extrabold">${profile.points} pts</span>
+        </div>`;
+    });
+
+    container.innerHTML = `
+        <h4 class="font-bold text-xs uppercase text-slate-400">Points Ranking</h4>
+        ${rows}
+    `;
+}
+
+function updateProfileSubject(subjectId) {
+    setSelectedSubject(subjectId);
+    const profile = getProfile(subjectId);
+    if (!profile) return;
+
+    document.getElementById("py-prof-weight").innerText = `${profile.weight} kg`;
+    document.getElementById("py-prof-height").innerText = `${profile.height} cm`;
+    document.getElementById("py-prof-age").innerText = `${profile.age} years`;
+    document.getElementById("py-prof-hr").innerText = `${profile.hrBaseline} bpm`;
 
     renderAvatar(subjectId);
     document.getElementById("profile-avatar-label").innerText = `SUBJECT ${subjectId}`;
 
-    document.getElementById("py-profile-name-title").innerText = data.name;
-    document.getElementById("py-prof-score").innerText = data.score;
-    document.getElementById("py-prof-streak").innerText = data.streak;
-    document.getElementById("py-prof-zstate").innerText = data.zstate;
+    document.getElementById("py-profile-name-title").innerText = profile.name;
+    document.getElementById("py-prof-score").innerText = `${profile.xp} XP (${profile.points} pts)`;
+    document.getElementById("py-prof-streak").innerText = `${profile.streak} Day${profile.streak === 1 ? "" : "s"}`;
+    document.getElementById("py-prof-zstate").innerText = profile.zstate || "Optimal (Z < 1.5)";
 
-    // Keep the selector in sync after a reload
     const selector = document.getElementById("py-subject-select");
     if (selector) selector.value = subjectId;
+
+    renderRanking();
+}
+
+// --- Profile management -------------------------------------------------
+
+function renameProfile() {
+    const subjectId = getSelectedSubject();
+    const profile = getProfile(subjectId);
+    if (!profile) return;
+
+    const name = prompt("New name for this astronaut:", profile.name);
+    if (!name || !name.trim() || name.trim() === profile.name) return;
+
+    const profiles = loadProfiles();
+    profiles.find(p => p.id === subjectId).name = name.trim();
+    saveProfiles(profiles);
+
+    populateSubjectSelector();
+    updateProfileSubject(subjectId);
+}
+
+function addProfile() {
+    const name = prompt("Name of the new astronaut:");
+    if (!name || !name.trim()) return;
+
+    const profiles = loadProfiles();
+    const id = "P" + Date.now().toString(36).toUpperCase();
+    const avatars = ["👨‍🚀", "👩‍🚀", "🧑‍🚀", "👩‍🔬", "🧑‍🔬", "👨‍🔬"];
+    profiles.push({
+        id: id,
+        name: name.trim(),
+        avatar: avatars[profiles.length % avatars.length],
+        weight: 70, height: 170, age: 20, hrBaseline: 70,
+        xp: 0, points: 0, streak: 0, lastLogDate: null
+    });
+    saveProfiles(profiles);
+
+    populateSubjectSelector();
+    updateProfileSubject(id);
+}
+
+function removeProfile() {
+    const profiles = loadProfiles();
+    if (profiles.length <= 1) {
+        alert("You cannot remove the last profile.");
+        return;
+    }
+
+    const subjectId = getSelectedSubject();
+    const profile = getProfile(subjectId);
+    if (!confirm(`Remove "${profile.name}" and all their progress?`)) return;
+
+    const remaining = profiles.filter(p => p.id !== subjectId);
+    saveProfiles(remaining);
+    try {
+        localStorage.removeItem(profilePhotoKey(subjectId));
+    } catch (error) {
+        // storage unavailable
+    }
+
+    populateSubjectSelector();
+    updateProfileSubject(remaining[0].id);
+}
+
+function editBasicData() {
+    const subjectId = getSelectedSubject();
+    const profiles = loadProfiles();
+    const profile = profiles.find(p => p.id === subjectId);
+    if (!profile) return;
+
+    const weight = prompt("Weight (kg):", profile.weight);
+    if (weight === null) return;
+    const height = prompt("Height (cm):", profile.height);
+    if (height === null) return;
+    const age = prompt("Age (years):", profile.age);
+    if (age === null) return;
+    const hr = prompt("Resting HR baseline (bpm):", profile.hrBaseline);
+    if (hr === null) return;
+
+    profile.weight = parseFloat(weight) || profile.weight;
+    profile.height = parseFloat(height) || profile.height;
+    profile.age = parseInt(age, 10) || profile.age;
+    profile.hrBaseline = parseInt(hr, 10) || profile.hrBaseline;
+    saveProfiles(profiles);
+
+    updateProfileSubject(subjectId);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const saved = localStorage.getItem("selectedSubject") || "A";
-    updateProfileSubject(saved);
+    populateSubjectSelector();
+    updateProfileSubject(getSelectedSubject());
 });

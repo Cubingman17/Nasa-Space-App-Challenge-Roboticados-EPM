@@ -6,6 +6,23 @@ from ai.metrics_reader import get_last_reading, read_metrics
 router = APIRouter(prefix="/api", tags=["AI"])
 
 
+@router.get("/home")
+def home_data(subject: str = "A"):
+    """Summary for the HOME screen based on the subject's last reading."""
+    reading = get_last_reading(subject)
+    if reading is None:
+        return {
+            "subject": subject,
+            "ai_advice": "No metrics registered yet. Log your data in the DATA tab.",
+            "missions": 0,
+        }
+    return {
+        "subject": subject,
+        "ai_advice": reading["ai_response"],
+        "missions": 1,
+    }
+
+
 @router.post("/predict")
 def predict(payload: dict):
     """Receives the frontend sensor metrics and returns their evaluation."""
@@ -14,10 +31,13 @@ def predict(payload: dict):
 
 @router.post("/chat")
 def chat(body: dict):
-    """Chats with the local AI (Ollama) using the last reading as context.
-    If Ollama is not available, replies with the metrics summary."""
-    prompt = (body or {}).get("prompt", "").strip()
-    reading = get_last_reading()
+    """Chats with the local AI (Ollama) using the subject's last reading
+    as context. If Ollama is not available, replies with the metrics
+    summary."""
+    body = body or {}
+    prompt = (body.get("prompt") or "").strip()
+    subject = body.get("subject_id") or "A"
+    reading = get_last_reading(subject)
 
     if prompt and local_llm.is_available():
         try:

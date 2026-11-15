@@ -151,7 +151,9 @@ const OPTIONAL_INPUTS = {
 
 async function submitManualSensors() {
     const payload = {
-        subject_id: localStorage.getItem("selectedSubject") || "A",
+        subject_id: typeof getSelectedSubject === "function"
+            ? getSelectedSubject()
+            : (localStorage.getItem("selectedSubject") || "A"),
         hr_bpm: document.getElementById("py-input-lpm").value,
         spo2_pct: document.getElementById("py-input-spo2").value,
         sleep_hours: document.getElementById("py-input-sleep").value,
@@ -183,15 +185,23 @@ async function submitManualSensors() {
 
     submitBtn.disabled = false;
 
-    // Save the state for the console border and the AI banners
+    // Save the subject's state for the console border and the AI banners
     const overall = String(response.overall_status || "normal").split(":")[0].trim();
     try {
-        localStorage.setItem("lastOverallStatus", overall);
-        localStorage.setItem("lastAiResponse", response.ai_response || "");
+        localStorage.setItem(`lastOverallStatus_${payload.subject_id}`, overall);
+        localStorage.setItem(`lastAiResponse_${payload.subject_id}`, response.ai_response || "");
     } catch (error) {
         // localStorage unavailable: continue without persisting
     }
     if (typeof applyHealthState === "function") applyHealthState(overall);
+
+    // Gamification: XP, points and streak for this astronaut
+    if (typeof updateProfileProgress === "function") {
+        const result = updateProfileProgress(payload.subject_id, payload, response);
+        if (result) {
+            feedback.innerText = `${response.ai_response || "Data recorded successfully."}\n+${result.earned} pts earned!`;
+        }
+    }
 
     feedback.className = `text-xs font-semibold p-2.5 rounded-xl text-center border ${STATUS_STYLES[overall] || STATUS_STYLES.normal}`;
     feedback.innerText = response.ai_response || "Data recorded successfully.";

@@ -31,18 +31,21 @@ function applyHealthState(status) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const savedSubject = localStorage.getItem("selectedSubject") || "A";
+    const savedSubject = typeof getSelectedSubject === "function"
+        ? getSelectedSubject()
+        : (localStorage.getItem("selectedSubject") || "A");
     const userLabel = document.getElementById("py-home-user");
     if (userLabel) {
-        userLabel.innerText = `ASTRONAUT ${savedSubject}`;
+        const profile = typeof getProfile === "function" ? getProfile(savedSubject) : null;
+        userLabel.innerText = `ASTRONAUT ${profile ? profile.name.toUpperCase() : savedSubject}`;
     }
 
-    // Restore the last known health state
-    const status = localStorage.getItem("lastOverallStatus");
+    // Restore the subject's last known health state
+    const status = localStorage.getItem(`lastOverallStatus_${savedSubject}`);
     if (status) applyHealthState(status);
 
-    // Show the last AI advice in the banners of each page
-    const lastAdvice = localStorage.getItem("lastAiResponse");
+    // Show the subject's last AI advice in the banners of each page
+    const lastAdvice = localStorage.getItem(`lastAiResponse_${savedSubject}`);
     if (lastAdvice) {
         ["py-home-ai-advice", "py-data-ai-advice", "py-profile-ai-advice"].forEach((id) => {
             const el = document.getElementById(id);

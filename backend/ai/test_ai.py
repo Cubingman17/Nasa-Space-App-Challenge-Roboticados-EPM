@@ -21,7 +21,7 @@ from ai.ia import (
     overall_status,
     radiation_value,
 )
-from ai.metrics_reader import read_metrics
+from ai.metrics_reader import get_last_reading, read_metrics
 
 PASS = 0
 FAIL = 0
@@ -131,6 +131,18 @@ def test_reader():
     reading = read_metrics({})
     check("empty payload uses defaults", reading["overall_status"] == "normal")
     check("default subject is A", reading["subject_id"] == "A")
+
+    # Each subject keeps their own last reading
+    read_metrics({"subject_id": "A", "hr_bpm": "70", "spo2_pct": "98",
+                  "sleep_hours": "8", "rt_ms": "250", "fatigue_level": "2"})
+    read_metrics({"subject_id": "B", "hr_bpm": "130", "spo2_pct": "88",
+                  "sleep_hours": "4", "rt_ms": "600", "fatigue_level": "9"})
+    check("subject A keeps their own reading",
+          get_last_reading("A")["overall_status"] == "normal")
+    check("subject B keeps their own reading",
+          get_last_reading("B")["overall_status"] == "critical")
+    check("latest reading without subject", get_last_reading()["subject_id"] == "B")
+    check("unknown subject has no reading", get_last_reading("Z") is None)
 
     # Invalid values fall back to defaults
     reading = read_metrics({"hr_bpm": "abc", "sleep_hours": None})

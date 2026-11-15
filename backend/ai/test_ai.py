@@ -127,9 +127,17 @@ def test_reader():
     reading = read_metrics({"hr_bpm": "70"})
     check("optionals absent when not sent", "glucose" not in reading["metrics"])
 
-    # Missing core fields fall back to defaults
-    reading = read_metrics({})
-    check("empty payload uses defaults", reading["overall_status"] == "normal")
+    # Missing core fields are rejected instead of replaced with invented values
+    rejected_empty_payload = False
+    try:
+        read_metrics({})
+    except ValueError:
+        rejected_empty_payload = True
+    check("empty payload is rejected", rejected_empty_payload)
+
+    reading = read_metrics({"hr_bpm": "70", "spo2_pct": "98",
+                            "sleep_hours": "8", "rt_ms": "250",
+                            "fatigue_level": "2"})
     check("default subject is A", reading["subject_id"] == "A")
 
     # Each subject keeps their own last reading
@@ -144,9 +152,13 @@ def test_reader():
     check("latest reading without subject", get_last_reading()["subject_id"] == "B")
     check("unknown subject has no reading", get_last_reading("Z") is None)
 
-    # Invalid values fall back to defaults
-    reading = read_metrics({"hr_bpm": "abc", "sleep_hours": None})
-    check("invalid values use defaults", reading["overall_status"] == "normal")
+    # Invalid values are rejected instead of replaced with invented values
+    rejected_invalid_payload = False
+    try:
+        read_metrics({"hr_bpm": "abc", "sleep_hours": None})
+    except ValueError:
+        rejected_invalid_payload = True
+    check("invalid values are rejected", rejected_invalid_payload)
 
 
 def test_api():

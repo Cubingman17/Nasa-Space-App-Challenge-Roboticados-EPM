@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
-from sqlalchemy import delete, func, select
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -9,14 +9,24 @@ try:
     from data.metrics import METRICS_BY_CATEGORY, METRICS_BY_ID
     from database import get_db
     from models.schemas import Metric
-    from models.tables import Astronaut, Measurement
-    from services.csv_import import CSVValidationError, parse_metric_csv
+    from models.tables import Measurement
+    from services.csv_import import (
+        CSVValidationError,
+        SeriesConflictError,
+        parse_metric_csv,
+        store_metric_series,
+    )
 except ModuleNotFoundError:
     from backend.data.metrics import METRICS_BY_CATEGORY, METRICS_BY_ID
     from backend.database import get_db
     from backend.models.schemas import Metric
-    from backend.models.tables import Astronaut, Measurement
-    from backend.services.csv_import import CSVValidationError, parse_metric_csv
+    from backend.models.tables import Measurement
+    from backend.services.csv_import import (
+        CSVValidationError,
+        SeriesConflictError,
+        parse_metric_csv,
+        store_metric_series,
+    )
 
 router = APIRouter(prefix="/api/data", tags=["data"])
 
@@ -38,10 +48,18 @@ CATEGORIES = {
         "description": "Spacecraft environmental and microbial measurements.",
     },
 }
+if set(METRICS_BY_CATEGORY) != set(CATEGORIES):
+    raise ValueError("Category descriptions must match categories in metrics.py")
 
 
 def _metric_model(definition: dict) -> Metric:
     return Metric(**definition)
+
+
+def _utc_timestamp(value: datetime) -> datetime:
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
 
 
 def _observation_counts(db: Session) -> dict[int, int]:
@@ -113,6 +131,10 @@ def get_metric_observations(
     definition = METRICS_BY_ID.get(metric_id)
     if definition is None:
         raise HTTPException(status_code=404, detail="Metric not found")
+    if start:
+        start = _utc_timestamp(start)
+    if end:
+        end = _utc_timestamp(end)
     if start and end and start > end:
         raise HTTPException(status_code=422, detail="start must be before end")
 
@@ -133,7 +155,7 @@ def get_metric_observations(
         "astronaut_id": astronaut_id,
         "status": "available" if rows else "no_data",
         "observations": [
-            {"timestamp": row.recorded_at, "value": row.value}
+            {"timestamp": _utc_timestamp(row.recorded_at), "value": row.value}
             for row in rows
         ],
     }
@@ -152,6 +174,13 @@ async def import_metric_csv(
     definition = METRICS_BY_ID.get(metric_id)
     if definition is None:
         raise HTTPException(status_code=404, detail="Metric not found")
+    astronaut_id = astronaut_id.strip()
+    source = source.strip()
+    if not astronaut_id or not source:
+        raise HTTPException(
+            status_code=422,
+            detail="astronaut_id and source cannot be blank",
+        )
 
     try:
         csv_text = (await request.body()).decode("utf-8-sig")
@@ -164,52 +193,19 @@ async def import_metric_csv(
     except CSVValidationError as error:
         raise HTTPException(status_code=422, detail=str(error)) from error
 
-    existing_astronaut = db.get(Astronaut, astronaut_id)
-    if existing_astronaut is None:
-        db.add(Astronaut(id=astronaut_id))
-
-    existing_statement = select(Measurement).where(
-        Measurement.astronaut_id == astronaut_id,
-        Measurement.metric_id == metric_id,
-    )
-    existing = db.scalars(existing_statement).all()
-    replaced_count = 0
-    if replace_existing:
-        replaced_count = len(existing)
-        db.execute(
-            delete(Measurement).where(
-                Measurement.astronaut_id == astronaut_id,
-                Measurement.metric_id == metric_id,
-            )
-        )
-    else:
-        existing_timestamps = {
-            row.recorded_at.replace(tzinfo=None)
-            for row in existing
-        }
-        conflicts = [
-            timestamp for timestamp, _ in points
-            if timestamp.replace(tzinfo=None) in existing_timestamps
-        ]
-        if conflicts:
-            raise HTTPException(
-                status_code=409,
-                detail="CSV contains timestamps already stored for this series; use replace_existing=true",
-            )
-
-    db.add_all([
-        Measurement(
+    try:
+        replaced_count = store_metric_series(
+            db,
             astronaut_id=astronaut_id,
             metric_id=metric_id,
-            value=value,
-            recorded_at=timestamp,
+            points=points,
             source=source,
+            replace_existing=replace_existing,
         )
-        for timestamp, value in points
-    ])
-
-    try:
         db.commit()
+    except SeriesConflictError as error:
+        db.rollback()
+        raise HTTPException(status_code=409, detail=str(error)) from error
     except IntegrityError as error:
         db.rollback()
         raise HTTPException(

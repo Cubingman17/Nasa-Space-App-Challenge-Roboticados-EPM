@@ -1,30 +1,29 @@
 """Reads the metrics detected by ia.py, prints a console report
 and builds the payload the backend sends to the frontend."""
 
+import math
+
 try:
     from .ia import evaluate_metrics, evaluate_optional, overall_status
 except ImportError:
     from ia import evaluate_metrics, evaluate_optional, overall_status
-
-# Default values for the core metrics when the frontend omits them
-DEFAULTS = {
-    'hr_bpm': 75,
-    'spo2_pct': 98,
-    'sleep_hours': 8,
-    'rt_ms': 250,
-    'fatigue_level': 3,
-}
 
 # Last reading per subject (used by /api/chat and /api/home)
 _last_readings = {}
 _last_reading = None
 
 
-def _number(value, default):
+def _required_number(payload, key):
+    value = payload.get(key)
+    if value is None or value == "":
+        raise ValueError(f"{key} is required")
     try:
-        return float(value)
+        number = float(value)
     except (TypeError, ValueError):
-        return default
+        raise ValueError(f"{key} must be numeric") from None
+    if not math.isfinite(number):
+        raise ValueError(f"{key} must be finite")
+    return number
 
 
 def _fmt(value):
@@ -37,11 +36,11 @@ def read_metrics(payload):
     global _last_reading
     payload = payload or {}
 
-    bpm = _number(payload.get('hr_bpm'), DEFAULTS['hr_bpm'])
-    spO2 = _number(payload.get('spo2_pct'), DEFAULTS['spo2_pct'])
-    sleep = _number(payload.get('sleep_hours'), DEFAULTS['sleep_hours'])
-    reaction = _number(payload.get('rt_ms'), DEFAULTS['rt_ms'])
-    fatigue = _number(payload.get('fatigue_level'), DEFAULTS['fatigue_level'])
+    bpm = _required_number(payload, 'hr_bpm')
+    spO2 = _required_number(payload, 'spo2_pct')
+    sleep = _required_number(payload, 'sleep_hours')
+    reaction = _required_number(payload, 'rt_ms')
+    fatigue = _required_number(payload, 'fatigue_level')
 
     metrics = evaluate_metrics(bpm, spO2, sleep, reaction, fatigue)
     metrics.update(evaluate_optional(payload))

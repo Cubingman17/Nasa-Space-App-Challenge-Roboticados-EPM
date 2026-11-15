@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from ai import local_llm
 from ai.metrics_reader import get_last_reading, read_metrics
@@ -26,7 +26,10 @@ def home_data(subject: str = "A"):
 @router.post("/predict")
 def predict(payload: dict):
     """Receives the frontend sensor metrics and returns their evaluation."""
-    return read_metrics(payload)
+    try:
+        return read_metrics(payload)
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
 
 
 @router.post("/chat")

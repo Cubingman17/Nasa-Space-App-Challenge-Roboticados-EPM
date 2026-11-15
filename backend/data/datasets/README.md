@@ -25,8 +25,16 @@ timestamp,value
   astronaut profile fields.
 
 The metric catalog is the source of truth for IDs, categories, names, and
-units. A CSV is associated with its metric by the API path, not by its filename
-or by a guessed name in the CSV.
+units. A CSV is associated with its metric by its stable ID, not by a guessed
+name in the CSV.
+
+| File | Metric |
+| --- | --- |
+| `metric_01.csv`–`metric_02.csv` | Active and passive radiation dosimetry |
+| `metric_03.csv`–`metric_15.csv` | Blood pressure, cardiac, ocular, bone, and biochemical metrics |
+| `metric_16.csv`–`metric_21.csv` | Cabin and microbiological environment metrics |
+| `metric_22.csv`–`metric_25.csv` | Sleep, chronobiology, reaction time, and well-being |
+| `metric_26.csv`–`metric_32.csv` | SpO2, HRV, temperature, body composition, and balance metrics |
 
 ## Import and query
 
@@ -43,6 +51,13 @@ duplicate points. To read the series:
 
 ```text
 GET /api/data/metrics/{metric_id}/observations?astronaut_id=A
+```
+
+To load all 32 files from this directory into SQLite in one database
+transaction, run from the `backend` directory:
+
+```bash
+python -m services.import_datasets --astronaut-id A
 ```
 
 The database stores every point in the shared `measurements` table, keyed by

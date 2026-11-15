@@ -288,4 +288,6 @@ METRICS_BY_CATEGORY = {
 
 if len(METRICS_BY_ID) != len(METRICS):
     raise ValueError("Metric IDs must be unique")
+if set(METRICS_BY_ID) != set(range(1, 33)):
+    raise ValueError("The metric catalog must contain every ID from 1 through 32")
 

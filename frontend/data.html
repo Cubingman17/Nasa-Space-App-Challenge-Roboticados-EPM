@@ -49,41 +49,73 @@
                 <div class="flex items-center gap-3">
                     <span class="text-lg">🤖</span>
                     <p class="text-xs md:text-sm font-medium text-slate-300" id="py-data-ai-advice">
-                        <strong class="text-blue-400">Data Explorer:</strong> Select one of the four health categories to view its CSV datasets and charts.
+                        <strong class="text-blue-400">Data Explorer:</strong> The 5 NASA spaceflight hazards, each fed by catalog datasets and your own logged metrics.
                     </p>
                 </div>
                 <button id="btn-back-data" onclick="closeRiskDetail()" class="hidden bg-slate-800 hover:bg-slate-700 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-600">
-                    ← Back to Categories
+                    ← Back to Hazards
                 </button>
             </div>
 
-            <!-- FOUR DATA CATEGORIES -->
+            <!-- OVERVIEW: OVERALL STATUS + THE 5 NASA HAZARDS -->
             <div id="data-overview" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-0">
+
+                <!-- OVERALL STATUS: the general hazard, separate from the individual ones -->
+                <div class="risk-card border border-slate-500/60 p-4 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🛡️</span>
+                        <div>
+                            <h3 class="font-extrabold text-sm md:text-base text-white tracking-wider">OVERALL STATUS</h3>
+                            <p class="text-[10px] md:text-xs text-slate-400 mt-0.5">Worst metric of your last reading (general hazard)</p>
+                        </div>
+                    </div>
+                    <span id="py-overall-pill" class="text-xs font-extrabold px-3 py-1 rounded-full border bg-slate-800 text-slate-400 border-slate-600">NO DATA</span>
+                </div>
+
                 <button type="button" onclick="openRiskDetail('radiation')" class="risk-card border border-rose-500/50 hover:border-rose-400 p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-lg md:text-xl text-rose-400 tracking-wider">☢️ RADIATION</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-2" id="category-count-radiation">Loading datasets…</p>
+                    <h3 class="font-extrabold text-base md:text-lg text-rose-400 tracking-wider flex items-center gap-2">
+                        ☢️ RADIATION <span id="py-dot-radiation" class="inline-block w-3 h-3 rounded-full" style="background:#f43f5e" title="Hazard status"></span>
+                    </h3>
+                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-2" id="category-count-radiation">Loading datasets…</p>
                 </button>
-                <button type="button" onclick="openRiskDetail('microgravity')" class="risk-card border border-amber-500/50 hover:border-amber-400 p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-lg md:text-xl text-amber-400 tracking-wider">🦴 MICROGRAVITY</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-2" id="category-count-microgravity">Loading datasets…</p>
+
+                <button type="button" onclick="openRiskDetail('isolation')" class="risk-card border border-violet-500/50 hover:border-violet-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-base md:text-lg text-violet-400 tracking-wider flex items-center gap-2">
+                        🚪 ISOLATION <span id="py-dot-isolation" class="inline-block w-3 h-3 rounded-full" style="background:#f59e0b" title="Hazard status"></span>
+                    </h3>
+                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-2" id="category-count-isolation">Loading datasets…</p>
                 </button>
-                <button type="button" onclick="openRiskDetail('psychology')" class="risk-card border border-violet-500/50 hover:border-violet-400 p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-lg md:text-xl text-violet-400 tracking-wider">🧠 PSYCHOLOGY</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-2" id="category-count-psychology">Loading datasets…</p>
+
+                <button type="button" onclick="openRiskDetail('gravity')" class="risk-card border border-amber-500/50 hover:border-amber-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-base md:text-lg text-amber-400 tracking-wider flex items-center gap-2">
+                        🦴 ALTERED GRAVITY <span id="py-dot-gravity" class="inline-block w-3 h-3 rounded-full" style="background:#f59e0b" title="Hazard status"></span>
+                    </h3>
+                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-2" id="category-count-gravity">Loading datasets…</p>
                 </button>
+
                 <button type="button" onclick="openRiskDetail('environment')" class="risk-card border border-emerald-500/50 hover:border-emerald-400 p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-lg md:text-xl text-emerald-400 tracking-wider">🌎 ENVIRONMENT</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-2" id="category-count-environment">Loading datasets…</p>
+                    <h3 class="font-extrabold text-base md:text-lg text-emerald-400 tracking-wider flex items-center gap-2">
+                        🏭 HOSTILE ENV. <span id="py-dot-environment" class="inline-block w-3 h-3 rounded-full" style="background:#10b981" title="Hazard status"></span>
+                    </h3>
+                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-2" id="category-count-environment">Loading datasets…</p>
+                </button>
+
+                <button type="button" onclick="openRiskDetail('distance')" class="risk-card border border-sky-500/50 hover:border-sky-400 p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-base md:text-lg text-sky-400 tracking-wider flex items-center gap-2">
+                        🛰️ DISTANCE <span id="py-dot-distance" class="inline-block w-3 h-3 rounded-full" style="background:#f43f5e" title="Hazard status"></span>
+                    </h3>
+                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-2" id="category-count-distance">Loading datasets…</p>
                 </button>
             </div>
 
-            <!-- CATEGORY DATASETS AND GENERATED CHARTS -->
+            <!-- HAZARD DATASETS AND GENERATED CHARTS -->
             <div id="data-detail-view" class="hidden flex flex-1 flex-col min-h-0 overflow-hidden">
                 <div class="mb-3 shrink-0">
                     <h3 id="detail-title" class="font-extrabold text-lg uppercase text-white"></h3>
                     <p id="detail-description" class="text-xs md:text-sm text-slate-400 mt-1"></p>
                     <p id="dataset-load-status" class="text-xs text-slate-400 mt-2"></p>
                 </div>
+                <div id="detail-metrics" class="mb-3 shrink-0 bg-slate-900/60 border border-slate-700 rounded-xl p-3"></div>
                 <div id="metric-datasets" class="flex-1 overflow-y-auto space-y-4 pr-1"></div>
             </div>
 
@@ -93,115 +125,6 @@
                 <span>Enter Manual Data</span>
             </button>
         </main>
-
-        <!-- MANUAL DATA ENTRY MODAL -->
-        <div id="manual-data-modal" class="hidden absolute inset-0 z-30 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="ui-card w-full max-w-2xl max-h-[88vh] overflow-y-auto p-6 shadow-2xl border-blue-500/40 flex flex-col gap-4">
-                <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-                    <div>
-                        <h3 class="font-extrabold text-base uppercase text-blue-400">📡 Manual Sensor & Log Entry</h3>
-                        <p class="text-xs text-slate-400">Required: <span class="text-rose-300">*</span> BPM, SpO2, Sleep, Reaction and Fatigue. Everything else is optional.</p>
-                    </div>
-                    <button onclick="toggleManualModal(false)" class="text-slate-400 hover:text-white font-bold text-lg px-2">✕</button>
-                </div>
-
-                <!-- Required metrics -->
-                <div>
-                    <h4 class="text-[10px] font-bold uppercase tracking-wider text-rose-300 mb-2">Required Metrics</h4>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">💓 BPM <span class="text-rose-300">*</span></label>
-                            <input type="number" min="20" max="250" id="py-input-lpm" placeholder="E.g. 68" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">🫁 SpO2 (%) <span class="text-rose-300">*</span></label>
-                            <input type="number" min="50" max="100" id="py-input-spo2" placeholder="E.g. 98" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">😴 Sleep (Hours) <span class="text-rose-300">*</span></label>
-                            <input type="number" step="0.1" min="0" max="24" id="py-input-sleep" placeholder="E.g. 7.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">⚡ Reaction (ms) <span class="text-rose-300">*</span></label>
-                            <input type="number" min="50" max="2000" id="py-input-rt" placeholder="E.g. 240" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">🧠 Fatigue (1-10) <span class="text-rose-300">*</span></label>
-                            <input type="number" min="1" max="10" id="py-input-fatigue" placeholder="E.g. 3" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Optional metrics -->
-                <div>
-                    <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Optional Metrics</h4>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">🩸 Glucose (mg/dL)</label>
-                            <input type="number" min="20" max="600" id="py-input-glucose" placeholder="E.g. 95" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">🩺 BP Systolic (mmHg)</label>
-                            <input type="number" min="40" max="250" id="py-input-bp-sys" placeholder="E.g. 120" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">🩺 BP Diastolic (mmHg)</label>
-                            <input type="number" min="40" max="250" id="py-input-bp-dia" placeholder="E.g. 80" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">🌡️ Body Temp (°C)</label>
-                            <input type="number" step="0.1" min="30" max="45" id="py-input-body-temp" placeholder="E.g. 36.6" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">😊 Mood (1-10)</label>
-                            <input type="number" min="1" max="10" id="py-input-mood" placeholder="E.g. 8" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">☢️ Radiation (µSv/day)</label>
-                            <input type="number" step="1" min="0" max="100000" id="py-input-rad" placeholder="E.g. 400" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">💨 Cabin CO2 (ppm)</label>
-                            <input type="number" step="1" min="100" max="20000" id="py-input-co2" placeholder="E.g. 900" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">🌡️ Cabin Temp (°C)</label>
-                            <input type="number" step="0.1" min="-20" max="60" id="py-input-temp" placeholder="E.g. 22.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                            <label class="font-bold text-slate-300 block mb-1">⚖️ Weight (kg)</label>
-                            <input type="number" step="0.1" min="20" max="300" id="py-input-weight" placeholder="E.g. 70.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs">
-                    <label class="font-bold text-slate-300 block mb-1">📝 Additional session notes (Optional)</label>
-                    <input type="text" id="py-input-notes" placeholder="E.g. Test taken after exercise or fasting..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
-                </div>
-
-                <div id="modal-feedback" class="hidden text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-xl text-center"></div>
-
-                <div class="flex justify-end gap-3 pt-2">
-                    <button onclick="toggleManualModal(false)" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold">Cancel</button>
-                    <button id="py-submit-sensors" onclick="submitManualSensors()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold uppercase tracking-wider shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-                        📤 Send Data to Python
-                    </button>
-                </div>
-            </div>
-        </div>
 
     </div>
 

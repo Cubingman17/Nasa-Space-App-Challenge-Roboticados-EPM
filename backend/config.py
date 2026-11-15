@@ -1,4 +1,6 @@
 from functools import lru_cache
+
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -17,6 +19,17 @@ class Settings(BaseSettings):
         case_sensitive=False,
         extra="ignore"
     )
+
+    @field_validator("debug", mode="before")
+    @classmethod
+    def parse_debug(cls, value):
+        """Some machines have a global DEBUG=release variable that is not a
+        boolean; ignore values pydantic cannot interpret."""
+        if isinstance(value, str) and value.strip().lower() not in (
+            "true", "false", "1", "0", "yes", "no", "on", "off",
+        ):
+            return True
+        return value
 
 
 @lru_cache

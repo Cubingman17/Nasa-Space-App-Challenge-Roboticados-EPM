@@ -154,6 +154,12 @@ def test_reader():
     check("latest reading without subject", get_last_reading()["subject_id"] == "B")
     check("unknown subject has no reading", get_last_reading("Z") is None)
 
+    # Suggestions: one actionable tip per non-normal metric
+    check("critical reading has suggestions", len(get_last_reading("B")["suggestions"]) >= 4)
+    check("normal reading has no suggestions", get_last_reading("A")["suggestions"] == [])
+    check("suggestions are in English",
+          any("sleep" in tip.lower() for tip in get_last_reading("B")["suggestions"]))
+
     # Invalid values are rejected instead of replaced with invented values
     rejected_invalid_payload = False
     try:

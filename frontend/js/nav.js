@@ -31,6 +31,7 @@ function applyHealthState(status) {
 }
 
 // Pretty banner: overall pill + one chip per metric with a status dot
+// + actionable suggestions for the metrics that are not optimal
 function renderAdviceBanner(el, reading) {
     const overall = String(reading.overall_status || "normal").split(":")[0].trim().toUpperCase();
     const pillClass = {
@@ -50,6 +51,19 @@ function renderAdviceBanner(el, reading) {
         </span>`;
     }
 
+    let suggestionsHtml = "";
+    const suggestions = reading.suggestions || [];
+    if (suggestions.length) {
+        const items = suggestions.map(tip =>
+            `<li class="flex items-start gap-1.5"><span class="text-amber-400 mt-0.5">▸</span><span>${escapeHtml(tip)}</span></li>`
+        ).join("");
+        suggestionsHtml = `
+            <div class="mt-1.5 pt-1.5 border-t border-slate-700/60">
+                <p class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300 mb-0.5">How to improve your metrics:</p>
+                <ul class="space-y-0.5">${items}</ul>
+            </div>`;
+    }
+
     el.innerHTML = `
         <div class="flex flex-col gap-1.5 w-full">
             <div class="flex items-center gap-2 flex-wrap">
@@ -57,6 +71,7 @@ function renderAdviceBanner(el, reading) {
                 <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${pillClass}">OVERALL: ${overall}</span>
             </div>
             <div class="flex flex-wrap gap-1.5">${chips}</div>
+            ${suggestionsHtml}
         </div>`;
 }
 

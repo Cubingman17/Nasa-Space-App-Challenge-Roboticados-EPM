@@ -1,11 +1,78 @@
+// DATA screen: the 5 NASA spaceflight hazards, fed by the backend metric
+// catalog (/api/data) and by the astronaut's own logged readings.
+
 const DATA_API_URL = `${PYTHON_API_URL}/data`;
 const datasetCharts = [];
-const categoryCountIds = {
-    radiation: "category-count-radiation",
-    microgravity: "category-count-microgravity",
-    psychology: "category-count-psychology",
-    environment: "category-count-environment"
+
+// The 5 NASA hazards and the catalog category that provides their datasets
+const HAZARDS = {
+    radiation: {
+        title: "RADIATION",
+        emoji: "☢️",
+        color: "#f43f5e",
+        catalog: "radiation",
+        description: "Space ionizing radiation: chromosomal aberrations and cumulative dose measured by onboard dosimetry.",
+        dotDefault: "critical"
+    },
+    isolation: {
+        title: "ISOLATION & CONFINEMENT",
+        emoji: "🚪",
+        color: "#8b5cf6",
+        catalog: "psychology",
+        description: "Confinement in a closed habitat degrades mood, sleep and raises chronic fatigue.",
+        dotDefault: "atention"
+    },
+    gravity: {
+        title: "ALTERED GRAVITY",
+        emoji: "🦴",
+        color: "#fbbf24",
+        catalog: "microgravity",
+        description: "Microgravity causes bone mineral density loss, muscle atrophy and cardiovascular deconditioning.",
+        dotDefault: "atention"
+    },
+    environment: {
+        title: "HOSTILE ENVIRONMENT",
+        emoji: "🏭",
+        color: "#10b981",
+        catalog: "environment",
+        description: "A closed environment can turn hostile fast: cabin CO2, oxygen, pressure and temperature must stay nominal.",
+        dotDefault: "normal"
+    },
+    distance: {
+        title: "DISTANCE & BEHAVIORAL HEALTH",
+        emoji: "🛰️",
+        color: "#0ea5e9",
+        catalog: "psychology",
+        description: "Far from Earth there is no real-time ground support: psychomotor vigilance (PVT) and sleep mark the behavioral risk.",
+        dotDefault: "critical"
+    }
 };
+
+// Metrics from the astronaut's last reading that feed each hazard
+const HAZARD_METRICS = {
+    radiation: [
+        { key: "radiation", label: "Radiation dose", why: "Daily µSv exposure measured by onboard dosimetry." }
+    ],
+    isolation: [
+        { key: "mood", label: "Mood index", why: "Self-reported well-being declines with confinement." },
+        { key: "fatigue", label: "Fatigue level", why: "Confinement and monotony raise chronic fatigue." },
+        { key: "sleep", label: "Sleep hours", why: "Sleep quality degrades in isolated habitats." }
+    ],
+    gravity: [
+        { key: "weight_kg", label: "Body mass", why: "Bone/muscle loss in microgravity is tracked via body mass changes (BMD itself comes from the catalog datasets)." }
+    ],
+    environment: [
+        { key: "cabin_co2", label: "Cabin CO2", why: "CO2 buildup in a closed environment impairs cognition." },
+        { key: "body_temp", label: "Body temperature", why: "Thermal regulation stress in a hostile cabin." },
+        { key: "spO2", label: "Blood oxygen (SpO2)", why: "Oxygen saturation reflects life-support performance." }
+    ],
+    distance: [
+        { key: "reaction", label: "PVT reaction time", why: "The gold-standard behavioral health marker for fatigue." },
+        { key: "sleep", label: "Sleep hours", why: "Sleep loss is the main driver of behavioral risk far from Earth." },
+        { key: "fatigue", label: "Fatigue level", why: "Accumulated fatigue on long-distance missions." }
+    ]
+};
+
 const chartColors = ["#38bdf8", "#a78bfa", "#fb7185", "#34d399", "#fbbf24"];
 
 async function requestDataApi(path) {
@@ -17,18 +84,26 @@ async function requestDataApi(path) {
     return response.json();
 }
 
+// Fill the "N metric tables · M records" line of each hazard card
 async function loadDataCategories() {
     try {
         const payload = await requestDataApi("");
+        const byCategory = {};
         for (const category of payload.categories || []) {
-            const count = document.getElementById(categoryCountIds[category.id]);
+            byCategory[category.id] = category;
+        }
+        for (const [hazardId, hazard] of Object.entries(HAZARDS)) {
+            const count = document.getElementById(`category-count-${hazardId}`);
+            const category = byCategory[hazard.catalog];
             if (count) {
-                count.textContent = `${category.metrics.length} metric tables · ${category.observation_count} records`;
+                count.textContent = category
+                    ? `${category.metrics.length} metric tables · ${category.observation_count} records`
+                    : "No catalog data";
             }
         }
     } catch (error) {
-        Object.values(categoryCountIds).forEach((id) => {
-            const count = document.getElementById(id);
+        Object.keys(HAZARDS).forEach((hazardId) => {
+            const count = document.getElementById(`category-count-${hazardId}`);
             if (count) count.textContent = "Data service unavailable";
         });
     }
@@ -193,7 +268,41 @@ async function renderMetricDataset(metric, container) {
     }
 }
 
-async function openRiskDetail(categoryId) {
+// Documents, per hazard, the metrics that determine its status
+function renderHazardMetrics(hazardId) {
+    const container = document.getElementById("detail-metrics");
+    if (!container) return;
+
+    const subject = typeof getSelectedSubject === "function" ? getSelectedSubject() : "A";
+    const reading = typeof getLastReading === "function" ? getLastReading(subject) : null;
+    const metrics = reading ? (reading.metrics || {}) : {};
+
+    let rows = "";
+    for (const entry of HAZARD_METRICS[hazardId] || []) {
+        const metric = metrics[entry.key];
+        const color = metric ? statusColor(metric.status) : "#64748b";
+        const value = metric
+            ? `${escapeHtml(String(metric.value))}${escapeHtml(metric.unit)} — ${escapeHtml(metric.status)}`
+            : "not logged yet";
+        rows += `<div class="flex items-start gap-2 py-1 border-b border-slate-800 last:border-0">
+            <span class="w-2.5 h-2.5 rounded-full mt-1 shrink-0" style="background:${color}"></span>
+            <div>
+                <p class="font-bold text-slate-200 text-[11px]">${escapeHtml(entry.label)}: <span class="font-normal text-slate-400">${value}</span></p>
+                <p class="text-[10px] text-slate-500 leading-snug">${escapeHtml(entry.why)}</p>
+            </div>
+        </div>`;
+    }
+
+    container.innerHTML = `
+        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-1">Metrics that feed this hazard</p>
+        ${rows}
+    `;
+}
+
+async function openRiskDetail(hazardId) {
+    const hazard = HAZARDS[hazardId];
+    if (!hazard) return;
+
     clearDatasetCharts();
     document.getElementById("data-overview").classList.add("hidden");
     document.getElementById("data-detail-view").classList.remove("hidden");
@@ -203,16 +312,15 @@ async function openRiskDetail(categoryId) {
     const description = document.getElementById("detail-description");
     const status = document.getElementById("dataset-load-status");
     const container = document.getElementById("metric-datasets");
-    const categoryName = categoryId.charAt(0).toUpperCase() + categoryId.slice(1);
-    title.textContent = categoryName;
-    description.textContent = "Loading metric tables and charts…";
-    status.textContent = "";
+
+    title.textContent = `${hazard.emoji} ${hazard.title}`;
+    description.textContent = hazard.description;
+    status.textContent = "Loading metric tables and charts…";
     container.replaceChildren();
+    renderHazardMetrics(hazardId);
 
     try {
-        const category = await requestDataApi(`/${encodeURIComponent(categoryId)}`);
-        title.textContent = category.name;
-        description.textContent = category.description;
+        const category = await requestDataApi(`/${encodeURIComponent(hazard.catalog)}`);
         status.textContent = `${category.metrics.length} metric tables · ${category.observation_count} total records`;
         await Promise.all(category.metrics.map((metric) => renderMetricDataset(metric, container)));
     } catch (error) {
@@ -228,9 +336,192 @@ function closeRiskDetail() {
     document.getElementById("data-overview").classList.remove("hidden");
 }
 
-loadDataCategories();
-// Floating Manual Entry Modal
+// -------------------------------------------------------------------------
+// Status dots per hazard + OVERALL panel (separate from individual hazards)
+// -------------------------------------------------------------------------
+function updateHazardDots() {
+    const subject = typeof getSelectedSubject === "function" ? getSelectedSubject() : "A";
+    const reading = typeof getLastReading === "function" ? getLastReading(subject) : null;
+    const metrics = reading ? (reading.metrics || {}) : {};
+
+    const worst = (statuses) => {
+        const order = { normal: 0, atention: 1, bad: 2, critical: 3 };
+        let worstStatus = "normal";
+        statuses.forEach(s => {
+            if (s && order[s.split(":")[0].trim()] > order[worstStatus]) worstStatus = s.split(":")[0].trim();
+        });
+        return worstStatus;
+    };
+
+    const dots = {
+        radiation: metrics.radiation ? metrics.radiation.status : null,
+        isolation: metrics.mood || metrics.fatigue
+            ? worst([metrics.mood && metrics.mood.status, metrics.fatigue && metrics.fatigue.status])
+            : null,
+        gravity: null,
+        environment: metrics.cabin_co2 || metrics.spO2
+            ? worst([metrics.cabin_co2 && metrics.cabin_co2.status, metrics.spO2 && metrics.spO2.status])
+            : null,
+        distance: metrics.reaction || metrics.sleep
+            ? worst([metrics.reaction && metrics.reaction.status, metrics.sleep && metrics.sleep.status])
+            : null
+    };
+
+    Object.entries(dots).forEach(([hazardId, status]) => {
+        const dot = document.getElementById(`py-dot-${hazardId}`);
+        if (!dot) return;
+        const effective = status || HAZARDS[hazardId].dotDefault;
+        dot.style.background = statusColor(effective);
+        dot.title = `Hazard status: ${effective}`;
+    });
+
+    // Overall panel: the general hazard, separate from the individual ones
+    const pill = document.getElementById("py-overall-pill");
+    if (pill) {
+        if (reading) {
+            const overall = String(reading.overall_status || "normal").split(":")[0].trim().toUpperCase();
+            const pillClass = {
+                NORMAL: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+                ATENTION: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+                BAD: "bg-orange-500/20 text-orange-300 border-orange-500/40",
+                CRITICAL: "bg-rose-500/20 text-rose-300 border-rose-500/40"
+            }[overall] || "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
+            pill.innerText = overall;
+            pill.className = "text-xs font-extrabold px-3 py-1 rounded-full border " + pillClass;
+        } else {
+            pill.innerText = "NO DATA";
+            pill.className = "text-xs font-extrabold px-3 py-1 rounded-full border bg-slate-800 text-slate-400 border-slate-600";
+        }
+    }
+}
+
+// -------------------------------------------------------------------------
+// Manual data entry modal (injected once, shared by DATA and HOME)
+// -------------------------------------------------------------------------
+const MANUAL_MODAL_HTML = `
+<div id="manual-data-modal" class="hidden absolute inset-0 z-30 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-3">
+    <div class="ui-card w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5 shadow-2xl border-blue-500/40 flex flex-col gap-4">
+
+        <div class="flex items-center justify-between border-b-2 border-blue-500/40 pb-3">
+            <div>
+                <h3 class="font-extrabold text-base uppercase tracking-wide text-blue-400">📡 Log Your Metrics</h3>
+                <p class="text-[11px] text-slate-400">Fields marked with <span class="text-rose-300 font-bold">*</span> are required. The rest are optional.</p>
+            </div>
+            <button onclick="toggleManualModal(false)" class="text-slate-400 hover:text-white font-bold text-lg px-2">✕</button>
+        </div>
+
+        <div>
+            <h4 class="text-[10px] font-extrabold uppercase tracking-widest text-rose-300 mb-2 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Required
+            </h4>
+            <div class="space-y-2">
+                <div class="flex items-center gap-3 bg-slate-900/80 border-l-4 border-rose-500/70 rounded-xl px-3 py-2">
+                    <span class="text-lg shrink-0">💓</span>
+                    <div class="flex-1 min-w-0"><p class="text-xs font-bold text-slate-200">BPM (Heart Rate) <span class="text-rose-300">*</span></p><p class="text-[10px] text-slate-500">60-100 bpm is optimal</p></div>
+                    <input type="number" min="20" max="250" id="py-input-lpm" placeholder="68" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-bold text-sm text-right">
+                </div>
+                <div class="flex items-center gap-3 bg-slate-900/80 border-l-4 border-rose-500/70 rounded-xl px-3 py-2">
+                    <span class="text-lg shrink-0">🫁</span>
+                    <div class="flex-1 min-w-0"><p class="text-xs font-bold text-slate-200">SpO2 <span class="text-rose-300">*</span></p><p class="text-[10px] text-slate-500">≥ 95% is optimal</p></div>
+                    <input type="number" min="50" max="100" id="py-input-spo2" placeholder="98" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-bold text-sm text-right">
+                </div>
+                <div class="flex items-center gap-3 bg-slate-900/80 border-l-4 border-rose-500/70 rounded-xl px-3 py-2">
+                    <span class="text-lg shrink-0">😴</span>
+                    <div class="flex-1 min-w-0"><p class="text-xs font-bold text-slate-200">Sleep (hours) <span class="text-rose-300">*</span></p><p class="text-[10px] text-slate-500">≥ 8 h is optimal</p></div>
+                    <input type="number" min="0" max="24" step="0.1" id="py-input-sleep" placeholder="7.5" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-bold text-sm text-right">
+                </div>
+                <div class="flex items-center gap-3 bg-slate-900/80 border-l-4 border-rose-500/70 rounded-xl px-3 py-2">
+                    <span class="text-lg shrink-0">⚡</span>
+                    <div class="flex-1 min-w-0"><p class="text-xs font-bold text-slate-200">Reaction time (ms) <span class="text-rose-300">*</span></p><p class="text-[10px] text-slate-500">≤ 250 ms is optimal (PVT)</p></div>
+                    <input type="number" min="50" max="2000" id="py-input-rt" placeholder="240" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-bold text-sm text-right">
+                </div>
+                <div class="flex items-center gap-3 bg-slate-900/80 border-l-4 border-rose-500/70 rounded-xl px-3 py-2">
+                    <span class="text-lg shrink-0">🧠</span>
+                    <div class="flex-1 min-w-0"><p class="text-xs font-bold text-slate-200">Fatigue (1-10) <span class="text-rose-300">*</span></p><p class="text-[10px] text-slate-500">≤ 3 is optimal</p></div>
+                    <input type="number" min="1" max="10" id="py-input-fatigue" placeholder="3" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-bold text-sm text-right">
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h4 class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Optional
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div class="flex items-center gap-2 bg-slate-900/60 border-l-4 border-slate-600 rounded-xl px-3 py-1.5">
+                    <span class="text-sm shrink-0">🩸</span>
+                    <p class="flex-1 text-[11px] font-bold text-slate-300">Glucose (mg/dL)</p>
+                    <input type="number" min="20" max="600" id="py-input-glucose" placeholder="95" class="w-20 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold text-xs text-right">
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/60 border-l-4 border-slate-600 rounded-xl px-3 py-1.5">
+                    <span class="text-sm shrink-0">🩺</span>
+                    <p class="flex-1 text-[11px] font-bold text-slate-300">BP systolic (mmHg)</p>
+                    <input type="number" min="40" max="250" id="py-input-bp-sys" placeholder="120" class="w-20 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold text-xs text-right">
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/60 border-l-4 border-slate-600 rounded-xl px-3 py-1.5">
+                    <span class="text-sm shrink-0">🩺</span>
+                    <p class="flex-1 text-[11px] font-bold text-slate-300">BP diastolic (mmHg)</p>
+                    <input type="number" min="40" max="250" id="py-input-bp-dia" placeholder="80" class="w-20 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold text-xs text-right">
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/60 border-l-4 border-slate-600 rounded-xl px-3 py-1.5">
+                    <span class="text-sm shrink-0">🌡️</span>
+                    <p class="flex-1 text-[11px] font-bold text-slate-300">Body temp (°C)</p>
+                    <input type="number" min="30" max="45" step="0.1" id="py-input-body-temp" placeholder="36.6" class="w-20 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold text-xs text-right">
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/60 border-l-4 border-slate-600 rounded-xl px-3 py-1.5">
+                    <span class="text-sm shrink-0">😊</span>
+                    <p class="flex-1 text-[11px] font-bold text-slate-300">Mood (1-10)</p>
+                    <input type="number" min="1" max="10" id="py-input-mood" placeholder="8" class="w-20 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold text-xs text-right">
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/60 border-l-4 border-slate-600 rounded-xl px-3 py-1.5">
+                    <span class="text-sm shrink-0">☢️</span>
+                    <p class="flex-1 text-[11px] font-bold text-slate-300">Radiation (µSv/day)</p>
+                    <input type="number" min="0" max="100000" id="py-input-rad" placeholder="400" class="w-20 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold text-xs text-right">
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/60 border-l-4 border-slate-600 rounded-xl px-3 py-1.5">
+                    <span class="text-sm shrink-0">💨</span>
+                    <p class="flex-1 text-[11px] font-bold text-slate-300">Cabin CO2 (ppm)</p>
+                    <input type="number" min="100" max="20000" id="py-input-co2" placeholder="900" class="w-20 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold text-xs text-right">
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/60 border-l-4 border-slate-600 rounded-xl px-3 py-1.5">
+                    <span class="text-sm shrink-0">🌡️</span>
+                    <p class="flex-1 text-[11px] font-bold text-slate-300">Cabin temp (°C)</p>
+                    <input type="number" min="-20" max="60" step="0.1" id="py-input-temp" placeholder="22.5" class="w-20 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold text-xs text-right">
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/60 border-l-4 border-slate-600 rounded-xl px-3 py-1.5">
+                    <span class="text-sm shrink-0">⚖️</span>
+                    <p class="flex-1 text-[11px] font-bold text-slate-300">Weight (kg)</p>
+                    <input type="number" min="20" max="300" step="0.1" id="py-input-weight" placeholder="70.5" class="w-20 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold text-xs text-right">
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/60 border-l-4 border-slate-600 rounded-xl px-3 py-1.5">
+                    <span class="text-sm shrink-0">📝</span>
+                    <p class="flex-1 text-[11px] font-bold text-slate-300">Session notes</p>
+                    <input type="text" id="py-input-notes" placeholder="E.g. after exercise" class="w-32 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-white text-xs">
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-feedback" class="hidden text-xs font-semibold p-3 rounded-xl border"></div>
+
+        <div class="flex justify-end gap-3 pt-1">
+            <button onclick="toggleManualModal(false)" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold">Cancel</button>
+            <button id="py-submit-sensors" onclick="submitManualSensors()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold uppercase tracking-wider shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                📤 Analyze my data
+            </button>
+        </div>
+    </div>
+</div>`;
+
+function ensureManualModal() {
+    if (!document.getElementById("manual-data-modal")) {
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = MANUAL_MODAL_HTML;
+        document.body.appendChild(wrapper.firstElementChild);
+    }
+}
+
 function toggleManualModal(show) {
+    ensureManualModal();
     const modal = document.getElementById("manual-data-modal");
     const feedback = document.getElementById("modal-feedback");
     if (show) {
@@ -240,14 +531,6 @@ function toggleManualModal(show) {
         modal.classList.add("hidden");
     }
 }
-
-// Feedback styles by overall status severity
-const STATUS_STYLES = {
-    normal: "text-emerald-300 bg-emerald-500/10 border-emerald-500/30",
-    atention: "text-amber-300 bg-amber-500/10 border-amber-500/30",
-    bad: "text-orange-300 bg-orange-500/10 border-orange-500/30",
-    critical: "text-rose-300 bg-rose-500/10 border-rose-500/30"
-};
 
 // Optional inputs: only sent when the user filled them in.
 const OPTIONAL_INPUTS = {
@@ -288,6 +571,43 @@ function validateRanges(payload) {
     return invalid;
 }
 
+// Feedback styles by overall status severity
+const STATUS_STYLES = {
+    normal: "text-emerald-300 bg-emerald-500/10 border-emerald-500/30",
+    atention: "text-amber-300 bg-amber-500/10 border-amber-500/30",
+    bad: "text-orange-300 bg-orange-500/10 border-orange-500/30",
+    critical: "text-rose-300 bg-rose-500/10 border-rose-500/30"
+};
+
+// Structured, easy-to-read feedback: status pill + suggestion list
+function renderFeedback(feedback, overall, suggestions, extraLine) {
+    const overallUpper = overall.toUpperCase();
+    const pillClass = {
+        NORMAL: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        ATENTION: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+        BAD: "bg-orange-500/20 text-orange-300 border-orange-500/40",
+        CRITICAL: "bg-rose-500/20 text-rose-300 border-rose-500/40"
+    }[overallUpper] || "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
+
+    let html = `<div class="flex items-center gap-2 mb-1.5">
+        <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${pillClass}">OVERALL: ${overallUpper}</span>
+        ${extraLine ? `<span class="text-emerald-300 font-bold">${escapeHtml(extraLine)}</span>` : ""}
+    </div>`;
+
+    if (suggestions && suggestions.length) {
+        html += `<p class="text-[10px] font-bold uppercase text-slate-400 mb-1">How to improve:</p><ul class="space-y-1">`;
+        suggestions.forEach(tip => {
+            html += `<li class="flex items-start gap-1.5"><span class="text-amber-400 mt-0.5">▸</span><span>${escapeHtml(tip)}</span></li>`;
+        });
+        html += `</ul>`;
+    } else {
+        html += `<p>All metrics in optimal range. Keep it up! 🚀</p>`;
+    }
+
+    feedback.className = "text-xs font-semibold p-3 rounded-xl border " + (STATUS_STYLES[overall] || STATUS_STYLES.normal);
+    feedback.innerHTML = html;
+}
+
 async function submitManualSensors() {
     const payload = {
         subject_id: typeof getSelectedSubject === "function"
@@ -325,7 +645,7 @@ async function submitManualSensors() {
 
     submitBtn.disabled = true;
     feedback.className = "text-xs font-semibold text-sky-300 bg-sky-500/10 border border-sky-500/30 p-2.5 rounded-xl text-center";
-    feedback.innerText = "📡 Sending data to the model...";
+    feedback.innerText = "📡 Analyzing your metrics...";
 
     const response = await PythonBridge.sendSensorData(payload);
 
@@ -348,21 +668,21 @@ async function submitManualSensors() {
         // localStorage unavailable: continue without persisting
     }
     if (typeof applyHealthState === "function") applyHealthState(overall);
+    updateHazardDots();
+
     // Gamification: XP, points and streak for this astronaut
+    let extraLine = "";
     if (typeof updateProfileProgress === "function") {
         const result = updateProfileProgress(payload.subject_id, payload, response);
-        if (result) {
-            feedback.innerText = `${response.ai_response || "Data recorded successfully."}\n+${result.earned} pts earned!`;
-        }
+        if (result) extraLine = `+${result.earned} pts earned!`;
     }
 
-    feedback.className = `text-xs font-semibold p-2.5 rounded-xl text-center border ${STATUS_STYLES[overall] || STATUS_STYLES.normal}`;
-    feedback.innerText = response.ai_response || "Data recorded successfully.";
+    renderFeedback(feedback, overall, response.suggestions, extraLine);
 
     setTimeout(() => {
         toggleManualModal(false);
         resetManualForm();
-    }, 3500);
+    }, 6000);
 }
 
 function resetManualForm() {
@@ -374,3 +694,9 @@ function resetManualForm() {
         if (el) el.value = "";
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    ensureManualModal();
+    updateHazardDots();
+    loadDataCategories();
+});

@@ -9,7 +9,6 @@ from __future__ import annotations
 import json
 import os
 import sys
-import threading
 import time
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -84,40 +83,49 @@ def api_request(method: str, path: str, *, params: dict | None = None, body: dic
 
 @st.cache_resource
 def start_backend() -> dict:
-    """Reuse a running API or start the bundled FastAPI app in a thread."""
+    """Reuse a running API or start the bundled FastAPI app.
+
+    A subprocess is used instead of an in-process thread: the backend mixes
+    'backend.*' and plain module imports, and when Streamlit runs from the
+    repository root both styles become importable at once, which makes
+    SQLAlchemy declare its tables twice and crash. A subprocess gets a clean
+    sys.path, exactly like running uvicorn inside backend/.
+    """
     try:
         api_request("GET", "/health")
         return {"status": "running", "server": None, "thread": None}
     except APIError:
         pass
 
-    if str(BACKEND_DIR) not in sys.path:
-        sys.path.insert(0, str(BACKEND_DIR))
-    try:
-        import uvicorn
-        from main import app as api_app
+    import subprocess
 
-        server = uvicorn.Server(
-            uvicorn.Config(
-                api_app,
-                host="127.0.0.1",
-                port=5000,
-                log_level="warning",
-            )
+    try:
+        process = subprocess.Popen(
+            [
+                sys.executable, "-m", "uvicorn", "main:app",
+                "--host", "127.0.0.1", "--port", "5000",
+            ],
+            cwd=str(BACKEND_DIR),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
         )
-        thread = threading.Thread(target=server.run, name="astrohealth-api", daemon=True)
-        thread.start()
-        for _ in range(50):
-            if not thread.is_alive():
-                break
-            try:
-                api_request("GET", "/health")
-                return {"status": "running", "server": server, "thread": thread}
-            except APIError:
-                time.sleep(0.2)
-        raise APIError("FastAPI no respondió en el puerto 5000.")
     except Exception as error:
         return {"status": "error", "server": None, "thread": None, "error": str(error)}
+
+    for _ in range(50):
+        if process.poll() is not None:
+            return {
+                "status": "error",
+                "server": None,
+                "thread": None,
+                "error": "The backend process exited immediately. Run it manually to see the error: cd backend && uvicorn main:app --port 5000",
+            }
+        try:
+            api_request("GET", "/health")
+            return {"status": "running", "server": process, "thread": None}
+        except APIError:
+            time.sleep(0.2)
+    return {"status": "error", "server": None, "thread": None, "error": "FastAPI did not respond on port 5000."}
 
 
 backend = start_backend()

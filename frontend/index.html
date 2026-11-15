@@ -90,9 +90,14 @@
                         • Psychomotor reaction test (3 min) &nbsp;|&nbsp; • Sleep and SpO2 log
                     </p>
                 </div>
-                <a href="data.html" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition">
-                    Enter Data →
-                </a>
+                <div class="flex items-center gap-2">
+                    <a href="data.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-600 transition">
+                        Data Explorer →
+                    </a>
+                    <button onclick="toggleManualModal(true)" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition cursor-pointer">
+                        ➕ Log Manual Data
+                    </button>
+                </div>
             </div>
         </main>
     </div>
@@ -100,6 +105,7 @@
     <script src="js/api.js"></script>
     <script src="js/profiles.js"></script>
     <script src="js/nav.js"></script>
+    <script src="js/data.js"></script>
     <script src="js/home.js"></script>
 </body>
 </html>

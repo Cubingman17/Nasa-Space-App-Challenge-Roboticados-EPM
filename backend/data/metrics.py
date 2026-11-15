@@ -278,3 +278,14 @@ METRICS = [
     }
 ]
 
+# Stable lookups used by the CSV importer and the data API. Keep METRICS as the
+# single source of truth so a metric ID always maps to one category and unit.
+METRICS_BY_ID = {metric["id"]: metric for metric in METRICS}
+METRICS_BY_CATEGORY = {
+    category: [metric for metric in METRICS if metric["category"] == category]
+    for category in dict.fromkeys(metric["category"] for metric in METRICS)
+}
+
+if len(METRICS_BY_ID) != len(METRICS):
+    raise ValueError("Metric IDs must be unique")
+

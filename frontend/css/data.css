@@ -1,17 +1,22 @@
-.risk-card {
+.risk-row {
     border-radius: 1rem;
     background-color: #0f172a;
     transition: transform 0.15s ease, border-color 0.2s ease;
+    overflow: hidden;
 }
-.risk-card:hover {
+.risk-row:hover {
     transform: scale(1.005);
 }
 
-/* Botón flotante en la esquina para ingreso manual */
-.floating-data-btn {
-    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+/* Botón de Insertar Data superior derecha */
+.top-insert-btn {
+    background-color: #334155;
+    color: #f8fafc;
+    border: 1px solid #475569;
+    border-radius: 0.75rem;
     transition: all 0.2s ease;
 }
-.floating-data-btn:hover {
-    transform: translateY(-2px) scale(1.03);
+.top-insert-btn:hover {
+    background-color: #3b82f6;
+    border-color: #60a5fa;
 }

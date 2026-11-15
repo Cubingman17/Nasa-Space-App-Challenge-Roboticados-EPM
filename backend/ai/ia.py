@@ -1,6 +1,6 @@
 bpm = int(input('BPM average: '))
 spO2 = int(input('Actual spO2: '))
-sleep = int(input('Sleep hours: '))
+sleep = float(input('Sleep hours: '))
 reaction = int(input('Reaction time (ms): '))
 
 def bpm_value():
@@ -65,16 +65,19 @@ def sleep_value():
 
 def reaction_value():
     reaction_status = ''
-    if reaction >= 0 and reaction <= 200:
+    if reaction <= 250:
         reaction_status = 'normal'
         
-    elif reaction > 200 and reaction <= 300:
+    elif reaction > 250 and reaction <= 300:
+        reaction_status = 'normal: a little deficient'
+    
+    elif reaction > 300 and reaction <= 350:
         reaction_status = 'atention'
     
-    elif reaction > 300 and reaction <= 400:
+    elif reaction > 350 and reaction <= 500:
         reaction_status = 'bad'
     
-    elif reaction > 400:
+    elif reaction > 500:
         reaction_status = 'critical'
         
     return reaction_status

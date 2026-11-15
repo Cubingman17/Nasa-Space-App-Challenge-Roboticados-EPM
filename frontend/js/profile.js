@@ -81,7 +81,10 @@ function renderRanking() {
         const highlight = profile.id === selected ? "text-blue-300" : "text-slate-300";
         rows += `<div class="flex justify-between items-center text-xs md:text-sm font-bold border-b border-slate-800 pb-1.5 ${highlight}">
             <span>${medals[index] || (index + 1) + "TH"} : ${escapeHtml(profile.name)}</span>
-            <span class="text-blue-400 font-extrabold">${profile.points} pts</span>
+            <span class="flex items-center gap-2">
+                <span class="text-amber-400" title="${profile.streak || 0} day logging streak">&#128293; ${profile.streak || 0}d</span>
+                <span class="text-blue-400 font-extrabold">${profile.points} pts</span>
+            </span>
         </div>`;
     });
 

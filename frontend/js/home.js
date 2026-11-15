@@ -83,7 +83,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 item.className = "leaderboard-item flex items-center justify-between px-3 py-2 text-xs md:text-sm font-semibold";
                 const highlight = p.id === subject ? "text-blue-300" : "text-white";
                 item.innerHTML = `<span>${medals[i] || (i + 1) + "."} <strong class="${highlight}">${escapeHtml(p.name)}</strong></span>
-                    <span class="text-blue-400 font-extrabold">${p.points} pts</span>`;
+                    <span class="flex items-center gap-2">
+                        <span class="text-amber-400" title="${p.streak || 0} day logging streak">&#128293; ${p.streak || 0}d</span>
+                        <span class="text-blue-400 font-extrabold">${p.points} pts</span>
+                    </span>`;
                 container.appendChild(item);
             });
         }

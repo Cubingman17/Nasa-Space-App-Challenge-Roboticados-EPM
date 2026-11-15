@@ -1,11 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import init_db
-from routers.ai import router as ai_router
-from routers.data import router as data_router
-from routers.home import router as home_router
-from routers.profile import router as profile_router
+try:
+    from backend.database import init_db
+    from backend.routers.ai import router as ai_router
+    from backend.routers.data import router as data_router
+    from backend.routers.home import router as home_router
+    from backend.routers.profile import router as profile_router
+except ModuleNotFoundError:
+    from database import init_db
+    from routers.ai import router as ai_router
+    from routers.data import router as data_router
+    from routers.home import router as home_router
+    from routers.profile import router as profile_router
 
 app = FastAPI(
     title="Astronaut Health API",

@@ -52,8 +52,9 @@ backend/             FastAPI (port 5000)
 **Option A — one command with Streamlit (recommended for demo):**
 
 ```bash
-pip install -r requirements.txt
-streamlit run frontend/app.py
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m streamlit run frontend/app.py
 ```
 
 This opens the native Streamlit application at `http://localhost:8501`. It starts the FastAPI backend on port 5000 when one is not already running. The Data screen reads the 32 CSV-backed metric datasets from the API; AstroAI and Profile use the same persistent backend.

@@ -3,9 +3,11 @@ from sqlalchemy.orm import Session
 
 try:
     from database import get_db
+    from models.schemas import ChatRequest
     from services.ai_service import analyze, chat as chat_service
 except ModuleNotFoundError:
     from backend.database import get_db
+    from backend.models.schemas import ChatRequest
     from backend.services.ai_service import analyze, chat as chat_service
 
 router = APIRouter(prefix="/api", tags=["AI"])
@@ -21,12 +23,9 @@ def predict(payload: dict, db: Session = Depends(get_db)):
 
 
 @router.post("/chat")
-def chat(body: dict, db: Session = Depends(get_db)):
+def chat(body: ChatRequest, db: Session = Depends(get_db)):
     """Chat using the astronaut's latest persisted health assessment."""
-    body = body or {}
-    prompt = (body.get("prompt") or "").strip()
-    subject = body.get("subject_id") or "A"
     try:
-        return chat_service(prompt, subject, db)
+        return chat_service(body.prompt, body.subject_id, db)
     except ValueError as error:
         raise HTTPException(status_code=422, detail=str(error)) from error

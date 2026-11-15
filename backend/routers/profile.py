@@ -1,3 +1,5 @@
+import math
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -75,13 +77,22 @@ def update_profile(astronaut_id: str, payload: dict, db: Session = Depends(get_d
         if field == "age" and value is not None and (not isinstance(value, int) or isinstance(value, bool) or not 0 <= value <= 120):
             raise HTTPException(status_code=422, detail="age must be an integer from 0 to 120")
         if field in {"height_cm", "weight_kg"} and value is not None:
-            if not isinstance(value, (int, float)) or isinstance(value, bool) or value <= 0:
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not math.isfinite(value)
+                or value <= 0
+            ):
                 raise HTTPException(status_code=422, detail=f"{field} must be a positive number")
             value = float(value)
         if field == "photo_url" and value is not None and (not isinstance(value, str) or len(value) > 500):
             raise HTTPException(status_code=422, detail="photo_url must be a string up to 500 characters")
         setattr(astronaut, field, value)
-    db.commit()
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
     db.refresh(astronaut)
     return _profile_payload(db, astronaut)
 

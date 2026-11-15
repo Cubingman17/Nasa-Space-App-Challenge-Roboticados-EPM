@@ -123,8 +123,10 @@ def test_reader():
     check("optional blood pressure included", "blood_pressure" in reading["metrics"])
     check("blood pressure value formatted", reading["metrics"]["blood_pressure"]["value"] == "130/85")
 
-    # Missing optional fields are simply absent
-    reading = read_metrics({"hr_bpm": "70"})
+    # Missing optional fields are simply absent when all core metrics exist
+    reading = read_metrics({"hr_bpm": "70", "spo2_pct": "98",
+                            "sleep_hours": "8", "rt_ms": "250",
+                            "fatigue_level": "2"})
     check("optionals absent when not sent", "glucose" not in reading["metrics"])
 
     # Missing core fields are rejected instead of replaced with invented values
@@ -165,6 +167,8 @@ def test_api():
     print("\n[4] API endpoints (FastAPI)")
     from fastapi.testclient import TestClient
     from main import app
+    from database import init_db
+    init_db()
     client = TestClient(app)
 
     r = client.post("/api/predict", json={

@@ -60,8 +60,8 @@ class Profile(BaseModel):
     badges: list[str] = Field(default_factory=list)
 
 class ChatRequest(BaseModel):
-    message: str = Field(min_length=1)
-    history: list[ChatMessage] = Field(default_factory=list)
+    prompt: str = Field(min_length=1, max_length=4000)
+    subject_id: str = Field(default="A", min_length=1, max_length=64)
 
 class AIResponse(BaseModel):
     analysis: str

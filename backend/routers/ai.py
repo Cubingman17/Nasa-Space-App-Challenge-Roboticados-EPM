@@ -2,15 +2,27 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 try:
+    from ai import local_llm
     from database import get_db
     from models.schemas import ChatRequest
     from services.ai_service import analyze, chat as chat_service
 except ModuleNotFoundError:
+    from backend.ai import local_llm
     from backend.database import get_db
     from backend.models.schemas import ChatRequest
     from backend.services.ai_service import analyze, chat as chat_service
 
 router = APIRouter(prefix="/api", tags=["AI"])
+
+
+@router.get("/ai/status")
+def ai_status():
+    """Whether the local AI (Ollama) is running, for the frontend indicator."""
+    available = local_llm.is_available()
+    return {
+        "ollama": available,
+        "source": "local-llm" if available else "offline",
+    }
 
 
 @router.post("/predict")

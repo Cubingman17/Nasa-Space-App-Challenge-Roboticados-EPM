@@ -101,6 +101,20 @@ document.addEventListener("DOMContentLoaded", () => {
             el.innerHTML = `<strong class="text-blue-400">Little AI Advice:</strong> ${escapeHtml(lastAdvice)}`;
         }
     });
+
+    // Main page: warn clearly when the local AI (Ollama) is not running
+    if (typeof PythonBridge !== "undefined" && typeof PythonBridge.fetchAiStatus === "function") {
+        PythonBridge.fetchAiStatus().then((status) => {
+            if (status.ollama) return;
+            const target = document.getElementById("py-home-ai-advice");
+            if (!target) return;
+            const warning = document.createElement("div");
+            warning.className = "mb-2 p-2.5 rounded-xl border border-rose-500/40 bg-rose-500/10 text-rose-200 text-xs font-semibold leading-snug";
+            warning.innerHTML = "&#9888;&#65039; The local AI (Ollama) is not running — this console does not work well without it. "
+                + "AI advice and the AstroAI chat are limited. Start Ollama (<b>ollama serve</b>) for the full experience.";
+            target.prepend(warning);
+        });
+    }
 });
 
 // Periodic auto-refresh so new data shows without leaving and re-entering

@@ -1,3 +1,39 @@
+// Real AI availability: only true when the backend reports Ollama running
+let aiOnline = false;
+
+const AI_OFFLINE_MESSAGE =
+    "Local AI (Ollama) is not running yet, I can't give you a response by now, " +
+    "connect it and try again later.";
+
+async function initAiStatus() {
+    const status = typeof PythonBridge.fetchAiStatus === "function"
+        ? await PythonBridge.fetchAiStatus()
+        : { backend: false, ollama: false };
+    aiOnline = !!status.ollama;
+    updateAiStatusBadge();
+    setMascotState(
+        "idle",
+        aiOnline
+            ? "Ready to analyze your health records."
+            : "Local AI (Ollama) is not running yet."
+    );
+    if (!aiOnline) {
+        appendBoxMessage("System", AI_OFFLINE_MESSAGE, "offline");
+    }
+}
+
+function updateAiStatusBadge() {
+    const badge = document.getElementById("ai-state-badge");
+    if (!badge) return;
+    if (aiOnline) {
+        badge.innerText = "Online";
+        badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+    } else {
+        badge.innerText = "Offline";
+        badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30";
+    }
+}
+
 async function handleSendMessage() {
     const input = document.getElementById("py-astronaut-msg-input");
     const sendBtn = document.getElementById("py-send-btn");
@@ -28,10 +64,7 @@ async function handleSendMessage() {
 
     // Fallback mode: make it explicit when the local LLM is not running
     if (response.source && response.source !== "local-llm") {
-        appendBoxMessage("System",
-            "AstroAI (Ollama) is offline. Fallback mode: rule-based analysis of your logged metrics. " +
-            "Start it with 'ollama serve' and 'ollama run astroai' to talk with the local AI.",
-            "fallback");
+        appendBoxMessage("System", AI_OFFLINE_MESSAGE, "offline");
     }
 
     // Back to normal after 2.5 seconds
@@ -83,8 +116,7 @@ function setMascotState(state, captionText) {
         badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
     } else {
         face.classList.remove("speaking");
-        badge.innerText = "Online";
-        badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        updateAiStatusBadge();
     }
 }
 
@@ -101,3 +133,7 @@ function appendBoxMessage(sender, text, source) {
     box.appendChild(msg);
     box.scrollTop = box.scrollHeight;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    initAiStatus();
+});

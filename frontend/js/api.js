@@ -49,8 +49,21 @@ const PythonBridge = {
             return await response.json();
         } catch (error) {
             return {
-                reply: "[Local AI] The /api/chat endpoint is ready to connect with Python."
+                reply: "Local AI (Ollama) is not running yet, I can't give you a response by now, connect it and try again later.",
+                source: "offline"
             };
+        }
+    },
+
+    // True only when the backend answers AND the local AI (Ollama) is up
+    async fetchAiStatus() {
+        try {
+            const response = await fetch(`${PYTHON_API_URL}/ai/status`);
+            if (!response.ok) throw new Error("offline");
+            const data = await response.json();
+            return { backend: true, ollama: !!data.ollama };
+        } catch (error) {
+            return { backend: false, ollama: false };
         }
     }
 };

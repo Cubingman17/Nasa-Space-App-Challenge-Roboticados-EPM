@@ -1,5 +1,12 @@
 const PYTHON_API_URL = "http://localhost:5000/api";
 
+// Utilidad compartida: escapa texto para insertarlo de forma segura en HTML
+function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text == null ? "" : String(text);
+    return div.innerHTML;
+}
+
 const PythonBridge = {
     async fetchHomeData(subjectId = "A") {
         try {

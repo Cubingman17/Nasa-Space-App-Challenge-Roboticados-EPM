@@ -114,6 +114,14 @@ function toggleManualModal(show) {
     }
 }
 
+// Estilos del feedback según la gravedad del estado general
+const STATUS_STYLES = {
+    normal: "text-emerald-300 bg-emerald-500/10 border-emerald-500/30",
+    atention: "text-amber-300 bg-amber-500/10 border-amber-500/30",
+    bad: "text-orange-300 bg-orange-500/10 border-orange-500/30",
+    critical: "text-rose-300 bg-rose-500/10 border-rose-500/30"
+};
+
 async function submitManualSensors() {
     const payload = {
         subject_id: localStorage.getItem("selectedSubject") || "A",
@@ -127,6 +135,7 @@ async function submitManualSensors() {
     };
 
     const feedback = document.getElementById("modal-feedback");
+    const submitBtn = document.getElementById("py-submit-sensors");
     feedback.classList.remove("hidden");
 
     if (!payload.hr_bpm || !payload.sleep_hours || !payload.rt_ms) {
@@ -135,7 +144,37 @@ async function submitManualSensors() {
         return;
     }
 
+    submitBtn.disabled = true;
+    feedback.className = "text-xs font-semibold text-sky-300 bg-sky-500/10 border border-sky-500/30 p-2.5 rounded-xl text-center";
+    feedback.innerText = "📡 Enviando datos al modelo...";
+
     const response = await PythonBridge.sendSensorData(payload);
-    feedback.className = "text-xs font-semibold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-xl text-center";
-    feedback.innerText = `✅ ${response.ai_response}`;
+
+    submitBtn.disabled = false;
+
+    // Guardar el estado para el borde de la consola y los banners de IA
+    const overall = String(response.overall_status || "normal").split(":")[0].trim();
+    try {
+        localStorage.setItem("lastOverallStatus", overall);
+        localStorage.setItem("lastAiResponse", response.ai_response || "");
+    } catch (error) {
+        // localStorage no disponible: se continúa sin persistir
+    }
+    if (typeof applyHealthState === "function") applyHealthState(overall);
+
+    feedback.className = `text-xs font-semibold p-2.5 rounded-xl text-center border ${STATUS_STYLES[overall] || STATUS_STYLES.normal}`;
+    feedback.innerText = response.ai_response || "Datos registrados correctamente.";
+
+    setTimeout(() => {
+        toggleManualModal(false);
+        resetManualForm();
+    }, 3500);
+}
+
+function resetManualForm() {
+    ["py-input-lpm", "py-input-spo2", "py-input-sleep", "py-input-rt",
+     "py-input-fatigue", "py-input-temp", "py-input-notes"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+    });
 }

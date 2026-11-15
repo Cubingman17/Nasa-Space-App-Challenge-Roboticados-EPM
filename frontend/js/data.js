@@ -1,5 +1,7 @@
 let detailChartInstance = null;
 
+// The 5 NASA spaceflight hazards: radiation, isolation, altered gravity,
+// hostile environment, and distance (behavioral health).
 const risksDatabase = {
     radiation: {
         title: "RADIATION & BIODOSIMETRY",
@@ -13,6 +15,18 @@ const risksDatabase = {
         borderTint: "rgba(244, 63, 94, 0.5)",
         dataValues: [2.4, 8.9, 8.2]
     },
+    isolation: {
+        title: "ISOLATION & CONFINEMENT",
+        badge: "Crew Self-Reports (n=3)",
+        description: "Decline in mood and rising fatigue caused by prolonged isolation and confinement inside a closed habitat.",
+        pre: "8.1 /10",
+        inFlight: "5.6 /10",
+        post: "7.2 /10",
+        chartColor: "#8b5cf6",
+        bgTint: "rgba(139, 92, 246, 0.12)",
+        borderTint: "rgba(139, 92, 246, 0.5)",
+        dataValues: [8.1, 5.6, 7.2]
+    },
     gravity: {
         title: "GRAVITY (Bone Mineral Density)",
         badge: "NASA OSDR Dataset",
@@ -25,22 +39,10 @@ const risksDatabase = {
         borderTint: "rgba(251, 191, 36, 0.5)",
         dataValues: [1.18, 1.09, 1.11]
     },
-    psicology: {
-        title: "PSYCHOLOGY & FATIGUE (PVT)",
-        badge: "Part 1 Model (n=3)",
-        description: "Increase in reaction times (>500 ms = lapse) associated with sleep deprivation or cycle disruption.",
-        pre: "235 ms",
-        inFlight: "410 ms",
-        post: "260 ms",
-        chartColor: "#f43f5e",
-        bgTint: "rgba(244, 63, 94, 0.12)",
-        borderTint: "rgba(244, 63, 94, 0.5)",
-        dataValues: [235, 410, 260]
-    },
     environment: {
-        title: "ENVIRONMENT (Cabin / Analog)",
+        title: "HOSTILE ENVIRONMENT (Cabin / Analog)",
         badge: "Environmental Control",
-        description: "Stability of ambient oxygen levels, pressure and controlled test conditions on Earth.",
+        description: "Stability of cabin CO2, ambient oxygen levels, pressure and controlled test conditions on Earth.",
         pre: "99% Nominal",
         inFlight: "98% Nominal",
         post: "99% Nominal",
@@ -48,6 +50,18 @@ const risksDatabase = {
         bgTint: "rgba(16, 185, 129, 0.12)",
         borderTint: "rgba(16, 185, 129, 0.5)",
         dataValues: [99, 98, 99]
+    },
+    distance: {
+        title: "DISTANCE & BEHAVIORAL HEALTH (PVT)",
+        badge: "Part 1 Model (n=3)",
+        description: "Increase in reaction times (>500 ms = lapse) associated with sleep deprivation and the behavioral load of deep-space operations.",
+        pre: "235 ms",
+        inFlight: "410 ms",
+        post: "260 ms",
+        chartColor: "#0ea5e9",
+        bgTint: "rgba(14, 165, 233, 0.12)",
+        borderTint: "rgba(14, 165, 233, 0.5)",
+        dataValues: [235, 410, 260]
     }
 };
 
@@ -122,6 +136,19 @@ const STATUS_STYLES = {
     critical: "text-rose-300 bg-rose-500/10 border-rose-500/30"
 };
 
+// Optional inputs: only sent when the user filled them in.
+const OPTIONAL_INPUTS = {
+    blood_glucose: "py-input-glucose",
+    bp_systolic: "py-input-bp-sys",
+    bp_diastolic: "py-input-bp-dia",
+    body_temp_c: "py-input-body-temp",
+    mood_level: "py-input-mood",
+    radiation_usv: "py-input-rad",
+    cabin_co2: "py-input-co2",
+    env_temp: "py-input-temp",
+    weight_kg: "py-input-weight"
+};
+
 async function submitManualSensors() {
     const payload = {
         subject_id: localStorage.getItem("selectedSubject") || "A",
@@ -130,17 +157,21 @@ async function submitManualSensors() {
         sleep_hours: document.getElementById("py-input-sleep").value,
         rt_ms: document.getElementById("py-input-rt").value,
         fatigue_level: document.getElementById("py-input-fatigue").value,
-        env_temp: document.getElementById("py-input-temp").value,
         notes: document.getElementById("py-input-notes").value
     };
+
+    for (const [field, inputId] of Object.entries(OPTIONAL_INPUTS)) {
+        const value = document.getElementById(inputId).value;
+        if (value !== "") payload[field] = value;
+    }
 
     const feedback = document.getElementById("modal-feedback");
     const submitBtn = document.getElementById("py-submit-sensors");
     feedback.classList.remove("hidden");
 
-    if (!payload.hr_bpm || !payload.sleep_hours || !payload.rt_ms) {
+    if (!payload.hr_bpm || !payload.spo2_pct || !payload.sleep_hours || !payload.rt_ms || !payload.fatigue_level) {
         feedback.className = "text-xs font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl text-center";
-        feedback.innerText = "⚠️ Complete at least HR, Sleep and Reaction Time.";
+        feedback.innerText = "⚠️ Complete all required fields: BPM, SpO2, Sleep, Reaction and Fatigue.";
         return;
     }
 
@@ -173,7 +204,9 @@ async function submitManualSensors() {
 
 function resetManualForm() {
     ["py-input-lpm", "py-input-spo2", "py-input-sleep", "py-input-rt",
-     "py-input-fatigue", "py-input-temp", "py-input-notes"].forEach((id) => {
+     "py-input-fatigue", "py-input-glucose", "py-input-bp-sys", "py-input-bp-dia",
+     "py-input-body-temp", "py-input-mood", "py-input-rad", "py-input-co2",
+     "py-input-temp", "py-input-weight", "py-input-notes"].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.value = "";
     });

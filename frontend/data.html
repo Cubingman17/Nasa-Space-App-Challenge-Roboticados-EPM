@@ -49,34 +49,39 @@
                 <div class="flex items-center gap-3">
                     <span class="text-lg">🤖</span>
                     <p class="text-xs md:text-sm font-medium text-slate-300" id="py-data-ai-advice">
-                        <strong class="text-blue-400">Little AI Advice:</strong> Inspect the risks or use the corner button to log your measurements.
+                        <strong class="text-blue-400">Little AI Advice:</strong> Inspect the five NASA spaceflight hazards or use the corner button to log your measurements.
                     </p>
                 </div>
                 <button id="btn-back-data" onclick="closeRiskDetail()" class="hidden bg-slate-800 hover:bg-slate-700 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-600">
-                    ← Back to Risks
+                    ← Back to Hazards
                 </button>
             </div>
 
-            <!-- OVERVIEW: 4 RISK BARS -->
-            <div id="data-overview" class="flex-1 flex flex-col justify-between gap-3">
-                <div onclick="openRiskDetail('radiation')" class="risk-card flex-1 border border-rose-500/50 hover:border-rose-400 p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-lg md:text-xl text-rose-400 tracking-wider">RADIATION</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-radiation">Risk: HIGH (Chromosomal aberrations - NASA LSDA Dataset)</p>
+            <!-- OVERVIEW: THE 5 NASA SPACEFLIGHT HAZARDS -->
+            <div id="data-overview" class="flex-1 flex flex-col justify-between gap-2 min-h-0">
+                <div onclick="openRiskDetail('radiation')" class="risk-card flex-1 border border-rose-500/50 hover:border-rose-400 p-2 md:p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-sm md:text-lg text-rose-400 tracking-wider">☢️ RADIATION</h3>
+                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-0.5 text-center" id="py-risk-radiation">Risk: HIGH (Chromosomal aberrations - NASA LSDA Dataset)</p>
                 </div>
 
-                <div onclick="openRiskDetail('gravity')" class="risk-card flex-1 border border-amber-500/50 hover:border-amber-400 p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-lg md:text-xl text-amber-400 tracking-wider">GRAVITY</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-gravity">Risk: MODERATE (Bone Mineral Density - NASA OSDR Dataset)</p>
+                <div onclick="openRiskDetail('isolation')" class="risk-card flex-1 border border-violet-500/50 hover:border-violet-400 p-2 md:p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-sm md:text-lg text-violet-400 tracking-wider">🚪 ISOLATION</h3>
+                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-0.5 text-center" id="py-risk-isolation">Risk: MODERATE (Mood and fatigue decline in confinement)</p>
                 </div>
 
-                <div onclick="openRiskDetail('psicology')" class="risk-card flex-1 border border-rose-500/50 hover:border-rose-400 p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-lg md:text-xl text-rose-400 tracking-wider">PSYCHOLOGY</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-psicology">Risk: HIGH (Psychomotor vigilance and sleep-related fatigue)</p>
+                <div onclick="openRiskDetail('gravity')" class="risk-card flex-1 border border-amber-500/50 hover:border-amber-400 p-2 md:p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-sm md:text-lg text-amber-400 tracking-wider">🦴 GRAVITY</h3>
+                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-0.5 text-center" id="py-risk-gravity">Risk: MODERATE (Bone Mineral Density - NASA OSDR Dataset)</p>
                 </div>
 
-                <div onclick="openRiskDetail('environment')" class="risk-card flex-1 border border-emerald-500/50 hover:border-emerald-400 p-4 flex flex-col items-center justify-center cursor-pointer">
-                    <h3 class="font-extrabold text-lg md:text-xl text-emerald-400 tracking-wider">ENVIRONMENT</h3>
-                    <p class="font-semibold text-xs md:text-sm text-slate-300 mt-1" id="py-risk-environment">Risk: LOW (Cabin conditions and Earth analog)</p>
+                <div onclick="openRiskDetail('environment')" class="risk-card flex-1 border border-emerald-500/50 hover:border-emerald-400 p-2 md:p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-sm md:text-lg text-emerald-400 tracking-wider">🏭 HOSTILE ENV.</h3>
+                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-0.5 text-center" id="py-risk-environment">Risk: LOW (Cabin CO2, pressure and temperature nominal)</p>
+                </div>
+
+                <div onclick="openRiskDetail('distance')" class="risk-card flex-1 border border-sky-500/50 hover:border-sky-400 p-2 md:p-4 flex flex-col items-center justify-center cursor-pointer">
+                    <h3 class="font-extrabold text-sm md:text-lg text-sky-400 tracking-wider">🛰️ DISTANCE</h3>
+                    <p class="font-semibold text-[10px] md:text-xs text-slate-300 mt-0.5 text-center" id="py-risk-distance">Risk: HIGH (Psychomotor vigilance and sleep-related fatigue)</p>
                 </div>
             </div>
 
@@ -122,41 +127,90 @@
                 <div class="flex items-center justify-between border-b border-slate-700 pb-3">
                     <div>
                         <h3 class="font-extrabold text-base uppercase text-blue-400">📡 Manual Sensor & Log Entry</h3>
-                        <p class="text-xs text-slate-400">Data will be sent directly to the Python model.</p>
+                        <p class="text-xs text-slate-400">Required: <span class="text-rose-300">*</span> BPM, SpO2, Sleep, Reaction and Fatigue. Everything else is optional.</p>
                     </div>
                     <button onclick="toggleManualModal(false)" class="text-slate-400 hover:text-white font-bold text-lg px-2">✕</button>
                 </div>
 
-                <!-- Grid with the 4 main metrics + additional info -->
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">💓 HR (Pulse)</label>
-                        <input type="number" id="py-input-lpm" placeholder="E.g. 68" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                    </div>
+                <!-- Required metrics -->
+                <div>
+                    <h4 class="text-[10px] font-bold uppercase tracking-wider text-rose-300 mb-2">Required Metrics</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">💓 BPM <span class="text-rose-300">*</span></label>
+                            <input type="number" id="py-input-lpm" placeholder="E.g. 68" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
 
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">🫁 SpO2 (%)</label>
-                        <input type="number" id="py-input-spo2" placeholder="E.g. 98" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                    </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">🫁 SpO2 (%) <span class="text-rose-300">*</span></label>
+                            <input type="number" id="py-input-spo2" placeholder="E.g. 98" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
 
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">😴 Sleep (Hours)</label>
-                        <input type="number" step="0.1" id="py-input-sleep" placeholder="E.g. 7.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                    </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">😴 Sleep (Hours) <span class="text-rose-300">*</span></label>
+                            <input type="number" step="0.1" id="py-input-sleep" placeholder="E.g. 7.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
 
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">⚡ Reaction (ms)</label>
-                        <input type="number" id="py-input-rt" placeholder="E.g. 240" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
-                    </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">⚡ Reaction (ms) <span class="text-rose-300">*</span></label>
+                            <input type="number" id="py-input-rt" placeholder="E.g. 240" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
 
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">🧠 Fatigue Level (1-10)</label>
-                        <input type="number" min="1" max="10" id="py-input-fatigue" placeholder="E.g. 3" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">🧠 Fatigue (1-10) <span class="text-rose-300">*</span></label>
+                            <input type="number" min="1" max="10" id="py-input-fatigue" placeholder="E.g. 3" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
                     </div>
+                </div>
 
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <label class="font-bold text-slate-300 block mb-1">🌡️ Cabin Temp (°C)</label>
-                        <input type="number" step="0.1" id="py-input-temp" placeholder="E.g. 22.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                <!-- Optional metrics -->
+                <div>
+                    <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Optional Metrics</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">🩸 Glucose (mg/dL)</label>
+                            <input type="number" id="py-input-glucose" placeholder="E.g. 95" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
+
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">🩺 BP Systolic (mmHg)</label>
+                            <input type="number" id="py-input-bp-sys" placeholder="E.g. 120" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
+
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">🩺 BP Diastolic (mmHg)</label>
+                            <input type="number" id="py-input-bp-dia" placeholder="E.g. 80" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
+
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">🌡️ Body Temp (°C)</label>
+                            <input type="number" step="0.1" id="py-input-body-temp" placeholder="E.g. 36.6" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
+
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">😊 Mood (1-10)</label>
+                            <input type="number" min="1" max="10" id="py-input-mood" placeholder="E.g. 8" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
+
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">☢️ Radiation (µSv/day)</label>
+                            <input type="number" step="1" id="py-input-rad" placeholder="E.g. 400" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
+
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">💨 Cabin CO2 (ppm)</label>
+                            <input type="number" step="1" id="py-input-co2" placeholder="E.g. 900" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
+
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">🌡️ Cabin Temp (°C)</label>
+                            <input type="number" step="0.1" id="py-input-temp" placeholder="E.g. 22.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
+
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <label class="font-bold text-slate-300 block mb-1">⚖️ Weight (kg)</label>
+                            <input type="number" step="0.1" id="py-input-weight" placeholder="E.g. 70.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-white font-bold">
+                        </div>
                     </div>
                 </div>
 

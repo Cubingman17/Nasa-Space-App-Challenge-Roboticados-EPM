@@ -93,3 +93,37 @@ class Measurement(Base):
 
     astronaut: Mapped[Astronaut] = relationship(back_populates="measurements")
     metric: Mapped[MetricCatalog] = relationship(back_populates="measurements")
+
+
+class HealthAssessment(Base):
+    """Persisted result of a manually submitted health assessment."""
+
+    __tablename__ = "health_assessments"
+    __table_args__ = (Index("ix_assessments_astronaut_time", "astronaut_id", "recorded_at"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    astronaut_id: Mapped[str] = mapped_column(
+        ForeignKey("astronauts.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    recorded_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
+    )
+    overall_status: Mapped[str] = mapped_column(String(32), nullable=False)
+    metrics_json: Mapped[dict[str, object]] = mapped_column(JSON, nullable=False)
+    input_json: Mapped[dict[str, object]] = mapped_column(JSON, nullable=False)
+    ai_response: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class GamificationProfile(Base):
+    """Backend-owned points, XP, and daily logging streak per astronaut."""
+
+    __tablename__ = "gamification_profiles"
+
+    astronaut_id: Mapped[str] = mapped_column(
+        ForeignKey("astronauts.id", ondelete="CASCADE"), primary_key=True
+    )
+    points: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    xp: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    streak: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    last_log_date: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    zstate: Mapped[str | None] = mapped_column(String(80), nullable=True)

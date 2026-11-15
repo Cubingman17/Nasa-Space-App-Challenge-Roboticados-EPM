@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import init_db
 from routers.ai import router as ai_router
 from routers.data import router as data_router
+from routers.home import router as home_router
+from routers.profile import router as profile_router
 
 app = FastAPI(
     title="Astronaut Health API",
@@ -21,6 +23,8 @@ app.add_middleware(
 
 app.include_router(ai_router)
 app.include_router(data_router)
+app.include_router(home_router)
+app.include_router(profile_router)
 
 
 @app.on_event("startup")

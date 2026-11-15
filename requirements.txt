@@ -4,4 +4,3 @@ pydantic>=2,<3
 pydantic-settings
 sqlalchemy
 python-dotenv
-streamlit

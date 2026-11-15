@@ -28,53 +28,73 @@ AstroHealth AI is a tablet-style mission console with four screens:
 ## Architecture
 
 ```
-app.py              Native Streamlit interface (Home, Data, AstroAI, Profile)
-index.html          HTML/JS client entry point (assets in frontend/)
-frontend/           HTML/JS client assets (css, js, pages)
-backend/            FastAPI (port 5000)
-├── routers/         /api/predict, /api/chat, data, profile, home
+index.html          Web console entry point (HOME)
+frontend/           HTML/JS/CSS client assets (DATA, AI, PROFILE screens)
+backend/            FastAPI server (port 5000) - also serves the web console
+├── routers/         /api/predict, /api/chat, /api/data, /api/home, /api/profile
 ├── ai/
-│   ├── ia.py            Rule-based metric evaluators (62 unit tests)
-│   ├── metrics_reader.py  Payload parsing + AI response builder
+│   ├── ia.py            Rule-based metric evaluators (69 unit tests)
+│   ├── metrics_reader.py  Payload parsing + AI response + suggestions builder
 │   ├── local_llm.py      Ollama client (localhost:11434)
 │   ├── Modelfile         AstroAI custom model (llama3.2:3b base)
 │   └── setup_ollama.py   One-command model setup
+├── services/        Persistence, gamification, dataset import
+└── data/datasets/   32 metric datasets (NASA LSDA & OSDR based)
+setup.sh / setup.bat  One-command local installation
+start.sh / start.bat  One-command launch
 ```
 
 ## Tech Stack
 
-- **Backend:** Python, FastAPI, Pydantic
-- **AI:** Ollama with a custom `astroai` model (llama3.2:3b base, health + emotional-support system prompt), 100% local
-- **Frontend:** Streamlit (Python), with the FastAPI backend for persistent data and analysis
+- **Backend:** Python, FastAPI, Pydantic, SQLite (SQLAlchemy)
+- **AI:** Ollama with a custom `astroai` model (llama3.2:3b base, health + emotional-support system prompt), 100% local — with a rule-based fallback when Ollama is not running
+- **Frontend:** HTML/JS/CSS (vanilla, Chart.js), served by the same FastAPI server
 - **Data:** NASA LSDA / OSDR public datasets for hazard context
 
 ## How to Run
 
-**Option A — one command with Streamlit (recommended for demo):**
+### Quick start (local, full experience)
+
+**Linux / macOS / Git Bash on Windows:**
 
 ```bash
-py -3 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m streamlit run app.py
+./setup.sh   # installs dependencies, sets up the local AI, imports datasets
+./start.sh   # launches the app at http://localhost:5000
 ```
 
-This opens the native Streamlit application at `http://localhost:8501`. It starts the FastAPI backend on port 5000 when one is not already running. The Data screen reads the 32 CSV-backed metric datasets from the API; AstroAI and Profile use the same persistent backend.
+**Windows (CMD / PowerShell):**
 
-**Option B — backend + static frontend separately:**
+```bat
+setup.bat
+start.bat
+```
 
-1. Set up the local AI model:
-   ```bash
-   cd backend/ai
-   python setup_ollama.py   # pulls llama3.2:3b and creates the astroai model
-   ```
-2. Start the backend:
-   ```bash
-   cd backend
-   uvicorn main:app --port 5000
-   ```
-3. Open `index.html` (repo root) in the browser.
+Then open **http://localhost:5000** — the same server hosts the web console
+(HOME, DATA, AI, PROFILE) and the API. The local AI companion (AstroAI)
+needs [Ollama](https://ollama.com/download); without it the app still works
+using the rule-based evaluation and a metrics-summary fallback.
 
-> Note: on Streamlit Community Cloud the UI renders as a visual demo; the live backend and the local Ollama model only work when running locally.
+### Online demo (GitHub Pages)
+
+The static web console is hosted on GitHub Pages from this same repository.
+In that mode the UI is fully browsable (profiles, hazards, gamification and
+manual logging with local storage), and any feature that needs the backend
+shows an explicit offline notice instead of faking data. The backend and the
+local AI model only run on your machine — GitHub Pages is static-only.
+
+To host it yourself: GitHub repo → **Settings → Pages → Source: Deploy from
+a branch → main / (root)**. `index.html` at the repo root is the entry point.
+
+### Manual run (no scripts)
+
+```bash
+python -m venv .venv && .venv/Scripts/activate   # or source .venv/bin/activate
+python -m pip install -r requirements.txt
+cd backend/ai && python setup_ollama.py           # optional: local AI model
+cd backend && python -m services.import_datasets  # load the 32 datasets
+cd backend && python -m uvicorn main:app --port 5000
+# open http://localhost:5000
+```
 
 ## Super Intelligence (SI) Disclosure
 
@@ -86,7 +106,7 @@ development: see [SI_DISCLOSURE.md](SI_DISCLOSURE.md).
 
 ```bash
 cd backend
-python -m ai.test_ai   # 65 checks: metric thresholds, API endpoints, local LLM
+python -m ai.test_ai   # 69 checks: metric thresholds, API endpoints, local LLM
 ```
 
 ## Team

@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 try:
     from backend.database import init_db
@@ -13,6 +16,8 @@ except ModuleNotFoundError:
     from routers.data import router as data_router
     from routers.home import router as home_router
     from routers.profile import router as profile_router
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 app = FastAPI(
     title="Astronaut Health API",
@@ -39,19 +44,16 @@ def initialize_database():
     init_db()
 
 
-@app.get("/")
-def home():
-    return {
-        "status": "running",
-        "message": "The backend is working"
-    }
-
-
 @app.get("/api/health")
 def health_check():
     return {
         "status": "healthy"
     }
+
+
+# Serve the whole web console (index.html + frontend assets) from the
+# repo root, so one local URL hosts both the UI and the API.
+app.mount("/", StaticFiles(directory=REPO_ROOT, html=True), name="console")
 
 
 if __name__ == "__main__":

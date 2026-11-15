@@ -31,7 +31,7 @@ const PythonBridge = {
             return {
                 offline: true,
                 overall_status: null,
-                ai_response: "[Offline] The backend is not reachable. Start it with 'uvicorn main:app --port 5000' (or streamlit run app.py) and log your data again."
+                ai_response: "[Offline] The backend is not reachable. Start it with './start.sh' (or 'start.bat') and log your data again."
             };
         }
     },

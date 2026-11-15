@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 
 app = FastAPI(
-    title="Predictive AI API",
-    description="Backend for our predictive AI project",
-    version="0.1.0"
+    title="Astronaut Health API",
+    description="API for astronaut health metrics and data availability.",
+    version="0.1.0",
 )
 
 
@@ -18,9 +18,9 @@ def home():
 @app.get("/api/health")
 def health_check():
     return {
-        "status": "healthy",
-        "model_trained": False
+        "status": "healthy"
     }
+
 
 if __name__ == "__main__":
     import uvicorn
@@ -28,5 +28,5 @@ if __name__ == "__main__":
     uvicorn.run(
         app,
         host="127.0.0.1",
-        port=8000
+        port=5000
     )

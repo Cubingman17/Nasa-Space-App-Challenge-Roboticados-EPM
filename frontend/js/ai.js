@@ -1,24 +1,61 @@
 async function handleSendMessage() {
     const input = document.getElementById("py-astronaut-msg-input");
+    const sendBtn = document.getElementById("py-send-btn");
     const text = input.value.trim();
-    if (!text) return;
+    if (!text || sendBtn.disabled) return;
 
     appendBoxMessage("Astronauta", text);
     input.value = "";
 
     // Activar estado "Pensando..." en la mascota IA
     setMascotState("thinking", "Analizando datos...");
+    setChatBusy(true);
+    showTypingIndicator();
 
-    const response = await PythonBridge.sendChatMessage(text);
-    
+    let response;
+    try {
+        response = await PythonBridge.sendChatMessage(text);
+    } catch (error) {
+        response = { reply: "Hubo un problema de conexión con la IA local. Intenta de nuevo." };
+    } finally {
+        removeTypingIndicator();
+        setChatBusy(false);
+    }
+
     // Activar animación de "Hablando" cuando responde
     setMascotState("speaking", "Respondiendo...");
-    appendBoxMessage("AstroAI Local", response.reply);
+    appendBoxMessage("AstroAI Local", response.reply, response.source);
 
     // Volver a estado normal tras 2.5 segundos
     setTimeout(() => {
         setMascotState("idle", "Listo para analizar tus registros de salud.");
     }, 2500);
+}
+
+function setChatBusy(busy) {
+    const input = document.getElementById("py-astronaut-msg-input");
+    const sendBtn = document.getElementById("py-send-btn");
+    input.disabled = busy;
+    sendBtn.disabled = busy;
+    sendBtn.classList.toggle("opacity-50", busy);
+    sendBtn.classList.toggle("cursor-not-allowed", busy);
+    sendBtn.innerText = busy ? "..." : "Enviar";
+}
+
+function showTypingIndicator() {
+    removeTypingIndicator();
+    const box = document.getElementById("py-ia-responses-box");
+    const el = document.createElement("div");
+    el.id = "py-typing-indicator";
+    el.className = "bg-slate-900 p-3 rounded-xl border border-slate-800 flex items-center gap-1.5 w-16 justify-center";
+    el.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+    box.appendChild(el);
+    box.scrollTop = box.scrollHeight;
+}
+
+function removeTypingIndicator() {
+    const el = document.getElementById("py-typing-indicator");
+    if (el) el.remove();
 }
 
 function setMascotState(state, captionText) {
@@ -43,11 +80,16 @@ function setMascotState(state, captionText) {
     }
 }
 
-function appendBoxMessage(sender, text) {
+function appendBoxMessage(sender, text, source) {
     const box = document.getElementById("py-ia-responses-box");
     const msg = document.createElement("div");
     msg.className = "bg-slate-900 p-3 rounded-xl border border-slate-800";
-    msg.innerHTML = `<p class="font-bold text-blue-400 text-[11px] uppercase mb-0.5">${sender}:</p><p class="text-slate-300">${text}</p>`;
+
+    const sourceChip = source
+        ? `<span class="ml-2 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 align-middle">${escapeHtml(source)}</span>`
+        : "";
+    msg.innerHTML = `<p class="font-bold text-blue-400 text-[11px] uppercase mb-0.5">${escapeHtml(sender)}:${sourceChip}</p><p class="text-slate-300 whitespace-pre-line">${escapeHtml(text)}</p>`;
+
     box.appendChild(msg);
     box.scrollTop = box.scrollHeight;
 }

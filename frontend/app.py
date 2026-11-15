@@ -98,6 +98,11 @@ def start_backend() -> dict:
         pass
 
     import subprocess
+    if str(ROOT_DIR) not in sys.path:
+        sys.path.insert(0, str(ROOT_DIR))
+    try:
+        import uvicorn
+        from backend.main import app as api_app
 
     try:
         process = subprocess.Popen(
@@ -239,7 +244,7 @@ def render_home() -> None:
         st.dataframe(
             pd.DataFrame(ranking)[["astronaut_id", "name", "points", "xp", "streak"]],
             hide_index=True,
-            use_container_width=True,
+            width="stretch",
         )
 
 
@@ -298,7 +303,7 @@ def render_data() -> None:
                     **observation.get("values", {}),
                 })
             frame = pd.DataFrame(rows)
-            st.dataframe(frame, hide_index=True, use_container_width=True)
+            st.dataframe(frame, hide_index=True, width="stretch")
             numeric_columns = [
                 name for name in frame.select_dtypes(include="number").columns
                 if name != "measurement_id"
@@ -307,7 +312,7 @@ def render_data() -> None:
                 chart = frame[["timestamp", *numeric_columns]].copy()
                 chart["timestamp"] = pd.to_datetime(chart["timestamp"], errors="coerce", utc=True)
                 chart = chart.dropna(subset=["timestamp"]).set_index("timestamp")
-                st.line_chart(chart, height=230, use_container_width=True)
+                st.line_chart(chart, height=230, width="stretch")
             else:
                 st.caption("This dataset has no numeric series to plot.")
             st.download_button(
@@ -341,7 +346,7 @@ def render_ai() -> None:
             mood = o5.number_input("Mood (1–10)", min_value=0.0, value=0.0, help="Leave at 0 to omit.")
             radiation = o6.number_input("Radiation (µSv)", min_value=0.0, value=0.0, help="Leave at 0 to omit.")
             co2 = st.number_input("Cabin CO₂ (ppm)", min_value=0.0, value=0.0, help="Leave at 0 to omit.")
-        submitted = st.form_submit_button("Analyze and save", type="primary", use_container_width=True)
+        submitted = st.form_submit_button("Analyze and save", type="primary", width="stretch")
     if submitted:
         payload = {
             "subject_id": subject_id,
@@ -457,7 +462,7 @@ def render_profile() -> None:
         ranking = api_request("GET", "/ranking").get("ranking", [])
         if ranking:
             st.subheader("Crew ranking")
-            st.dataframe(pd.DataFrame(ranking), hide_index=True, use_container_width=True)
+            st.dataframe(pd.DataFrame(ranking), hide_index=True, width="stretch")
     except APIError as error:
         show_api_error(error)
 

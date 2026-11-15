@@ -26,6 +26,14 @@ async function handleSendMessage() {
     setMascotState("speaking", "Replying...");
     appendBoxMessage("AstroAI Local", response.reply, response.source);
 
+    // Fallback mode: make it explicit when the local LLM is not running
+    if (response.source && response.source !== "local-llm") {
+        appendBoxMessage("System",
+            "AstroAI (Ollama) is offline. Fallback mode: rule-based analysis of your logged metrics. " +
+            "Start it with 'ollama serve' and 'ollama run astroai' to talk with the local AI.",
+            "fallback");
+    }
+
     // Back to normal after 2.5 seconds
     setTimeout(() => {
         setMascotState("idle", "Ready to analyze your health records.");

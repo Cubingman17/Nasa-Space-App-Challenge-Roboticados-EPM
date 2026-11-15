@@ -27,8 +27,11 @@ const PythonBridge = {
             });
             return await response.json();
         } catch (error) {
+            // Backend offline: signal it so the UI does NOT fake a green state
             return {
-                ai_response: `[Local Simulation] Data received for Subject ${payload.subject_id}. Predicted next reaction: ${Math.round(payload.rt_ms * 1.02)} ms.`
+                offline: true,
+                overall_status: null,
+                ai_response: "[Offline] The backend is not reachable. Start it with 'uvicorn main:app --port 5000' (or streamlit run frontend/app.py) and log your data again."
             };
         }
     },

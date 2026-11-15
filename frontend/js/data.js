@@ -149,6 +149,72 @@ const OPTIONAL_INPUTS = {
     weight_kg: "py-input-weight"
 };
 
+// Sane ranges: values outside these are rejected (e.g. BPM of 1e32)
+const VALUE_RANGES = {
+    hr_bpm: [20, 250, "BPM (20-250)"],
+    spo2_pct: [50, 100, "SpO2 (50-100%)"],
+    sleep_hours: [0, 24, "Sleep (0-24 h)"],
+    rt_ms: [50, 2000, "Reaction (50-2000 ms)"],
+    fatigue_level: [1, 10, "Fatigue (1-10)"],
+    blood_glucose: [20, 600, "Glucose (20-600 mg/dL)"],
+    bp_systolic: [40, 250, "BP systolic (40-250 mmHg)"],
+    bp_diastolic: [40, 250, "BP diastolic (40-250 mmHg)"],
+    body_temp_c: [30, 45, "Body temp (30-45 °C)"],
+    mood_level: [1, 10, "Mood (1-10)"],
+    radiation_usv: [0, 100000, "Radiation (0-100000 µSv)"],
+    cabin_co2: [100, 20000, "Cabin CO2 (100-20000 ppm)"],
+    weight_kg: [20, 300, "Weight (20-300 kg)"]
+};
+
+function validateRanges(payload) {
+    const invalid = [];
+    for (const [field, [min, max, label]] of Object.entries(VALUE_RANGES)) {
+        const value = parseFloat(payload[field]);
+        if (!isNaN(value) && (value < min || value > max)) invalid.push(label);
+    }
+    return invalid;
+}
+
+// Status dot per NASA hazard, from the subject's last reading.
+// Static fallback = the risk level shown on each card (NASA dataset context).
+function updateHazardDots() {
+    const subject = typeof getSelectedSubject === "function" ? getSelectedSubject() : "A";
+    const reading = typeof getLastReading === "function" ? getLastReading(subject) : null;
+    const metrics = reading ? (reading.metrics || {}) : {};
+
+    const worst = (statuses) => {
+        const order = { normal: 0, atention: 1, bad: 2, critical: 3 };
+        let worstStatus = "normal";
+        statuses.forEach(s => {
+            if (s && order[s.split(":")[0].trim()] > order[worstStatus]) worstStatus = s.split(":")[0].trim();
+        });
+        return worstStatus;
+    };
+
+    const dots = {
+        "py-dot-radiation": metrics.radiation ? metrics.radiation.status : "critical",
+        "py-dot-isolation": metrics.mood || metrics.fatigue
+            ? worst([metrics.mood && metrics.mood.status, metrics.fatigue && metrics.fatigue.status])
+            : "atention",
+        "py-dot-gravity": "atention",
+        "py-dot-environment": metrics.cabin_co2 || metrics.spO2
+            ? worst([metrics.cabin_co2 && metrics.cabin_co2.status, metrics.spO2 && metrics.spO2.status])
+            : "normal",
+        "py-dot-distance": metrics.reaction || metrics.sleep
+            ? worst([metrics.reaction && metrics.reaction.status, metrics.sleep && metrics.sleep.status])
+            : "critical"
+    };
+
+    Object.entries(dots).forEach(([id, status]) => {
+        const dot = document.getElementById(id);
+        if (dot) dot.style.background = statusColor(status);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateHazardDots();
+});
+
 async function submitManualSensors() {
     const payload = {
         subject_id: typeof getSelectedSubject === "function"
@@ -177,6 +243,13 @@ async function submitManualSensors() {
         return;
     }
 
+    const invalid = validateRanges(payload);
+    if (invalid.length) {
+        feedback.className = "text-xs font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl text-center";
+        feedback.innerText = `⚠️ Values out of range: ${invalid.join(", ")}.`;
+        return;
+    }
+
     submitBtn.disabled = true;
     feedback.className = "text-xs font-semibold text-sky-300 bg-sky-500/10 border border-sky-500/30 p-2.5 rounded-xl text-center";
     feedback.innerText = "📡 Sending data to the model...";
@@ -185,15 +258,24 @@ async function submitManualSensors() {
 
     submitBtn.disabled = false;
 
+    // Backend offline: warn and do NOT fake a healthy state
+    if (response.offline || !response.overall_status) {
+        feedback.className = "text-xs font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl text-center";
+        feedback.innerText = response.ai_response;
+        return;
+    }
+
     // Save the subject's state for the console border and the AI banners
     const overall = String(response.overall_status || "normal").split(":")[0].trim();
     try {
         localStorage.setItem(`lastOverallStatus_${payload.subject_id}`, overall);
         localStorage.setItem(`lastAiResponse_${payload.subject_id}`, response.ai_response || "");
+        localStorage.setItem(`lastReading_${payload.subject_id}`, JSON.stringify(response));
     } catch (error) {
         // localStorage unavailable: continue without persisting
     }
     if (typeof applyHealthState === "function") applyHealthState(overall);
+    updateHazardDots();
 
     // Gamification: XP, points and streak for this astronaut
     if (typeof updateProfileProgress === "function") {

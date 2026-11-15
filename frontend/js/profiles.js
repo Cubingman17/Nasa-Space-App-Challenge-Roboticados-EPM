@@ -93,3 +93,32 @@ function computeRanking() {
         b.points - a.points || b.xp - a.xp
     );
 }
+
+// --- Status helpers shared by all screens -------------------------------
+
+// Color per health status (used by dots, charts and banners)
+function statusColor(status) {
+    const base = String(status || "normal").split(":")[0].trim();
+    return {
+        normal: "#10b981",
+        atention: "#f59e0b",
+        bad: "#f97316",
+        critical: "#f43f5e"
+    }[base] || "#10b981";
+}
+
+// Health score 0-100 per metric status (used by the HOME radar)
+function statusScore(status) {
+    const base = String(status || "normal").split(":")[0].trim();
+    return { normal: 100, atention: 60, bad: 30, critical: 10 }[base] || 100;
+}
+
+// Last full reading of a subject (saved by data.js after each log)
+function getLastReading(subjectId) {
+    try {
+        const raw = localStorage.getItem(`lastReading_${subjectId}`);
+        return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+        return null;
+    }
+}

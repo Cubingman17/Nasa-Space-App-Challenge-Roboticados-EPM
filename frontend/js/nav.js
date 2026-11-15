@@ -30,6 +30,36 @@ function applyHealthState(status) {
     }
 }
 
+// Pretty banner: overall pill + one chip per metric with a status dot
+function renderAdviceBanner(el, reading) {
+    const overall = String(reading.overall_status || "normal").split(":")[0].trim().toUpperCase();
+    const pillClass = {
+        NORMAL: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+        ATENTION: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+        BAD: "bg-orange-500/20 text-orange-300 border-orange-500/40",
+        CRITICAL: "bg-rose-500/20 text-rose-300 border-rose-500/40"
+    }[overall] || "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
+
+    let chips = "";
+    for (const metric of Object.values(reading.metrics || {})) {
+        const color = statusColor(metric.status);
+        chips += `<span class="inline-flex items-center gap-1.5 bg-slate-900/80 border border-slate-700 rounded-full px-2.5 py-0.5">
+            <span class="w-2 h-2 rounded-full" style="background:${color}"></span>
+            <span class="font-bold text-slate-200">${escapeHtml(metric.label)}</span>
+            <span class="text-slate-400">${escapeHtml(String(metric.value))}${escapeHtml(metric.unit)}</span>
+        </span>`;
+    }
+
+    el.innerHTML = `
+        <div class="flex flex-col gap-1.5 w-full">
+            <div class="flex items-center gap-2 flex-wrap">
+                <strong class="text-blue-400">Little AI Advice:</strong>
+                <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${pillClass}">OVERALL: ${overall}</span>
+            </div>
+            <div class="flex flex-wrap gap-1.5">${chips}</div>
+        </div>`;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const savedSubject = typeof getSelectedSubject === "function"
         ? getSelectedSubject()
@@ -45,13 +75,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (status) applyHealthState(status);
 
     // Show the subject's last AI advice in the banners of each page
+    const reading = typeof getLastReading === "function" ? getLastReading(savedSubject) : null;
     const lastAdvice = localStorage.getItem(`lastAiResponse_${savedSubject}`);
-    if (lastAdvice) {
-        ["py-home-ai-advice", "py-data-ai-advice", "py-profile-ai-advice"].forEach((id) => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.innerHTML = `<strong class="text-blue-400">Little AI Advice:</strong> ${escapeHtml(lastAdvice)}`;
-            }
-        });
-    }
+    ["py-home-ai-advice", "py-data-ai-advice", "py-profile-ai-advice"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (reading) {
+            renderAdviceBanner(el, reading);
+        } else if (lastAdvice) {
+            el.innerHTML = `<strong class="text-blue-400">Little AI Advice:</strong> ${escapeHtml(lastAdvice)}`;
+        }
+    });
 });

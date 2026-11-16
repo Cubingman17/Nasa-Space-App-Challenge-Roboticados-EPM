@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const target = document.getElementById("py-home-ai-advice");
             if (!target) return;
             const warning = document.createElement("div");
+            warning.id = "ai-offline-warning";
             warning.className = "mb-2 p-2.5 rounded-xl border border-rose-500/40 bg-rose-500/10 text-rose-200 text-xs font-semibold leading-snug";
             warning.innerHTML = "&#9888;&#65039; The local AI (Ollama) is not running — this console does not work well without it. "
                 + "AI advice and the AstroAI chat are limited. Start Ollama (<b>ollama serve</b>) for the full experience.";
@@ -116,16 +117,3 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
-
-// Periodic auto-refresh so new data shows without leaving and re-entering
-// the screen. Skipped while the user is typing or the manual-data modal
-// is open, so it never interrupts an entry in progress.
-const AUTO_REFRESH_MS = 45000;
-setInterval(() => {
-    const modal = document.getElementById("manual-data-modal");
-    if (modal && !modal.classList.contains("hidden")) return;
-    const active = document.activeElement;
-    if (active && ["INPUT", "TEXTAREA", "SELECT"].includes(active.tagName)) return;
-    if (active && active.isContentEditable) return;
-    location.reload();
-}, AUTO_REFRESH_MS);

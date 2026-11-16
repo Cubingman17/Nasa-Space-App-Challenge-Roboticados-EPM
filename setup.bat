@@ -37,4 +37,6 @@ popd
 
 echo.
 echo === Setup complete ===
-echo ^>^> Start the app any time with:  start.bat
+echo ^>^> Run the app:
+echo      1. Start the backend:  python backend\main.py
+echo      2. Open the console:   http://localhost:5000  (or index.html in your browser)

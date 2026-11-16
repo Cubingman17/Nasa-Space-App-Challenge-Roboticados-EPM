@@ -41,7 +41,6 @@ backend/            FastAPI server (port 5000) - also serves the web console
 ├── services/        Persistence, gamification, dataset import
 └── data/datasets/   32 metric datasets (NASA LSDA & OSDR based)
 setup.sh / setup.bat  One-command local installation
-start.sh / start.bat  One-command launch
 ```
 
 ## Tech Stack
@@ -55,24 +54,35 @@ start.sh / start.bat  One-command launch
 
 ### Quick start (local, full experience)
 
-**Linux / macOS / Git Bash on Windows:**
+**Step 1 - install (once):**
 
 ```bash
-./setup.sh   # installs dependencies, sets up the local AI, imports datasets
-./start.sh   # launches the app at http://localhost:5000
+./setup.sh      # Linux / macOS / Git Bash on Windows
 ```
-
-**Windows (CMD / PowerShell):**
-
 ```bat
-setup.bat
-start.bat
+setup.bat       # Windows (CMD / PowerShell)
 ```
 
-Then open **http://localhost:5000** — the same server hosts the web console
-(HOME, DATA, AI, PROFILE) and the API. The local AI companion (AstroAI)
-needs [Ollama](https://ollama.com/download); without it the app still works
-using the rule-based evaluation and a metrics-summary fallback.
+This creates a `.venv` with the dependencies, sets up the local AI model
+(optional) and imports the 32 metric datasets.
+
+**Step 2 - run the app (two things):**
+
+1. Start the backend from the repo root:
+
+   ```bash
+   python backend/main.py
+   ```
+
+2. Open the web console in your browser:
+
+   - **http://localhost:5000** (recommended - the backend serves the whole
+     console: HOME, DATA, AI, PROFILE), or
+   - open `index.html` (repo root) directly as a file.
+
+The local AI companion (AstroAI) needs [Ollama](https://ollama.com/download);
+without it the app still works using the rule-based evaluation and a
+metrics-summary fallback, and the UI clearly marks the AI as offline.
 
 ### Online demo (GitHub Pages)
 
@@ -92,8 +102,8 @@ python -m venv .venv && .venv/Scripts/activate   # or source .venv/bin/activate
 python -m pip install -r requirements.txt
 cd backend/ai && python setup_ollama.py           # optional: local AI model
 cd backend && python -m services.import_datasets  # load the 32 datasets
-cd backend && python -m uvicorn main:app --port 5000
-# open http://localhost:5000
+python backend/main.py   # starts the API + console on http://localhost:5000
+# open http://localhost:5000 (or index.html in your browser)
 ```
 
 ## Super Intelligence (SI) Disclosure
